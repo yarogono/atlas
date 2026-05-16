@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 
 interface Props {
-  initialPrincipal?: number;
-  initialRate?: number;
-  initialYears?: number;
+  initialPrincipal?: number | string;
+  initialRate?: number | string;
+  initialYears?: number | string;
 }
 
 export const InteractiveCalc = ({ 
@@ -13,9 +13,9 @@ export const InteractiveCalc = ({
   initialRate = 5, 
   initialYears = 10 
 }: Props) => {
-  const [principal, setPrincipal] = useState(initialPrincipal);
-  const [rate, setRate] = useState(initialRate);
-  const [years, setYears] = useState(initialYears);
+  const [principal, setPrincipal] = useState(Number(initialPrincipal));
+  const [rate, setRate] = useState(Number(initialRate));
+  const [years, setYears] = useState(Number(initialYears));
 
   const finalAmount = (principal * Math.pow(1 + rate / 100, years)).toFixed(2);
 
