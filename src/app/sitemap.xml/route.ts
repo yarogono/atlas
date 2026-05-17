@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import welfareData from '../../data/regions-welfare.json';
+
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
@@ -90,7 +92,15 @@ export async function GET() {
     console.error('Failed to read posts directory for sitemap');
   }
 
-  const allPages = [...defaultPages, ...postUrls];
+  // 3. 지자체 동적 페이지 추가 (pSEO)
+  const regionalUrls = Object.keys(welfareData).map((region) => ({
+    url: `${baseUrl}/regions/${encodeURIComponent(region)}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
+  const allPages = [...defaultPages, ...postUrls, ...regionalUrls];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
