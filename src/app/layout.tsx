@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr'),
   title: {
     template: '%s | 복지지원금24시',
-    default: '정부지원금 대상 조회·계산기 | 내가 받을 금액 3초만에 확인 - 복지지원금24시',
+    default: '정부지원금 대상 조회·계산기 | 복지지원금24시',
   },
   description: '정부지원금, 청년정책, 소상공인 지원금 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요.',
   openGraph: {
-    title: '정부지원금 대상 조회·계산기 | 내가 받을 금액 3초만에 확인',
+    title: '정부지원금 대상 조회·계산기 | 복지지원금24시',
     description: '정부지원금, 청년정책, 소상공인 지원금 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요.',
     url: '/',
     siteName: '복지지원금24시',
@@ -41,6 +41,23 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5633731930294890"

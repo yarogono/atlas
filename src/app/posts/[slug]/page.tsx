@@ -58,8 +58,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
 
-  // [핵심 키워드] + [검색 의도] + [클릭 유도 문구]
-  const seoTitle = `${title} 대상 조회·계산기 | 내가 받을 금액 바로 확인`;
+  const seoTitle = title;
   const seoDescription = description || `${title} 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요. 정부지원금 핵심 정보 총정리.`;
 
   return {

@@ -9,7 +9,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const decodedRegion = decodeURIComponent(params.region);
-  const title = `${decodedRegion} 정부지원금 및 지자체 혜택 대상 조회 | 복지지원금24시`;
+  const title = `${decodedRegion} 지원금 및 지자체 혜택 | 복지지원금24시`;
   const description = `${decodedRegion} 거주자를 위한 맞춤형 지자체 정부지원금, 청년정책, 소상공인 혜택 대상을 즉시 조회해 드립니다.`;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
 
