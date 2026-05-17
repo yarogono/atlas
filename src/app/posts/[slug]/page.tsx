@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { InteractiveCalc } from '@/components/InteractiveCalc';
 import { SubsidyHero } from '@/components/mdx/SubsidyHero';
 import { SubsidyCta } from '@/components/mdx/SubsidyCta';
@@ -120,6 +121,8 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 
   // JSON-LD 구조화 데이터
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+  
+  // 1. Article 구조화 데이터 고도화 (publisher, dateModified, mainEntityOfPage 추가)
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -127,12 +130,48 @@ export default function PostPage({ params }: { params: { slug: string } }) {
     description: description,
     image: coverImage ? [coverImage] : [],
     datePublished: date,
+    dateModified: date, // 수정일이 없을 경우 등록일을 기본값으로 매핑
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${baseUrl}/posts/${params.slug}`
+    },
     author: [{
       '@type': 'Organization',
       name: '복지지원금24시',
       url: baseUrl,
-    }]
+    }],
+    publisher: {
+      '@type': 'Organization',
+      name: '복지지원금24시',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/favicon.png'
+      }
+    }
   };
+
+  // 2. FAQ 구조화 데이터 자동 추출 및 생성 (본문에 FAQ 컴포넌트가 존재할 시 구글 FAQ 리치 스니펫 매칭용)
+  const faqMatch = fileContents.match(/<FaqAccordion\s+items='([^']+)'/);
+  let faqJsonLd: any = null;
+  if (faqMatch) {
+    try {
+      const faqItems = JSON.parse(faqMatch[1]);
+      faqJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqItems.map((item: any) => ({
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.a
+          }
+        }))
+      };
+    } catch (e) {
+      console.error('Failed to parse FAQ items for JSON-LD');
+    }
+  }
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -165,6 +204,9 @@ export default function PostPage({ params }: { params: { slug: string } }) {
     <article className="max-w-3xl mx-auto w-full">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {faqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      )}
       
       <Breadcrumb title={title} />
       
@@ -179,7 +221,16 @@ export default function PostPage({ params }: { params: { slug: string } }) {
       </div>
       
       {!hideCoverImage && coverImage && (
-        <img src={coverImage} alt={title} className="w-full h-[250px] md:h-[400px] object-cover rounded-2xl md:rounded-3xl mb-12 shadow-sm" />
+        <div className="relative w-full h-[250px] md:h-[400px] mb-12 overflow-hidden rounded-2xl md:rounded-3xl shadow-sm">
+          <Image 
+            src={coverImage} 
+            alt={title} 
+            fill
+            sizes="(max-w-768px) 100vw, 768px"
+            className="object-cover" 
+            priority
+          />
+        </div>
       )}
       
       <div className="prose prose-slate prose-lg md:prose-xl max-w-none 

@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 
 export default function UpdatesPage() {
   const recentUpdates = [
-    { title: '2026년 하반기 소상공인 새출발기금 접수 시작', date: '2026.05.15', badge: 'NEW', type: '소상공인' },
-    { title: '청년내일저축계좌 신규 가입자 모집 마감 임박', date: '2026.05.10', badge: '마감임박', type: '청년' },
-    { title: '에너지 바우처 하절기 지원금 신청 안내', date: '2026.05.08', badge: '신청중', type: '생활지원' },
-    { title: '근로장려금 정기 신청 기간 안내 (5월)', date: '2026.05.01', badge: '핫이슈', type: '전국민' },
+    { title: '2026년 하반기 소상공인 새출발기금 접수 시작', date: '2026.05.15', badge: 'NEW', type: '소상공인', url: '/posts/third-post' },
+    { title: '청년내일저축계좌 신규 가입자 모집 마감 임박', date: '2026.05.10', badge: '마감임박', type: '청년', url: '/posts/sample-post' },
+    { title: '에너지 바우처 하절기 지원금 신청 안내', date: '2026.05.08', badge: '신청중', type: '생활지원', url: '/posts/2026-oil-support-guide' },
+    { title: '근로장려금 정기 신청 기간 안내 (5월)', date: '2026.05.01', badge: '핫이슈', type: '전국민', url: '/posts/sample-post' },
   ];
 
   return (
@@ -36,7 +36,7 @@ export default function UpdatesPage() {
       <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-12">
         <div className="space-y-4">
           {recentUpdates.map((item, idx) => (
-            <Link key={idx} href={`/posts/example-${idx}`} className="flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-600 group">
+            <Link key={idx} href={item.url} className="flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-600 group">
               <div className="flex items-center gap-4">
                 <div className={`px-2.5 py-1 text-xs font-bold rounded-lg whitespace-nowrap
                   ${item.badge === 'NEW' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' : ''}

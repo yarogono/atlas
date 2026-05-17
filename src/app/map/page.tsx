@@ -1,9 +1,20 @@
 import { FullMap } from '@/components/map/FullMap';
 import { Metadata } from 'next';
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+
 export const metadata: Metadata = {
-  title: '내 주변 사용처 찾기 | 보조금24시',
+  title: '내 주변 사용처 찾기 | 복지지원금24시',
   description: '내 주변 고유가 피해지원금, 지역사랑상품권 사용처를 실시간 지도로 확인하세요.',
+  openGraph: {
+    title: '내 주변 사용처 찾기 | 복지지원금24시',
+    description: '내 주변 고유가 피해지원금, 지역사랑상품권 사용처를 실시간 지도로 확인하세요.',
+    url: `${baseUrl}/map`,
+    type: 'website',
+  },
+  alternates: {
+    canonical: `${baseUrl}/map`,
+  }
 };
 
 export default function MapPage() {
