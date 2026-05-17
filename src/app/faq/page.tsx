@@ -39,7 +39,7 @@ export default function FaqPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 w-full">
       <Script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      
+
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">
           💬 자주 묻는 질문 <span className="text-blue-600">(FAQ)</span>
@@ -67,11 +67,6 @@ export default function FaqPage() {
             </div>
           </details>
         ))}
-      </div>
-
-      {/* Adsense / Ad Placeholder */}
-      <div className="w-full h-[100px] bg-slate-200 dark:bg-slate-700 rounded-xl flex items-center justify-center text-slate-400 text-sm mb-12">
-        [ 구글 애드센스 광고 영역 ]
       </div>
 
     </div>

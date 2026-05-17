@@ -9,7 +9,6 @@ import { AppCta } from '@/components/mdx/AppCta';
 import { ScheduleTable } from '@/components/mdx/ScheduleTable';
 import { StepGuide } from '@/components/mdx/StepGuide';
 import { NoticeBox } from '@/components/mdx/NoticeBox';
-import { AdSense } from '@/components/mdx/AdSense';
 import { SourceRef } from '@/components/mdx/SourceRef';
 import { FaqAccordion } from '@/components/mdx/FaqAccordion';
 import { RelatedLinks } from '@/components/mdx/RelatedLinks';
@@ -17,6 +16,7 @@ import { Toc } from '@/components/mdx/Toc';
 import { Breadcrumb } from '@/components/mdx/Breadcrumb';
 import { Pagination } from '@/components/mdx/Pagination';
 import { MapCta } from '@/components/mdx/MapCta';
+import { EligibilityCalc } from '@/components/mdx/EligibilityCalc';
 
 const generateId = (children: any) => {
   if (typeof children === 'string') {
@@ -33,7 +33,6 @@ const components = {
   ScheduleTable,
   StepGuide,
   NoticeBox,
-  AdSense,
   SourceRef,
   FaqAccordion,
   RelatedLinks,
@@ -41,6 +40,7 @@ const components = {
   Breadcrumb,
   Pagination,
   MapCta,
+  EligibilityCalc,
   h2: ({ children, ...props }: any) => <h2 id={generateId(children)} className="scroll-mt-24" {...props}>{children}</h2>,
   h3: ({ children, ...props }: any) => <h3 id={generateId(children)} className="scroll-mt-24" {...props}>{children}</h3>,
 };

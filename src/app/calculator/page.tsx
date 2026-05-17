@@ -34,7 +34,7 @@ export default function CalculatorPage() {
   return (
     <div className="max-w-4xl mx-auto py-8">
       <Script id="calc-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      
+
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">
           💰 정부지원금 <span className="text-blue-600">3초 계산기</span>
@@ -85,7 +85,7 @@ export default function CalculatorPage() {
               </select>
             </div>
           </div>
-          
+
           <div className="pt-6">
             <button type="button" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl py-4 rounded-2xl shadow-lg transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2">
               <span>내 지원금 결과 보기 🚀</span>
@@ -94,10 +94,6 @@ export default function CalculatorPage() {
         </form>
       </div>
 
-      {/* Adsense / Ad Placeholder */}
-      <div className="w-full h-[100px] bg-slate-200 dark:bg-slate-700 rounded-xl flex items-center justify-center text-slate-400 text-sm mb-12">
-        [ 구글 애드센스 광고 영역 ]
-      </div>
 
       <div className="text-center bg-blue-50 dark:bg-slate-800 p-8 rounded-2xl border border-blue-100 dark:border-slate-700">
         <h2 className="text-xl font-bold mb-3 text-slate-800 dark:text-white">정확한 대상 여부가 궁금하다면?</h2>

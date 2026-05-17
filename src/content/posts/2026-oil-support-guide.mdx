@@ -21,6 +21,54 @@ export const S3_IMAGE_URL = '';
 
 <AppCta />
 
+<div className="not-prose my-8 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+  <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+    <h3 className="text-lg font-bold text-slate-800 m-0">💳 카드사별 고유가 피해지원금 신청 링크</h3>
+    <p className="text-sm text-slate-500 mt-1 m-0">본인 명의의 카드를 선택하여 온라인으로 즉시 신청하세요.</p>
+  </div>
+  <div className="overflow-x-auto">
+    <table className="min-w-full text-left border-collapse">
+      <thead>
+        <tr className="border-b border-slate-200 bg-slate-50/50">
+          <th className="px-6 py-3 text-sm font-semibold text-slate-700 whitespace-nowrap">카드사</th>
+          <th className="px-6 py-3 text-sm font-semibold text-slate-700 whitespace-nowrap">온라인 신청 바로가기</th>
+          <th className="px-6 py-3 text-sm font-semibold text-slate-700 whitespace-nowrap">ARS 전화 신청</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-slate-100">
+        <tr className="hover:bg-slate-50 transition-colors">
+          <td className="px-6 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">KB국민카드</td>
+          <td className="px-6 py-4 text-sm whitespace-nowrap"><a href="https://m.kbcard.com/BON/DVIEW/MBHV1103" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-sm">[KB국민카드] 신청하기</a></td>
+          <td className="px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap">☎️ 1644-8811</td>
+        </tr>
+        <tr className="hover:bg-slate-50 transition-colors">
+          <td className="px-6 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">신한카드</td>
+          <td className="px-6 py-4 text-sm whitespace-nowrap"><a href="https://www.shinhancard.com/pconts/html/myPage/governmentSupport/MOBFM591N/MOBFM591R02.html" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-sm">[신한카드] 신청하기</a></td>
+          <td className="px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap">☎️ 1544-7000</td>
+        </tr>
+        <tr className="hover:bg-slate-50 transition-colors">
+          <td className="px-6 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">NH농협카드</td>
+          <td className="px-6 py-4 text-sm whitespace-nowrap"><a href="https://card.nonghyup.com/servlet/IPCS012601.menu" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-sm">[NH농협카드] 신청하기</a></td>
+          <td className="px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap">☎️ 1644-4000</td>
+        </tr>
+        <tr className="hover:bg-slate-50 transition-colors">
+          <td className="px-6 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">롯데카드</td>
+          <td className="px-6 py-4 text-sm whitespace-nowrap"><a href="https://www.lottecard.co.kr/app/LPEMRFA_V999.lc" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-sm">[롯데카드] 신청하기</a></td>
+          <td className="px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap">☎️ 1588-8100</td>
+        </tr>
+        <tr className="hover:bg-slate-50 transition-colors">
+          <td className="px-6 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">BC카드 <span className="text-xs font-normal text-slate-500">(우체국 등)</span></td>
+          <td className="px-6 py-4 text-sm whitespace-nowrap"><a href="https://go.bccard.com/app/apply/epost" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-sm">[BC카드] 신청하기</a></td>
+          <td className="px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap">☎️ 1588-4000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-200">
+    <p className="text-xs text-slate-500 m-0">* 삼성카드, 현대카드, 하나카드, 우리카드의 경우에도 각 카드사 공식 앱(App) 또는 홈페이지 메인 화면의 '정부 상생 지원금/고유가 피해지원금' 팝업 및 메뉴를 통해 즉시 신청이 가능합니다.</p>
+  </div>
+</div>
+
 <NoticeBox type="warning" title="💡 바쁜 분들을 위한 3줄 핵심 요약" items='["이번 2차 지원금은 **소득 하위 70% (건강보험료 기준)** 가구를 대상으로 1인당 최대 25만 원을 지급합니다.","위의 **카드사 바로가기 버튼**을 눌러 본인 명의 카드로 신청하시면, 다음 날 오전 9시에 즉시 포인트가 충전됩니다.","기존 경유차 운전자를 위한 **유가연동보조금**과는 별개의 정책이므로 대상자라면 중복 수혜가 가능합니다."]' />
 
 <img src="https://images.unsplash.com/photo-1604594849809-dfedbc827105?q=80&w=1200&auto=format&fit=crop" alt="고유가 피해지원금 2차 신청 방법 대상 신청일" className="w-full h-[250px] md:h-[400px] object-cover rounded-2xl md:rounded-3xl mb-12 shadow-sm" />
@@ -42,6 +90,8 @@ export const S3_IMAGE_URL = '';
 * <strong>재산 기준</strong>: 대도시 3억 원, 중소도시 2억 원, 농어촌 1억 5천만 원 이하
 * <strong>차량 소유 기준</strong>: 배기량 2,000cc 미만의 승용차 1대 소유 (생계형 차량은 배기량 무관)
 
+<EligibilityCalc />
+
 ### 2. 모바일 신청 방법 가이드
 신청 방법은 상단의 <strong>카드사 바로가기 버튼</strong>을 통해 본인이 주로 사용하는 신용/체크카드를 선택하여 충전받는 방식이 가장 빠릅니다.
 
@@ -49,17 +99,7 @@ export const S3_IMAGE_URL = '';
 2. 각 카드사 앱(App) 또는 웹사이트에서 간편 인증을 진행합니다.
 3. 대상자 조회가 완료되면 신청 버튼을 눌러 접수합니다.
 
-### 카드사별 고유가 피해지원금 신청 링크
 
-| 카드사 | 온라인 신청 바로가기 링크 | ARS 전화 신청 |
-|---|---|---|
-| KB국민카드 | [[KB국민카드] 고유가 피해지원금 신청](https://m.kbcard.com/BON/DVIEW/MBHV1103) | ☎️ 1644-8811 |
-| 신한카드 | [[신한카드] 고유가 피해지원금 신청](https://www.shinhancard.com/pconts/html/myPage/governmentSupport/MOBFM591N/MOBFM591R02.html) | ☎️ 1544-7000 |
-| NH농협카드 | [[NH농협카드] 고유가 피해지원금 신청](https://card.nonghyup.com/servlet/IPCS012601.menu) | ☎️ 1644-4000 |
-| 롯데카드 | [[롯데카드] 고유가 피해지원금 신청](https://www.lottecard.co.kr/app/LPEMRFA_V999.lc) | ☎️ 1588-8100 |
-| BC카드 (우체국 등) | [[BC카드] 고유가 피해지원금 신청](https://go.bccard.com/app/apply/epost) | ☎️ 1588-4000 |
-
-* 삼성카드, 현대카드, 하나카드, 우리카드의 경우에도 각 카드사 공식 앱(App) 또는 홈페이지 메인 화면의 '정부 상생 지원금/고유가 피해지원금' 팝업 및 메뉴를 통해 즉시 신청이 가능합니다.
 
 ---
 

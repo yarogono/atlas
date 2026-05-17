@@ -44,10 +44,6 @@ export default function GuidePage() {
           </Link>
         ))}
       </div>
-
-      <div className="w-full h-[100px] bg-slate-200 dark:bg-slate-700 rounded-xl flex items-center justify-center text-slate-400 text-sm">
-        [ 구글 애드센스 광고 영역 ]
-      </div>
     </div>
   );
 }
