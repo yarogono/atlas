@@ -7,11 +7,20 @@ import Link from 'next/link';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr'),
   title: {
     template: '%s | 복지지원금24시',
-    default: '복지지원금24시 - 돈이 되는 정부정책',
+    default: '정부지원금 대상 조회·계산기 | 내가 받을 금액 3초만에 확인 - 복지지원금24시',
   },
-  description: '정부지원금, 청년정책, 소상공인 지원금 정보를 가장 빠르고 정확하게 안내합니다.',
+  description: '정부지원금, 청년정책, 소상공인 지원금 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요.',
+  openGraph: {
+    title: '정부지원금 대상 조회·계산기 | 내가 받을 금액 3초만에 확인',
+    description: '정부지원금, 청년정책, 소상공인 지원금 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요.',
+    url: '/',
+    siteName: '복지지원금24시',
+    locale: 'ko_KR',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -34,6 +43,20 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className={`${inter.className} bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 min-h-screen flex flex-col`}>
+        {/* WebSite JSON-LD */}
+        <Script id="website-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: '복지지원금24시',
+            url: process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr'}/search?q={search_term_string}`,
+              'query-input': 'required name=search_term_string'
+            }
+          })
+        }} />
         {/* 상단 파란색 내비게이션 바 */}
         <header className="sticky top-0 z-50 w-full bg-blue-600 dark:bg-blue-800 text-white shadow-md">
           <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row md:h-16 md:py-0 md:items-center justify-between gap-3">
@@ -51,12 +74,12 @@ export default function RootLayout({
             </div>
 
             <nav className="flex items-center gap-4 md:gap-6 font-medium overflow-x-auto whitespace-nowrap pb-1 md:pb-0 scrollbar-hide text-sm md:text-base">
-              <Link href="/map" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-blue-100 bg-blue-700/50 px-2 py-1 rounded-md">🗺️ 지도</Link>
-              <Link href="#" className="hover:text-blue-200 transition-colors">정부지원정책</Link>
-              <Link href="#" className="hover:text-blue-200 transition-colors">청년정책</Link>
-              <Link href="#" className="hover:text-blue-200 transition-colors">소상공인</Link>
-              <Link href="#" className="hover:text-blue-200 transition-colors">계산기</Link>
-              <Link href="#" className="hover:text-blue-200 transition-colors">꿀팁</Link>
+              <Link href="/calculator" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-yellow-300 font-bold">🧮 3초 계산기</Link>
+              <Link href="/eligibility" className="hover:text-blue-200 transition-colors">대상조회</Link>
+              <Link href="/guide" className="hover:text-blue-200 transition-colors">종합가이드</Link>
+              <Link href="/regions" className="hover:text-blue-200 transition-colors">🗺️ 지역별</Link>
+              <Link href="/faq" className="hover:text-blue-200 transition-colors">FAQ</Link>
+              <Link href="/updates" className="hover:text-blue-200 transition-colors">최신업데이트</Link>
             </nav>
 
             <div className="hidden md:flex items-center">

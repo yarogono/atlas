@@ -14,6 +14,46 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-3xl p-8 md:p-12 text-white shadow-xl text-center relative overflow-hidden">
+        <div className="absolute top-0 right-0 opacity-10 translate-x-1/3 -translate-y-1/3 pointer-events-none">
+          <svg width="400" height="400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg>
+        </div>
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <h1 className="text-3xl md:text-5xl font-black mb-6 leading-tight break-keep">
+            올해 내가 받을 수 있는<br/>
+            <span className="text-yellow-300">정부지원금</span>은 얼마일까?
+          </h1>
+          <p className="text-lg md:text-xl text-blue-100 mb-8 break-keep">
+            복잡한 조건은 그만! 나이, 직업, 소득만 입력하고 3초 만에 예상 수령액을 즉시 확인해보세요.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/calculator" className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold text-lg py-4 px-8 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+              <span>🧮 3초 만에 계산하기</span>
+            </Link>
+            <Link href="/eligibility" className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white font-bold text-lg py-4 px-8 rounded-full transition-colors flex items-center justify-center gap-2">
+              <span>✅ 대상 여부 바로 조회</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Hub Links */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { title: '종합가이드', icon: '📖', href: '/guide', desc: '모든 정책 총정리' },
+          { title: '자주 묻는 질문', icon: '💬', href: '/faq', desc: '궁금증 즉시 해결' },
+          { title: '최신 업데이트', icon: '⚡', href: '/updates', desc: '오늘 뜬 새로운 지원금' },
+          { title: '우리동네 지원금', icon: '📍', href: '/regions', desc: '지자체별 혜택' }
+        ].map(hub => (
+          <Link key={hub.href} href={hub.href} className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-md transition-all group flex flex-col items-center text-center">
+            <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">{hub.icon}</div>
+            <h2 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">{hub.title}</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{hub.desc}</p>
+          </Link>
+        ))}
+      </section>
+
       {/* 매거진 스타일 그리드 레이아웃 */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         

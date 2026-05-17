@@ -57,12 +57,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
 
+  // [핵심 키워드] + [검색 의도] + [클릭 유도 문구]
+  const seoTitle = `${title} 대상 조회·계산기 | 내가 받을 금액 바로 확인`;
+  const seoDescription = description || `${title} 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요. 정부지원금 핵심 정보 총정리.`;
+
   return {
-    title,
-    description,
+    title: seoTitle,
+    description: seoDescription,
     openGraph: {
-      title,
-      description,
+      title: seoTitle,
+      description: seoDescription,
       type: 'article',
       publishedTime: date,
       url: `${baseUrl}/posts/${params.slug}`,
@@ -93,6 +97,8 @@ export default function PostPage({ params }: { params: { slug: string } }) {
   const date = dateMatch ? dateMatch[1] : '';
   const coverImageMatch = fileContents.match(/coverImage:\s*"([^"]+)"/);
   const coverImage = coverImageMatch ? coverImageMatch[1] : '';
+  const hideCoverImageMatch = fileContents.match(/hideCoverImage:\s*(true|false)/);
+  const hideCoverImage = hideCoverImageMatch ? hideCoverImageMatch[1] === 'true' : false;
 
   // Pagination을 위한 전체 포스트 리스트 (날짜순 정렬)
   const allFiles = fs.readdirSync(postsDirectory).filter(f => f.endsWith('.mdx'));
@@ -114,7 +120,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 
   // JSON-LD 구조화 데이터
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
-  const jsonLd = {
+  const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: title,
@@ -128,23 +134,51 @@ export default function PostPage({ params }: { params: { slug: string } }) {
     }]
   };
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: baseUrl
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '정부지원금 가이드',
+        item: `${baseUrl}/guide`
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: title,
+        item: `${baseUrl}/posts/${params.slug}`
+      }
+    ]
+  };
+
   const contentWithoutFrontmatter = fileContents.replace(/---[\s\S]*?---/, '');
 
   return (
     <article className="max-w-3xl mx-auto w-full">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       
       <Breadcrumb title={title} />
       
       <div className="mb-10 mt-6">
-        <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-tight break-keep">{title}</h1>
+        <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight break-keep">
+          {title} <span className="text-blue-600 dark:text-blue-400 text-2xl md:text-4xl block mt-2">지원대상 및 신청방법 총정리</span>
+        </h1>
         <div className="flex items-center gap-4 text-sm text-slate-500 font-medium">
           <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">{date}</span>
           <span>조회수 1.2만</span>
         </div>
       </div>
       
-      {coverImage && (
+      {!hideCoverImage && coverImage && (
         <img src={coverImage} alt={title} className="w-full h-[250px] md:h-[400px] object-cover rounded-2xl md:rounded-3xl mb-12 shadow-sm" />
       )}
       
