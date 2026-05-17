@@ -21,6 +21,16 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     type: 'website',
   },
+  verification: {
+    google: 'LZPIpa762YBaEvnn4vlmglSsBX9nDQxkyXwp1Mmowzc',
+    other: {
+      'naver-site-verification': 'cc95169b88946f7e84dca3a61b7c630705a27dd3',
+    },
+  },
+  icons: {
+    icon: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/favicon.png', // S3 파비콘 이미지 URL을 여기에 입력하세요 (예: https://s3.../favicon.ico)
+    apple: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/favicon.png', // (선택) S3 애플 터치 아이콘 URL (예: https://s3.../apple-touch-icon.png)
+  },
 };
 
 export default function RootLayout({
@@ -37,9 +47,9 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <Script 
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&libraries=services,clusterer&autoload=false`} 
-          strategy="beforeInteractive" 
+        <Script
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&libraries=services,clusterer&autoload=false`}
+          strategy="beforeInteractive"
         />
       </head>
       <body suppressHydrationWarning className={`${inter.className} bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 min-h-screen flex flex-col`}>
