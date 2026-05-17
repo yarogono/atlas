@@ -8,6 +8,13 @@ export const metadata: Metadata = {
     title: '복지지원금24시 이용방법',
     description: '어떻게 써야 혜택을 다 받을 수 있을까요?',
     url: '/usage',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '복지지원금24시 이용방법',
+    description: '어떻게 써야 혜택을 다 받을 수 있을까요?',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/usage',

@@ -8,6 +8,13 @@ export const metadata: Metadata = {
     title: '우리동네 지자체 지원금 모아보기',
     description: '내가 사는 지역의 혜택, 놓치지 말고 챙기세요.',
     url: '/regions',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '우리동네 지자체 지원금 모아보기',
+    description: '내가 사는 지역의 혜택, 놓치지 말고 챙기세요.',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/regions',

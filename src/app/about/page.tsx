@@ -1,8 +1,20 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '사이트 소개',
+  title: '사이트 소개 | 복지지원금24시',
   description: '복지지원금24시의 운영 목적과 제공하는 서비스에 대해 안내해 드립니다.',
+  openGraph: {
+    title: '사이트 소개 | 복지지원금24시',
+    description: '복지지원금24시의 운영 목적과 제공하는 서비스에 대해 안내해 드립니다.',
+    url: '/about',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '사이트 소개 | 복지지원금24시',
+    description: '복지지원금24시의 운영 목적과 제공하는 서비스에 대해 안내해 드립니다.',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
 };
 
 export default function AboutPage() {

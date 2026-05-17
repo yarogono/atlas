@@ -72,6 +72,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url: `${baseUrl}/posts/${params.slug}`,
       images: coverImage ? [{ url: coverImage }] : [],
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDescription,
+      images: coverImage ? [coverImage] : [],
+    },
     alternates: {
       canonical: `${baseUrl}/posts/${params.slug}`,
     }

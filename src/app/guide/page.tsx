@@ -8,6 +8,13 @@ export const metadata: Metadata = {
     title: '정부지원금 종합 가이드',
     description: '나에게 맞는 정책, 종합 가이드에서 한눈에 확인하세요.',
     url: '/guide',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '정부지원금 종합 가이드',
+    description: '나에게 맞는 정책, 종합 가이드에서 한눈에 확인하세요.',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/guide',

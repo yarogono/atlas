@@ -8,6 +8,13 @@ export const metadata: Metadata = {
     title: '최신 업데이트 및 신청 일정 안내',
     description: '놓치기 쉬운 지원금 신청 일정, 여기서 확인하세요.',
     url: '/updates',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '최신 업데이트 및 신청 일정 안내',
+    description: '놓치기 쉬운 지원금 신청 일정, 여기서 확인하세요.',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/updates',

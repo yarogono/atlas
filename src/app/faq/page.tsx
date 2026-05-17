@@ -9,6 +9,13 @@ export const metadata: Metadata = {
     title: '정부지원금 자주 묻는 질문(FAQ)',
     description: '가장 많이 묻는 질문들을 속 시원하게 해결해드립니다.',
     url: '/faq',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '정부지원금 자주 묻는 질문(FAQ)',
+    description: '가장 많이 묻는 질문들을 속 시원하게 해결해드립니다.',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/faq',

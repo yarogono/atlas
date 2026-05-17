@@ -9,6 +9,13 @@ export const metadata: Metadata = {
     title: '정부지원금 3초 계산기 | 즉시 확인하기',
     description: '나에게 맞는 지원금을 3초만에 계산해보세요.',
     url: '/calculator',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '정부지원금 3초 계산기 | 즉시 확인하기',
+    description: '나에게 맞는 지원금을 3초만에 계산해보세요.',
+    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/calculator',
