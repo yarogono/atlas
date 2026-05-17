@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: '최신 업데이트 및 일정 | 복지지원금24시',
@@ -8,13 +9,11 @@ export const metadata: Metadata = {
     title: '최신 업데이트 및 신청 일정 안내',
     description: '놓치기 쉬운 지원금 신청 일정, 여기서 확인하세요.',
     url: '/updates',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   twitter: {
     card: 'summary_large_image',
     title: '최신 업데이트 및 신청 일정 안내',
     description: '놓치기 쉬운 지원금 신청 일정, 여기서 확인하세요.',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/updates',
@@ -22,6 +21,26 @@ export const metadata: Metadata = {
 };
 
 export default function UpdatesPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: baseUrl
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '최신 업데이트 및 일정',
+        item: `${baseUrl}/updates`
+      }
+    ]
+  };
+
   const recentUpdates = [
     { title: '2026년 하반기 소상공인 새출발기금 접수 시작', date: '2026.05.15', badge: 'NEW', type: '소상공인', url: '/posts/third-post' },
     { title: '청년내일저축계좌 신규 가입자 모집 마감 임박', date: '2026.05.10', badge: '마감임박', type: '청년', url: '/posts/sample-post' },
@@ -31,6 +50,7 @@ export default function UpdatesPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 w-full">
+      <Script id="updates-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">
           ⚡ 최신 <span className="text-blue-600">업데이트</span>

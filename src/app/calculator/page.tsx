@@ -9,13 +9,11 @@ export const metadata: Metadata = {
     title: '정부지원금 3초 계산기 | 즉시 확인하기',
     description: '나에게 맞는 지원금을 3초만에 계산해보세요.',
     url: '/calculator',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   twitter: {
     card: 'summary_large_image',
     title: '정부지원금 3초 계산기 | 즉시 확인하기',
     description: '나에게 맞는 지원금을 3초만에 계산해보세요.',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/calculator',
@@ -23,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 export default function CalculatorPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -35,12 +34,32 @@ export default function CalculatorPage() {
       priceCurrency: 'KRW'
     },
     description: '나에게 맞는 정부지원금 예상 수령액을 3초만에 계산해주는 도구입니다.',
-    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr'}/calculator`
+    url: `${baseUrl}/calculator`
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: baseUrl
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '정부지원금 계산기',
+        item: `${baseUrl}/calculator`
+      }
+    ]
   };
 
   return (
     <div className="max-w-4xl mx-auto py-8">
       <Script id="calc-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Script id="calc-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">

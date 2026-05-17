@@ -13,6 +13,11 @@ export const metadata: Metadata = {
     default: '정부지원금 대상 조회·계산기 | 복지지원금24시',
   },
   description: '정부지원금, 청년정책, 소상공인 지원금 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요.',
+  robots: {
+    index: true,
+    follow: true,
+    'max-image-preview': 'large',
+  },
   openGraph: {
     title: '정부지원금 대상 조회·계산기 | 복지지원금24시',
     description: '정부지원금, 청년정책, 소상공인 지원금 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요.',
@@ -20,13 +25,27 @@ export const metadata: Metadata = {
     siteName: '복지지원금24시',
     locale: 'ko_KR',
     type: 'website',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+    images: [
+      {
+        url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
+        width: 1200,
+        height: 630,
+        alt: '정부지원금 대상 조회 및 계산기 - 복지지원금24시',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: '정부지원금 대상 조회·계산기 | 복지지원금24시',
     description: '정부지원금, 청년정책, 소상공인 지원금 대상 여부를 확인하고 예상 금액까지 즉시 계산해보세요.',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+    images: [
+      {
+        url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
+        width: 1200,
+        height: 630,
+        alt: '정부지원금 대상 조회 및 계산기 - 복지지원금24시',
+      },
+    ],
   },
   verification: {
     google: 'LZPIpa762YBaEvnn4vlmglSsBX9nDQxkyXwp1Mmowzc',

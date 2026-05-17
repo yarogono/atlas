@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: '사이트 소개 | 복지지원금24시',
@@ -7,19 +8,38 @@ export const metadata: Metadata = {
     title: '사이트 소개 | 복지지원금24시',
     description: '복지지원금24시의 운영 목적과 제공하는 서비스에 대해 안내해 드립니다.',
     url: '/about',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   twitter: {
     card: 'summary_large_image',
     title: '사이트 소개 | 복지지원금24시',
     description: '복지지원금24시의 운영 목적과 제공하는 서비스에 대해 안내해 드립니다.',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
 };
 
 export default function AboutPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: baseUrl
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '사이트 소개',
+        item: `${baseUrl}/about`
+      }
+    ]
+  };
+
   return (
     <div className="max-w-3xl mx-auto py-12 px-4">
+      <Script id="about-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       {/* Header */}
       <div className="text-center mb-16">
         <h1 className="text-3xl md:text-5xl font-black text-slate-800 mb-6 tracking-tight">

@@ -55,6 +55,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const description = content.match(/description:\s*"([^"]+)"/)?.[1] || '';
   const date = content.match(/date:\s*"([^"]+)"/)?.[1] || '';
   const coverImage = content.match(/coverImage:\s*"([^"]+)"/)?.[1] || '';
+  const keywords = content.match(/keywords:\s*"([^"]+)"/)?.[1] || '';
   
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
 
@@ -64,19 +65,34 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: seoTitle,
     description: seoDescription,
+    keywords: keywords || undefined,
     openGraph: {
       title: seoTitle,
       description: seoDescription,
       type: 'article',
       publishedTime: date,
       url: `${baseUrl}/posts/${params.slug}`,
-      images: coverImage ? [{ url: coverImage }] : [],
+      images: coverImage ? [
+        {
+          url: coverImage,
+          width: 1200,
+          height: 630,
+          alt: `${seoTitle} - 복지지원금24시`,
+        }
+      ] : [],
     },
     twitter: {
       card: 'summary_large_image',
       title: seoTitle,
       description: seoDescription,
-      images: coverImage ? [coverImage] : [],
+      images: coverImage ? [
+        {
+          url: coverImage,
+          width: 1200,
+          height: 630,
+          alt: `${seoTitle} - 복지지원금24시`,
+        }
+      ] : [],
     },
     alternates: {
       canonical: `${baseUrl}/posts/${params.slug}`,
@@ -105,6 +121,10 @@ export default function PostPage({ params }: { params: { slug: string } }) {
   const coverImage = coverImageMatch ? coverImageMatch[1] : '';
   const hideCoverImageMatch = fileContents.match(/hideCoverImage:\s*(true|false)/);
   const hideCoverImage = hideCoverImageMatch ? hideCoverImageMatch[1] === 'true' : false;
+  const keywordsMatch = fileContents.match(/keywords:\s*"([^"]+)"/);
+  const keywords = keywordsMatch ? keywordsMatch[1] : '';
+  const categoryMatch = fileContents.match(/category:\s*"([^"]+)"/);
+  const category = categoryMatch ? categoryMatch[1] : '정부지원금';
 
   // Pagination을 위한 전체 포스트 리스트 (날짜순 정렬)
   const allFiles = fs.readdirSync(postsDirectory).filter(f => f.endsWith('.mdx'));
@@ -126,16 +146,23 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 
   // JSON-LD 구조화 데이터
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
-  
-  // 1. Article 구조화 데이터 고도화 (publisher, dateModified, mainEntityOfPage 추가)
-  const articleJsonLd = {
+
+  // 본문 텍스트 기반 wordCount 계산 (Frontmatter 제외)
+  const bodyText = fileContents.replace(/---[\s\S]*?---/, '').replace(/<[^>]+>/g, '').replace(/[\[\]{}'"]/g, ' ');
+  const wordCount = bodyText.trim().split(/\s+/).filter(Boolean).length;
+
+  // 1. BlogPosting 구조화 데이터 고도화
+  const articleJsonLd: Record<string, any> = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: title,
     description: description,
     image: coverImage ? [coverImage] : [],
     datePublished: date,
     dateModified: date, // 수정일이 없을 경우 등록일을 기본값으로 매핑
+    inLanguage: 'ko-KR',
+    wordCount,
+    articleSection: category || '정부지원금',
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `${baseUrl}/posts/${params.slug}`
@@ -154,9 +181,15 @@ export default function PostPage({ params }: { params: { slug: string } }) {
       }
     }
   };
+  // keywords 필드 선택적 추가
+  if (keywords) {
+    articleJsonLd.keywords = keywords.split(',').map((k: string) => k.trim());
+  }
 
-  // 2. FAQ 구조화 데이터 자동 추출 및 생성 (본문에 FAQ 컴포넌트가 존재할 시 구글 FAQ 리치 스니펫 매칭용)
-  const faqMatch = fileContents.match(/<FaqAccordion\s+items='([^']+)'/);
+  // 2. FAQPage 구조화 데이터 자동 추출 (FaqAccordion 컴포넌트 홑/쌍따옴표 모두 지원)
+  const faqMatch =
+    fileContents.match(/<FaqAccordion\s+items='([^']+)'/) ||
+    fileContents.match(/<FaqAccordion\s+items="([^"]+)"/);
   let faqJsonLd: any = null;
   if (faqMatch) {
     try {

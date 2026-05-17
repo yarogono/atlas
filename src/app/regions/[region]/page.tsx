@@ -11,22 +11,39 @@ interface Props {
   };
 }
 
+// 안전하게 URL 파라미터를 복수 디코딩하는 헬퍼 함수 (단일/이중 인코딩 및 미인코딩 대응)
+function decodeRegion(region: string): string {
+  try {
+    let decoded = region;
+    while (decoded.includes('%')) {
+      const nextDecoded = decodeURIComponent(decoded);
+      if (nextDecoded === decoded) break;
+      decoded = nextDecoded;
+    }
+    return decoded;
+  } catch {
+    return region;
+  }
+}
+
 // 1. 사전 렌더링을 위한 전국의 모든 지자체 경로 사전 정의 (SSG 빌드용)
+// Next.js 권장사항에 따라 인코딩되지 않은 한글 원본 문자열을 반환하여 Next.js가 라우팅 및 인코딩을 자동 처리하도록 함
 export async function generateStaticParams() {
   return Object.keys(welfareData).map((region) => ({
-    region: encodeURIComponent(region),
+    region: region,
   }));
 }
 
 // 2. 동적 SEO 메타데이터 자동 최적화
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const decodedRegion = decodeURIComponent(params.region);
+  const decodedRegion = decodeRegion(params.region);
   const regionKey = decodedRegion as keyof typeof welfareData;
   const regionInfo = welfareData[regionKey];
 
   const title = `${decodedRegion} 고유가 피해지원금 2차 신청 사용처 조회 | 복지지원금24시`;
   const description = `${regionInfo?.fullName || decodedRegion} 주민분들을 위한 2026 고유가 피해지원금 2차 신청 방법, 대상 기준 및 지역 내 사용처 정보를 3초 만에 실시간으로 조회해 드립니다.`;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+  const canonicalUrl = `${baseUrl}/regions/${encodeURIComponent(decodedRegion)}`;
 
   return {
     title,
@@ -34,24 +51,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: `${baseUrl}/regions/${params.region}`,
+      url: canonicalUrl,
       type: 'website',
-      images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+      images: [
+        {
+          url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
+          width: 1200,
+          height: 630,
+          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 및 사용처 조회 - 복지지원금24시`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
+      images: [
+        {
+          url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
+          width: 1200,
+          height: 630,
+          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 및 사용처 조회 - 복지지원금24시`,
+        },
+      ],
     },
     alternates: {
-      canonical: `${baseUrl}/regions/${params.region}`,
+      canonical: canonicalUrl,
     }
   };
 }
 
 export default function RegionPage({ params }: Props) {
-  const decodedRegion = decodeURIComponent(params.region);
+  const decodedRegion = decodeRegion(params.region);
   const regionKey = decodedRegion as keyof typeof welfareData;
   const regionInfo = welfareData[regionKey] || {
     fullName: decodedRegion,
@@ -110,11 +141,39 @@ export default function RegionPage({ params }: Props) {
     }
   };
 
+  // 5. 검색엔진 노출을 위한 BreadcrumbList 스키마
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: baseUrl
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '지역별 지원금',
+        item: `${baseUrl}/regions`
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: `${decodedRegion} 지원금`,
+        item: `${baseUrl}/regions/${params.region}`
+      }
+    ]
+  };
+
   return (
     <div className="max-w-4xl mx-auto py-8 w-full px-4">
       {/* Dynamic JSON-LD Rich Snippet schemas injection */}
       <Script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <Script id="business-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema) }} />
+      <Script id="region-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <div className="text-center mb-12">
         <div className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-bold px-4 py-1.5 rounded-full text-sm mb-4">

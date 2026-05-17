@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: '우리동네 지자체 지원금 | 복지지원금24시',
@@ -8,13 +9,11 @@ export const metadata: Metadata = {
     title: '우리동네 지자체 지원금 모아보기',
     description: '내가 사는 지역의 혜택, 놓치지 말고 챙기세요.',
     url: '/regions',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   twitter: {
     card: 'summary_large_image',
     title: '우리동네 지자체 지원금 모아보기',
     description: '내가 사는 지역의 혜택, 놓치지 말고 챙기세요.',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/regions',
@@ -23,9 +22,29 @@ export const metadata: Metadata = {
 
 export default function RegionsPage() {
   const regions = ['서울', '경기', '인천', '부산', '대구', '광주', '대전', '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'];
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: baseUrl
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '지역별 지원금',
+        item: `${baseUrl}/regions`
+      }
+    ]
+  };
 
   return (
     <div className="max-w-5xl mx-auto py-8 w-full">
+      <Script id="regions-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">
           📍 우리동네 <span className="text-blue-600">지원금</span>

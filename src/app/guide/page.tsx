@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: '정부지원금 종합 가이드 | 복지지원금24시',
@@ -8,13 +9,11 @@ export const metadata: Metadata = {
     title: '정부지원금 종합 가이드',
     description: '나에게 맞는 정책, 종합 가이드에서 한눈에 확인하세요.',
     url: '/guide',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   twitter: {
     card: 'summary_large_image',
     title: '정부지원금 종합 가이드',
     description: '나에게 맞는 정책, 종합 가이드에서 한눈에 확인하세요.',
-    images: ['https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp'],
   },
   alternates: {
     canonical: '/guide',
@@ -22,8 +21,29 @@ export const metadata: Metadata = {
 };
 
 export default function GuidePage() {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: baseUrl
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '정부지원금 종합 가이드',
+        item: `${baseUrl}/guide`
+      }
+    ]
+  };
+
   return (
     <div className="max-w-6xl mx-auto py-8">
+      <Script id="guide-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">
           📖 정부지원금 <span className="text-blue-600">종합 가이드</span>
