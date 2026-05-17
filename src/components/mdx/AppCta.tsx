@@ -11,12 +11,12 @@ interface AppItem {
 
 export function AppCta() {
   const apps: AppItem[] = [
-    { name: '카카오뱅크', icon: '🏦', color: 'bg-[#FEE500] text-black border-[#FEE500]', url: '#' },
-    { name: '토스뱅크', icon: '💙', color: 'bg-[#0050FF] text-white border-[#0050FF]', url: '#' },
-    { name: '케이뱅크', icon: '🏦', color: 'bg-[#000041] text-white border-[#000041]', url: '#' },
-    { name: '카카오페이', icon: '💛', color: 'bg-[#FEE500] text-black border-[#FEE500]', url: '#' },
-    { name: '네이버페이', icon: '💚', color: 'bg-[#03C75A] text-white border-[#03C75A]', url: '#' },
-    { name: '복지로', icon: '🏛', color: 'bg-[#0a3d7e] text-white border-[#0a3d7e]', url: '#', subtitle: '온라인 신청' },
+    { name: '카카오뱅크', icon: '🏦', color: 'bg-[#FEE500] text-black border-[#FEE500]', url: 'https://www.kakaobank.com/Corp/News/Notices/view/18760' },
+    { name: '토스뱅크', icon: '💙', color: 'bg-[#0050FF] text-white border-[#0050FF]', url: 'https://www.tossbank.com/' },
+    { name: '케이뱅크', icon: '🏦', color: 'bg-[#000041] text-white border-[#000041]', url: 'https://www.kbanknow.com/' },
+    { name: '카카오페이', icon: '💛', color: 'bg-[#FEE500] text-black border-[#FEE500]', url: 'https://www.kakaopay.com/' },
+    { name: '네이버페이', icon: '💚', color: 'bg-[#03C75A] text-white border-[#03C75A]', url: 'https://pay.naver.com/gov/energyrelief' },
+    { name: '복지로', icon: '🏛', color: 'bg-[#0a3d7e] text-white border-[#0a3d7e]', url: 'https://www.mois.go.kr/frt/sub/a06/b07/highOilPriceSupport/screen.do', subtitle: '온라인 신청' },
   ];
 
   return (
