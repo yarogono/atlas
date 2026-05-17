@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
-  
+
   const content = `User-agent: *
 Allow: /
 
