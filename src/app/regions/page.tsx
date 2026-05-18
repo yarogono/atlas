@@ -2,27 +2,29 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
+
 export const metadata: Metadata = {
-  title: '우리동네 지자체 지원금 | 복지지원금24시',
-  description: '서울, 경기, 인천 등 내가 사는 지역의 숨은 지자체 정부지원금을 지도와 함께 확인해보세요.',
+  title: '고유가 피해지원금 지역별 신청 방법 가이드 | 복지지원금24시',
+  description: '전국 지자체별 2026년 고유가 피해지원금 신청 자격, 대상 조건, 온·오프라인 신청 절차 및 가이드를 지도와 함께 확인해 보세요.',
   openGraph: {
-    title: '우리동네 지자체 지원금 모아보기',
-    description: '내가 사는 지역의 혜택, 놓치지 말고 챙기세요.',
-    url: '/regions',
+    title: '고유가 피해지원금 지역별 신청 방법 가이드 | 복지지원금24시',
+    description: '전국 지자체별 고유가 피해지원금 신청 자격과 온·오프라인 실시간 신청 가이드를 제공합니다.',
+    url: `${baseUrl}/regions`,
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '우리동네 지자체 지원금 모아보기',
-    description: '내가 사는 지역의 혜택, 놓치지 말고 챙기세요.',
+    title: '고유가 피해지원금 지역별 신청 방법 가이드 | 복지지원금24시',
+    description: '전국 지자체별 고유가 피해지원금 신청 자격과 온·오프라인 실시간 신청 가이드를 제공합니다.',
   },
   alternates: {
-    canonical: '/regions',
+    canonical: `${baseUrl}/regions`,
   }
 };
 
 export default function RegionsPage() {
   const regions = ['서울', '경기', '인천', '부산', '대구', '광주', '대전', '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'];
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -36,7 +38,7 @@ export default function RegionsPage() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: '지역별 지원금',
+        name: '고유가 피해지원금 지역별 신청 방법 가이드',
         item: `${baseUrl}/regions`
       }
     ]
@@ -47,10 +49,10 @@ export default function RegionsPage() {
       <Script id="regions-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">
-          📍 우리동네 <span className="text-blue-600">지원금</span>
+          📍 고유가 피해지원금 <span className="text-blue-600">지역별 신청 방법 가이드</span>
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          우리 지자체에서만 제공하는 특별한 혜택을 찾아보세요.
+          전국 지자체별 2026 고유가 피해지원금 온라인·오프라인 신청 절차와 대상 기준을 확인하세요.
         </p>
       </div>
 

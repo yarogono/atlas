@@ -40,8 +40,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const regionKey = decodedRegion as keyof typeof welfareData;
   const regionInfo = welfareData[regionKey];
 
-  const title = `${decodedRegion} 고유가 피해지원금 2차 신청 사용처 조회 | 복지지원금24시`;
-  const description = `${regionInfo?.fullName || decodedRegion} 주민분들을 위한 2026 고유가 피해지원금 2차 신청 방법, 대상 기준 및 지역 내 사용처 정보를 3초 만에 실시간으로 조회해 드립니다.`;
+  const title = `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드 | 복지지원금24시`;
+  const description = `${regionInfo?.fullName || decodedRegion} 주민 대상 2026년 고유가 피해지원금 2차 신청 방법 가이드, 지급 조건, 온·오프라인 신청 절차 및 가맹점 정보를 실시간으로 제공합니다.`;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
   const canonicalUrl = `${baseUrl}/regions/${encodeURIComponent(decodedRegion)}`;
 
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
           width: 1200,
           height: 630,
-          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 및 사용처 조회 - 복지지원금24시`,
+          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드 - 복지지원금24시`,
         },
       ],
     },
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
           width: 1200,
           height: 630,
-          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 및 사용처 조회 - 복지지원금24시`,
+          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드 - 복지지원금24시`,
         },
       ],
     },
@@ -104,10 +104,10 @@ export default function RegionPage({ params }: Props) {
     'mainEntity': [
       {
         '@type': 'Question',
-        'name': `${decodedRegion} 고유가 피해지원금 2차 신청 자격과 조건은 무엇인가요?`,
+        'name': `${decodedRegion} 고유가 피해지원금 2차 신청 방법 및 조건은 무엇인가요?`,
         'acceptedAnswer': {
           '@type': 'Answer',
-          'text': `2026년 고유가 피해지원금 2차는 소득 및 재산 기준 등을 충족하는 가구에 한해 지급됩니다. 자세한 자격 요건은 지원금 가이드를 통해 즉시 확인 가능합니다.`
+          'text': `2026년 ${decodedRegion} 고유가 피해지원금 2차 신청은 소득 및 가구원수 요건을 충족하는 가구를 대상으로 합니다. 온라인은 공식 누리집에서, 오프라인은 주소지 관할 행정복지센터에서 신청하실 수 있으며 자세한 일정과 준비 서류는 가이드에서 확인이 가능합니다.`
         }
       },
       {
@@ -126,7 +126,7 @@ export default function RegionPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     'name': regionInfo.officeName,
-    'description': `${decodedRegion} 지역 거주자 대상 공공 복지 혜택 및 지자체 정부지원금 신청 공식 행정 처소입니다.`,
+    'description': `${decodedRegion} 주민 대상 고유가 피해지원금 2차 신청 및 지자체 복지 혜택 공식 접수처입니다.`,
     'telephone': regionInfo.officePhone,
     'address': {
       '@type': 'PostalAddress',
@@ -156,13 +156,13 @@ export default function RegionPage({ params }: Props) {
       {
         '@type': 'ListItem',
         position: 2,
-        name: '지역별 지원금',
+        name: '고유가 피해지원금 지역별 신청 방법 가이드',
         item: `${baseUrl}/regions`
       },
       {
         '@type': 'ListItem',
         position: 3,
-        name: `${decodedRegion} 지원금`,
+        name: `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드`,
         item: `${baseUrl}/regions/${params.region}`
       }
     ]
@@ -177,13 +177,13 @@ export default function RegionPage({ params }: Props) {
 
       <div className="text-center mb-12">
         <div className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-bold px-4 py-1.5 rounded-full text-sm mb-4">
-          📍 {decodedRegion} 사용처 및 혜택 조회
+          📍 {decodedRegion} 고유가 피해지원금 2차 신청 안내
         </div>
         <h1 className="text-3xl md:text-5xl font-black mb-4">
-          {decodedRegion} <span className="text-blue-600">고유가 피해지원금 2차</span>
+          {decodedRegion} <span className="text-blue-600">고유가 피해지원금 2차 신청 방법 가이드</span>
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300 break-keep">
-          {decodedRegion} 고유가 피해지원금 2차 신청 방법, 대상 기준 및 지역 내 사용처 정보를 놓치지 말고 지금 바로 확인해 보세요.
+          {decodedRegion} 지역 주민을 위한 2026 고유가 피해지원금 2차 신청 일정, 신청 자격 기준 및 실시간 온·오프라인 가이드를 확인해보세요.
         </p>
       </div>
 
