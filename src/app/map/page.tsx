@@ -7,10 +7,10 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
 const mapThumbnailUrl = 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/map-thumbnail.webp';
 
 export const metadata: Metadata = {
-  title: '내 주변 사용처 찾기 | 복지지원금24시',
+  title: '고유가 피해지원금 사용처 찾기 조회 | 복지지원금24시',
   description: '내 주변 고유가 피해지원금, 지역사랑상품권 사용처를 실시간 지도로 확인하세요.',
   openGraph: {
-    title: '내 주변 사용처 찾기 | 복지지원금24시',
+    title: '고유가 피해지원금 사용처 찾기 조회 | 복지지원금24시',
     description: '내 주변 고유가 피해지원금, 지역사랑상품권 사용처를 실시간 지도로 확인하세요.',
     url: `${baseUrl}/map`,
     type: 'website',
@@ -19,20 +19,20 @@ export const metadata: Metadata = {
         url: mapThumbnailUrl,
         width: 1200,
         height: 630,
-        alt: '내 주변 사용처 찾기 지도 | 복지지원금24시',
+        alt: '고유가 피해지원금 사용처 찾기 조회 지도 | 복지지원금24시',
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: '내 주변 사용처 찾기 | 복지지원금24시',
+    title: '고유가 피해지원금 사용처 찾기 조회 | 복지지원금24시',
     description: '내 주변 고유가 피해지원금, 지역사랑상품권 사용처를 실시간 지도로 확인하세요.',
     images: [
       {
         url: mapThumbnailUrl,
         width: 1200,
         height: 630,
-        alt: '내 주변 사용처 찾기 지도 | 복지지원금24시',
+        alt: '고유가 피해지원금 사용처 찾기 조회 지도 | 복지지원금24시',
       }
     ]
   },
@@ -55,7 +55,7 @@ export default function MapPage() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: '내 주변 사용처 찾기',
+        name: '고유가 피해지원금 사용처 찾기 조회',
         item: `${baseUrl}/map`
       }
     ]
@@ -66,7 +66,7 @@ export default function MapPage() {
     '@type': 'WebPage',
     '@id': `${baseUrl}/map#webpage`,
     'url': `${baseUrl}/map`,
-    'name': '내 주변 사용처 찾기 | 복지지원금24시',
+    'name': '고유가 피해지원금 사용처 찾기 조회 | 복지지원금24시',
     'description': '내 주변 고유가 피해지원금, 지역사랑상품권 사용처를 실시간 지도로 확인하세요.',
     'publisher': {
       '@type': 'Organization',
