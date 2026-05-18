@@ -5,18 +5,18 @@ import Script from 'next/script';
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
 
 export const metadata: Metadata = {
-  title: '고유가 피해지원금 지역별 신청 방법 가이드 | 복지지원금24시',
-  description: '전국 지자체별 2026년 고유가 피해지원금 신청 자격, 대상 조건, 온·오프라인 신청 절차 및 가이드를 지도와 함께 확인해 보세요.',
+  title: '고유가 피해지원금 지역별 신청 바로가기 | 복지지원금24시',
+  description: '전국 지자체별 2026년 고유가 피해지원금 신청 자격, 대상 조건, 온·오프라인 신청 절차 및 바로가기를 지도와 함께 확인해 보세요.',
   openGraph: {
-    title: '고유가 피해지원금 지역별 신청 방법 가이드 | 복지지원금24시',
-    description: '전국 지자체별 고유가 피해지원금 신청 자격과 온·오프라인 실시간 신청 가이드를 제공합니다.',
+    title: '고유가 피해지원금 지역별 신청 바로가기 | 복지지원금24시',
+    description: '전국 지자체별 고유가 피해지원금 신청 자격과 온·오프라인 실시간 신청 바로가기를 제공합니다.',
     url: `${baseUrl}/regions`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '고유가 피해지원금 지역별 신청 방법 가이드 | 복지지원금24시',
-    description: '전국 지자체별 고유가 피해지원금 신청 자격과 온·오프라인 실시간 신청 가이드를 제공합니다.',
+    title: '고유가 피해지원금 지역별 신청 바로가기 | 복지지원금24시',
+    description: '전국 지자체별 고유가 피해지원금 신청 자격과 온·오프라인 실시간 신청 바로가기를 제공합니다.',
   },
   alternates: {
     canonical: `${baseUrl}/regions`,
@@ -38,7 +38,7 @@ export default function RegionsPage() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: '고유가 피해지원금 지역별 신청 방법 가이드',
+        name: '고유가 피해지원금 지역별 신청 바로가기',
         item: `${baseUrl}/regions`
       }
     ]
@@ -49,7 +49,7 @@ export default function RegionsPage() {
       <Script id="regions-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-black mb-4">
-          📍 고유가 피해지원금 <span className="text-blue-600">지역별 신청 방법 가이드</span>
+          📍 고유가 피해지원금 <span className="text-blue-600">지역별 신청 바로가기</span>
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300">
           전국 지자체별 2026 고유가 피해지원금 온라인·오프라인 신청 절차와 대상 기준을 확인하세요.

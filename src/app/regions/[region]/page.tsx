@@ -40,8 +40,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const regionKey = decodedRegion as keyof typeof welfareData;
   const regionInfo = welfareData[regionKey];
 
-  const title = `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드 | 복지지원금24시`;
-  const description = `${regionInfo?.fullName || decodedRegion} 주민 대상 2026년 고유가 피해지원금 2차 신청 방법 가이드, 지급 조건, 온·오프라인 신청 절차 및 가맹점 정보를 실시간으로 제공합니다.`;
+  const title = `${decodedRegion} 고유가 피해지원금 2차 신청 바로가기 | 복지지원금24시`;
+  const description = `${regionInfo?.fullName || decodedRegion} 주민 대상 2026년 고유가 피해지원금 2차 신청 바로가기, 지급 조건, 온·오프라인 신청 절차 및 가맹점 정보를 실시간으로 제공합니다.`;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
   const canonicalUrl = `${baseUrl}/regions/${encodeURIComponent(decodedRegion)}`;
 
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
           width: 1200,
           height: 630,
-          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드 - 복지지원금24시`,
+          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 바로가기 - 복지지원금24시`,
         },
       ],
     },
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
           width: 1200,
           height: 630,
-          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드 - 복지지원금24시`,
+          alt: `${decodedRegion} 고유가 피해지원금 2차 신청 바로가기 - 복지지원금24시`,
         },
       ],
     },
@@ -156,13 +156,13 @@ export default function RegionPage({ params }: Props) {
       {
         '@type': 'ListItem',
         position: 2,
-        name: '고유가 피해지원금 지역별 신청 방법 가이드',
+        name: '고유가 피해지원금 지역별 신청 바로가기',
         item: `${baseUrl}/regions`
       },
       {
         '@type': 'ListItem',
         position: 3,
-        name: `${decodedRegion} 고유가 피해지원금 2차 신청 방법 가이드`,
+        name: `${decodedRegion} 고유가 피해지원금 2차 신청 바로가기`,
         item: `${baseUrl}/regions/${params.region}`
       }
     ]
@@ -180,10 +180,10 @@ export default function RegionPage({ params }: Props) {
           📍 {decodedRegion} 고유가 피해지원금 2차 신청 안내
         </div>
         <h1 className="text-3xl md:text-5xl font-black mb-4">
-          {decodedRegion} <span className="text-blue-600">고유가 피해지원금 2차 신청 방법 가이드</span>
+          {decodedRegion} <span className="text-blue-600">고유가 피해지원금 2차 신청 바로가기</span>
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300 break-keep">
-          {decodedRegion} 지역 주민을 위한 2026 고유가 피해지원금 2차 신청 일정, 신청 자격 기준 및 실시간 온·오프라인 가이드를 확인해보세요.
+          {decodedRegion} 지역 주민을 위한 2026 고유가 피해지원금 2차 신청 일정, 신청 자격 기준 및 실시간 온·오프라인 신청 바로가기를 확인해보세요.
         </p>
       </div>
 
