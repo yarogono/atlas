@@ -117,7 +117,10 @@ export default function PostPage({ params }: { params: { slug: string } }) {
   const description = descMatch ? descMatch[1] : '';
   const dateMatch = fileContents.match(/date:\s*"([^"]+)"/);
   const date = dateMatch ? dateMatch[1] : '';
+  const lastModMatch = fileContents.match(/lastModified:\s*"([^"]+)"/);
+  const lastModified = lastModMatch ? lastModMatch[1] : '';
   const coverImageMatch = fileContents.match(/coverImage:\s*"([^"]+)"/);
+
   const coverImage = coverImageMatch ? coverImageMatch[1] : '';
   const hideCoverImageMatch = fileContents.match(/hideCoverImage:\s*(true|false)/);
   const hideCoverImage = hideCoverImageMatch ? hideCoverImageMatch[1] === 'true' : false;
@@ -159,7 +162,8 @@ export default function PostPage({ params }: { params: { slug: string } }) {
     description: description,
     image: coverImage ? [coverImage] : [],
     datePublished: date,
-    dateModified: date, // 수정일이 없을 경우 등록일을 기본값으로 매핑
+    dateModified: lastModified || date, // 수정일이 있을 경우 최종 수정일을 매핑
+
     inLanguage: 'ko-KR',
     wordCount,
     articleSection: category || '정부지원금',
@@ -252,8 +256,11 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight break-keep">
           {title} <span className="text-blue-600 dark:text-blue-400 text-2xl md:text-4xl block mt-2">지원대상 및 신청방법 총정리</span>
         </h1>
-        <div className="flex items-center gap-4 text-sm text-slate-500 font-medium">
-          <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">{date}</span>
+        <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-slate-500 font-medium">
+          <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">발행일: {date}</span>
+          {lastModified && lastModified !== date && (
+            <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">최근수정일: {lastModified}</span>
+          )}
           <span>조회수 1.2만</span>
         </div>
       </div>

@@ -81,15 +81,28 @@ export async function GET() {
       .filter((fileName) => fileName.endsWith('.mdx'))
       .map((fileName) => {
         const slug = fileName.replace(/\.mdx$/, '');
+        const fullPath = path.join(postsDirectory, fileName);
+        const fileContents = fs.readFileSync(fullPath, 'utf8');
+        
+        const lastModMatch = fileContents.match(/lastModified:\s*"([^"]+)"/);
+        const dateMatch = fileContents.match(/date:\s*"([^"]+)"/);
+        
+        let lastModDate = new Date().toISOString();
+        if (lastModMatch) {
+          lastModDate = new Date(lastModMatch[1]).toISOString();
+        } else if (dateMatch) {
+          lastModDate = new Date(dateMatch[1]).toISOString();
+        }
+        
         return {
           url: `${baseUrl}/posts/${slug}`,
-          lastModified: new Date().toISOString(),
+          lastModified: lastModDate,
           changeFrequency: 'weekly',
           priority: 0.8,
         };
       });
   } catch (e) {
-    console.error('Failed to read posts directory for sitemap');
+    console.error('Failed to read posts directory for sitemap', e);
   }
 
   // 3. 지자체 동적 페이지 추가 (pSEO)
