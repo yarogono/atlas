@@ -127,12 +127,13 @@ export default function RootLayout({
             </div>
 
             <nav className="flex items-center gap-4 md:gap-6 font-medium overflow-x-auto whitespace-nowrap pb-1 md:pb-0 scrollbar-hide text-sm md:text-base">
-              <Link href="/calculator" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-yellow-300 font-bold">🧮 3초 계산기</Link>
-              <Link href="/eligibility" className="hover:text-blue-200 transition-colors">대상조회</Link>
-              <Link href="/guide" className="hover:text-blue-200 transition-colors">종합가이드</Link>
-              <Link href="/regions" className="hover:text-blue-200 transition-colors">🗺️ 지역별</Link>
-              <Link href="/faq" className="hover:text-blue-200 transition-colors">FAQ</Link>
-              <Link href="/updates" className="hover:text-blue-200 transition-colors">최신업데이트</Link>
+              <Link href="/calculator" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-yellow-350 font-black">🧮 계산기 목록</Link>
+              <Link href="/calculator/stock-average" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">📉 평단가</Link>
+              <Link href="/calculator/compound-interest" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">📈 복리</Link>
+              <Link href="/calculator/transfer-tax" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">🏠 양도세</Link>
+              <span className="text-white/20 hidden md:inline">|</span>
+              <Link href="/eligibility" className="hover:text-blue-200 transition-colors text-white/85 text-xs md:text-sm">대상조회</Link>
+              <Link href="/guide" className="hover:text-blue-200 transition-colors text-white/85 text-xs md:text-sm">가이드</Link>
             </nav>
 
             <div className="hidden md:flex items-center">
