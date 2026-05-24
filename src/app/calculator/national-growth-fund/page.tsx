@@ -3,28 +3,29 @@ import Script from 'next/script';
 import NationalGrowthFundCalc from '@/components/calculator/NationalGrowthFundCalc';
 
 export const metadata: Metadata = {
-  title: '국민성장펀드 절세 계산기 & 수익률 계산기 | 연말정산 환급금 시뮬레이터',
-  description: '국민성장펀드 절세 계산기 및 국민성장펀드 수익률 계산기 서비스를 제공합니다. 연봉과 펀드 투자금액을 입력하고, 연말정산 세액 소득공제 환급금과 가입 즉시 얻는 확정 절세 수익률을 실시간 시뮬레이션해 보세요.',
+  title: '국민성장펀드 나의 실질 투자 가성비 계산기 | 절세 및 손실방어 시뮬레이터',
+  description: '국민성장펀드 가입 시 세제 혜택(소득공제 최대 1,600만 원)과 연말정산 환급 세액 및 확정 절세 수익률을 실시간 계산합니다. 정부의 20% 후순위 손실 우선분담이 적용된 나의 실제 원금 변동률을 실시간 차트로 시뮬레이션해 보세요.',
   keywords: [
-    '국민성장펀드 절세 계산기',
-    '국민성장펀드 수익률 계산기',
+    '국민성장펀드',
     '국민성장펀드 계산기',
-    '국민성장펀드 소득공제 계산기',
-    '국민성장펀드 환급금 계산기',
-    '연말정산 소득공제',
-    '연말정산 환급금',
-    '종합소득세율 환급',
-    '세제혜택 펀드'
+    '국민성장펀드 가성비 계산기',
+    '국민성장펀드 수익률 계산기',
+    '국민성장펀드 절세 계산기',
+    '국민성장펀드 소득공제',
+    '국민성장펀드 환급금',
+    '국민성장펀드 손실방어',
+    '연말정산 소득공제 계산기',
+    '절세 펀드 계산기'
   ],
   openGraph: {
-    title: '국민성장펀드 절세 계산기 & 수익률 계산기 | 연말정산 환급금 시뮬레이터',
-    description: '국민성장펀드 절세 계산기 및 국민성장펀드 수익률 계산기 서비스를 제공합니다. 연봉과 펀드 투자금액을 입력하고, 연말정산 세액 소득공제 환급금과 가입 즉시 얻는 확정 절세 수익률을 실시간 시뮬레이션해 보세요.',
+    title: '국민성장펀드 나의 실질 투자 가성비 계산기 | 절세 및 손실방어 시뮬레이터',
+    description: '국민성장펀드 가입 시 세제 혜택(소득공제 최대 1,600만 원)과 연말정산 환급 세액 및 확정 절세 수익률을 실시간 계산합니다. 정부의 20% 후순위 손실 우선분담이 적용된 나의 실제 원금 변동률을 실시간 차트로 시뮬레이션해 보세요.',
     url: '/calculator/national-growth-fund',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '국민성장펀드 절세 계산기 & 수익률 계산기 | 연말정산 환급금 시뮬레이터',
-    description: '국민성장펀드 절세 계산기 및 국민성장펀드 수익률 계산기 서비스를 제공합니다. 연봉과 펀드 투자금액을 입력하고, 연말정산 세액 소득공제 환급금과 가입 즉시 얻는 확정 절세 수익률을 실시간 시뮬레이션해 보세요.',
+    title: '국민성장펀드 나의 실질 투자 가성비 계산기 | 절세 및 손실방어 시뮬레이터',
+    description: '국민성장펀드 가입 시 세제 혜택(소득공제 최대 1,600만 원)과 연말정산 환급 세액 및 확정 절세 수익률을 실시간 계산합니다. 정부의 20% 후순위 손실 우선분담이 적용된 나의 실제 원금 변동률을 실시간 차트로 시뮬레이션해 보세요.',
   },
   alternates: {
     canonical: '/calculator/national-growth-fund',
@@ -37,7 +38,7 @@ export default function NationalGrowthFundPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: '국민성장펀드 절세 계산기 & 수익률 계산기',
+    name: '국민성장펀드 나의 실질 투자 가성비 계산기',
     operatingSystem: 'Any',
     applicationCategory: 'FinanceApplication',
     offers: {
@@ -45,7 +46,7 @@ export default function NationalGrowthFundPage() {
       price: '0',
       priceCurrency: 'KRW'
     },
-    description: '국민성장펀드 절세 계산기 및 국민성장펀드 수익률 계산기. 투자예정 금액과 연간 소득을 기반으로 연말정산 소득공제 예상 환급 세액 및 실질 절세 수익률을 실시간 산출하는 계산기.',
+    description: '국민성장펀드 가입자를 위한 연말정산 절세 혜택 시뮬레이터. 소득공제 금액, 예상 세금 환급액, 확정 절세 수익률 및 최고세율 자산가 대비 가성비 지수를 산출하며, 정부 20% 후순위 손실 보전 우선분담 구조에 따른 실제 원금 변동률을 실시간 비교 차트로 시각화합니다.',
     url: `${baseUrl}/calculator/national-growth-fund`
   };
 
@@ -68,7 +69,7 @@ export default function NationalGrowthFundPage() {
       {
         '@type': 'ListItem',
         position: 3,
-        name: '국민성장펀드 절세 & 수익률 계산기',
+        name: '국민성장펀드 나의 실질 투자 가성비 계산기',
         item: `${baseUrl}/calculator/national-growth-fund`
       }
     ]
@@ -78,6 +79,11 @@ export default function NationalGrowthFundPage() {
     <div className="max-w-5xl mx-auto py-8 px-4">
       <Script id="fund-calc-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Script id="fund-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {/* Load Chart.js CDN before the page becomes interactive */}
+      <Script 
+        src="https://cdn.jsdelivr.net/npm/chart.js" 
+        strategy="beforeInteractive"
+      />
       <NationalGrowthFundCalc />
     </div>
   );

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function CalculatorHubPage() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
-  
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -83,13 +83,33 @@ export default function CalculatorHubPage() {
     },
     {
       id: 'national-growth-fund',
-      title: '🇰🇷 국민성장펀드 절세 계산기',
-      subtitle: '연말정산 소득공제 환급금 & 절세 수익률 시뮬레이터',
-      description: '국민성장펀드 납입 시 확보하는 세액 혜택을 정밀 계산합니다. 3단계 누진 소득공제 산식(최대 1,800만 원 한도)과 종합소득세율 구간을 결합해 세금 환급금 및 가입 즉시 챙기는 확정 수익률을 계산하며, 하방 -20% 손실 방어 안전마진 구조를 시각화합니다.',
+      title: '🛡️ 국민성장펀드 가성비 계산기',
+      subtitle: '실질 절세 혜택 & 하방 -20% 손실방어 시뮬레이터',
+      description: '국민성장펀드 가입 시 가입자의 소득 과세표준 구간에 따른 세액 환급과 절세 수익률을 실시간 계산하고, 정부의 20% 후순위 손실 우선분담 구조에 따라 시장 반토막(-50%) 시에도 내 손실은 -30%로 제한되는 안전마진 효과를 차트로 비교해 줍니다.',
       url: '/calculator/national-growth-fund',
+      category: '재테크 · 세금',
+      tag: '강력 추천 🔥',
+      badgeColor: 'bg-indigo-50 text-indigo-650 dark:bg-indigo-950/40 dark:text-indigo-400'
+    },
+    {
+      id: 'national-growth-fund-limit',
+      title: '국민성장펀드 소득공제 한도 계산기',
+      subtitle: '4단계 누진 소득공제 한도 & 예상 세금 환급액 계산기',
+      description: '2026년 출시된 국민참여형 국민성장펀드의 납입금액별 4단계 소득공제 누진 구간(최대 1,800만 원 한도)에 따른 연말정산 실질 환급 세액 및 투자원금 대비 확정 선수익률 효과를 실시간으로 간편하게 모의 계산해 줍니다.',
+      url: '/calculator/national-growth-fund-limit',
       category: '재테크 · 세금',
       tag: '신규 🌟',
       badgeColor: 'bg-red-50 text-red-650 dark:bg-red-950/40 dark:text-red-400'
+    },
+    {
+      id: 'national-growth-fund-couple',
+      title: '👩‍❤️‍👨 국민성장펀드 부부 절세 전략 계산기',
+      subtitle: '부부 명의 유불리 자동 판정 및 배우자 증여세 한도 계산기',
+      description: '부부가 함께 국민성장펀드 가입 시 남편 명의와 아내 명의 중 누구로 가입해야 환급 혜택이 큰지 실시간 비교하고, 배우자 간 일시 이체 시 6억 원 증여세 공제 한도의 위반 여부 안전 검증과 지역별 오프라인 재고 판매처 추천까지 제공합니다.',
+      url: '/calculator/national-growth-fund-couple',
+      category: '부부재테크 · 세금',
+      tag: '추천 ⭐',
+      badgeColor: 'bg-violet-50 text-violet-650 dark:bg-violet-950/40 dark:text-violet-400'
     },
     {
       id: 'subsidy',
