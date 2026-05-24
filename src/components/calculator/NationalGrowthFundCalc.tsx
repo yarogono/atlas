@@ -47,7 +47,7 @@ export default function NationalGrowthFundCalc() {
     // 1. 연간 투자 한도 최대 1억 원 제한 경고 여부
     const isOverLimit = rawInvest > 10000;
     const actualInvest = Math.min(rawInvest, 10000); // 실투자액 (1억 캡)
-
+    
     // 2. 세제 혜택 최대 납입 한도는 7천만 원
     const taxDeductibleInvest = Math.min(actualInvest, 7000);
 
@@ -87,10 +87,10 @@ export default function NationalGrowthFundCalc() {
 
   return (
     <div className="not-prose w-full select-none transition-all duration-300">
-
+      
       {/* 국민성장펀드 메인 카드 프레임 */}
       <div className="w-full bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden mb-8">
-
+        
         {/* 헤더 */}
         <div className="px-6 py-7 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
           <h1 className="text-2xl md:text-3xl font-black text-slate-855 dark:text-slate-100 tracking-tight flex items-center gap-2">
@@ -103,7 +103,7 @@ export default function NationalGrowthFundCalc() {
 
         {/* 메인 폼 */}
         <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white dark:bg-slate-900">
-
+          
           {/* [1단계] 사용자 입력 영역 (5열 차지) */}
           <div className="lg:col-span-5 space-y-6">
             <h2 className="text-lg font-black text-slate-800 dark:text-slate-250 uppercase tracking-widest flex items-center gap-1.5">
@@ -126,7 +126,7 @@ export default function NationalGrowthFundCalc() {
                 />
                 <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-base font-bold">만원</span>
               </div>
-
+              
               {/* 한도 초과 경고 메시지 */}
               {fundCalculations.isOverLimit && (
                 <div className="mt-2 text-sm text-amber-600 dark:text-amber-455 font-bold flex items-center gap-1.5 leading-normal bg-amber-50/50 dark:bg-amber-950/20 p-3 rounded-lg border border-amber-100 dark:border-amber-900/30">
@@ -153,7 +153,7 @@ export default function NationalGrowthFundCalc() {
 
               {/* 과세표준 구간 신속 매핑 단축 단추 */}
               <div className="space-y-2 pt-2">
-                <span className="block text-sm font-bold text-slate-500 dark:text-slate-405">자주 찾는 연봉 구간 단축 버튼</span>
+                <span className="block text-sm font-bold text-slate-505 dark:text-slate-405">자주 찾는 연봉 구간 단축 버튼</span>
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { label: '연봉 3,500만', val: '3500' },
@@ -166,10 +166,11 @@ export default function NationalGrowthFundCalc() {
                     <button
                       key={btn.val}
                       onClick={() => handleQuickSalary(btn.val)}
-                      className={`py-3 px-3 text-center text-sm font-bold rounded-xl border transition-all active:scale-95 ${annualSalary === btn.val
+                      className={`py-3 px-3 text-center text-sm font-bold rounded-xl border transition-all active:scale-95 ${
+                        annualSalary === btn.val
                           ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
-                          : 'bg-slate-100/80 dark:bg-slate-800 border-none text-slate-700 dark:text-slate-350 hover:bg-slate-200 dark:hover:bg-slate-700'
-                        }`}
+                          : 'bg-slate-100/80 dark:bg-slate-850 border-none text-slate-700 dark:text-slate-350 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      }`}
                     >
                       {btn.label}
                     </button>
@@ -188,7 +189,7 @@ export default function NationalGrowthFundCalc() {
 
             {hasInputs ? (
               <div className="space-y-6">
-
+                
                 {/* 3대 지표 카드 */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {/* 총 소득공제액 */}
@@ -208,7 +209,7 @@ export default function NationalGrowthFundCalc() {
                     <span className="text-2xl md:text-3xl font-black text-yellow-600 dark:text-yellow-455 tracking-tight block">
                       {fundCalculations.refund.toFixed(1).replace(/\.0$/, '')}만 원
                     </span>
-                    <span className="text-xs md:text-sm text-yellow-600/70 dark:text-yellow-500/70 block mt-1.5 font-semibold">
+                    <span className="text-xs md:text-sm text-yellow-605/70 dark:text-yellow-500/70 block mt-1.5 font-semibold">
                       (세율 {fundCalculations.taxRate.toFixed(1)}% 적용)
                     </span>
                   </div>
@@ -219,7 +220,7 @@ export default function NationalGrowthFundCalc() {
                     <span className="text-2xl md:text-3xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight block">
                       {fundCalculations.realYield.toFixed(2)}%
                     </span>
-                    <span className="text-xs md:text-sm text-emerald-550/80 bg-emerald-50 dark:bg-emerald-950/50 px-3 py-1 rounded-full inline-block mt-1.5 font-bold">
+                    <span className="text-xs md:text-sm text-emerald-550/80 bg-emerald-55 dark:bg-emerald-950/50 px-3 py-1 rounded-full inline-block mt-1.5 font-bold">
                       가입 즉시 확정
                     </span>
                   </div>
@@ -234,7 +235,7 @@ export default function NationalGrowthFundCalc() {
                     <h3 className="text-lg font-black text-blue-700 dark:text-blue-400 m-0">
                       정부 지원 하방 안전마진 -20% 손실 방어
                     </h3>
-                    <p className="text-base text-slate-650 dark:text-slate-350 leading-relaxed m-0 font-medium">
+                    <p className="text-base text-slate-655 dark:text-slate-350 leading-relaxed m-0 font-medium">
                       재정 및 운용사 자금 후순위 출자로 인해 펀드 손실 발생 시 <strong className="text-blue-600 dark:text-blue-450 font-extrabold">최대 -20%</strong>까지 우선적으로 손실을 흡수해 줍니다.
                     </p>
                   </div>
@@ -264,7 +265,7 @@ export default function NationalGrowthFundCalc() {
 
       {/* 국민성장펀드 기초지식 및 극대화 팁 가이드 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-slate-800 dark:text-slate-200">
-
+        
         {/* 국민성장펀드란? */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md transition-transform duration-200 hover:scale-[1.01] hover:shadow-lg">
           <div className="flex items-center gap-2.5 mb-3.5">
