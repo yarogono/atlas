@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Script from 'next/script';
-import TransferTaxCalc from '@/components/calculator/TransferTaxCalcNew';
+// 최신 부동산 양도소득세 계산기 컴포넌트 임포트
+import TransferTaxCalc from '@/components/calculator/TransferTaxCalc';
 
 export const metadata: Metadata = {
   title: '부동산 양도소득세 계산기 | 최신 양도세 비과세·장특공제 시뮬레이터',
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function TransferTaxPage() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
-  
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',

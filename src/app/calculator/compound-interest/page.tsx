@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Script from 'next/script';
-import CompoundInterestCalc from '@/components/calculator/CompoundInterestCalcNew';
+import CompoundInterestCalc from '@/components/calculator/CompoundInterestCalc';
 
 export const metadata: Metadata = {
   title: '간편 복리계산기 | 주식·코인·적립식 복리 수익률 계산기',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function CompoundInterestPage() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
-  
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
