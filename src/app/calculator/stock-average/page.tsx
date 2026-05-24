@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Script from 'next/script';
-import StockAverageCalc from '@/components/calculator/StockAverageCalc';
+import StockAverageCalc from '@/components/calculator/StockAverageCalcNew';
 
 export const metadata: Metadata = {
   title: '주식·코인 평단가 계산기 | 실시간 물타기 평균단가 계산기',

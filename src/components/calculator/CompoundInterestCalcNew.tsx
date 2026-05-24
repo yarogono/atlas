@@ -36,7 +36,6 @@ export default function CompoundInterestCalc() {
     }
     
     const formattedInteger = integerPart ? parseInt(integerPart, 10).toLocaleString('ko-KR') : '';
-    
     if (parts.length === 2) {
       return `${formattedInteger}.${parts[1]}`;
     }
@@ -95,7 +94,6 @@ export default function CompoundInterestCalc() {
       currentAsset = newAsset;
 
       // 4. 세금 및 순수익 계산
-      // 누적 순수익 = 세전 최종 금액 - 누적 투자원금
       const totalInterestSoFar = currentAsset - totalDeposit;
       const taxSoFar = Math.max(totalInterestSoFar * taxRate, 0);
       const netProfitSoFar = totalInterestSoFar - taxSoFar;
@@ -153,18 +151,14 @@ export default function CompoundInterestCalc() {
     // 최소값 찾기 (원금 혹은 복리 자산 중 최솟값)
     const minVal = Math.min(...history.map(h => parseRawNumber(h.cumulativeDeposit))) || 0;
     
-    // Y축 높이 스케일링용 분모
     const yDiff = maxVal - minVal > 0 ? maxVal - minVal : 1;
 
-    // 좌표 생성 매퍼
     const getCoords = (idx: number, val: number) => {
       const x = paddingLeft + (idx / pVal) * chartW;
-      // y는 아래로 갈수록 커지므로 반대로 매핑
       const y = svgHeight - paddingBottom - ((val - minVal) / yDiff) * chartH;
       return { x, y };
     };
 
-    // 복리 자산 라인 & 그라데이션 영역 패스
     let assetPath = '';
     let assetAreaPath = '';
     let principalPath = '';
@@ -188,14 +182,12 @@ export default function CompoundInterestCalc() {
       }
     });
 
-    // 축 눈금선 데이터 (Y축 4단계 표시)
     const yTicks = Array.from({ length: 4 }).map((_, i) => {
       const val = minVal + (yDiff * i) / 3;
       const y = svgHeight - paddingBottom - (i / 3) * chartH;
       return { val, y };
     });
 
-    // X축 눈금선 데이터
     const xTicksCount = Math.min(pVal + 1, 6);
     const xTicks = Array.from({ length: xTicksCount }).map((_, i) => {
       const idx = Math.round((pVal * i) / (xTicksCount - 1));
@@ -222,7 +214,6 @@ export default function CompoundInterestCalc() {
     };
   }, [calculationResults]);
 
-  // 현재 표시할 호버 아이템
   const currentHoverItem = hoveredIndex !== null ? calculationResults.history[hoveredIndex] : null;
   const hoverCoords = currentHoverItem !== null ? chartSvgData.getCoords(hoveredIndex!, currentHoverItem.assetAfterTax) : null;
 
@@ -234,10 +225,10 @@ export default function CompoundInterestCalc() {
         
         {/* 헤더 */}
         <div className="px-6 py-7 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-          <h1 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-850 dark:text-slate-100 tracking-tight flex items-center gap-2">
             🧮 간편 복리계산기
           </h1>
-          <p className="text-sm md:text-base text-slate-500 dark:text-slate-450 mt-1.5 leading-relaxed">
+          <p className="text-base md:text-lg text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
             주식, 코인, 적립식 투자의 회차별 복리 시뮬레이터 및 세후 이자 시각화 차트
           </p>
         </div>
@@ -247,14 +238,14 @@ export default function CompoundInterestCalc() {
           
           {/* [좌측] 투자 설정 폼 (5열 차지) */}
           <div className="lg:col-span-5 space-y-6">
-            <h2 className="text-lg font-black text-slate-805 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+            <h2 className="text-lg font-black text-slate-800 dark:text-slate-250 uppercase tracking-widest flex items-center gap-1.5">
               <span className="w-2 h-4 bg-blue-500 rounded-full"></span>
               투자 설정
             </h2>
 
             {/* 초기 투자 원금 */}
-            <div className="space-y-2.5">
-              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-350">
+            <div className="space-y-2">
+              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-300">
                 초기 투자 원금 (원)
               </label>
               <div className="relative">
@@ -263,16 +254,16 @@ export default function CompoundInterestCalc() {
                   value={initialPrincipal}
                   onChange={(e) => handleNumericChange(e.target.value, setInitialPrincipal)}
                   placeholder="원금 입력"
-                  className="w-full py-4 pl-5 pr-12 font-black text-lg text-slate-805 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
+                  className="w-full py-3.5 pl-4 pr-10 font-bold text-base text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
                 />
-                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-450 text-base font-bold">원</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">원</span>
               </div>
             </div>
 
             {/* 매 회차 추가 납입액 */}
-            <div className="space-y-2.5">
-              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-350">
-                매 회차 추가 납입 (적립식 복리 계산)
+            <div className="space-y-2">
+              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-300">
+                매 회차 추가 납입 (적립식 복리 적용)
               </label>
               <div className="relative">
                 <input
@@ -280,16 +271,16 @@ export default function CompoundInterestCalc() {
                   value={additionalDeposit}
                   onChange={(e) => handleNumericChange(e.target.value, setAdditionalDeposit)}
                   placeholder="납입금 입력"
-                  className="w-full py-4 pl-5 pr-12 font-black text-lg text-slate-805 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
+                  className="w-full py-3.5 pl-4 pr-10 font-bold text-base text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
                 />
-                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-455 text-base font-bold">원</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">원</span>
               </div>
             </div>
 
             {/* 계산 기간 & 기간 단위 */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2.5">
-                <label className="block text-base font-extrabold text-slate-700 dark:text-slate-350">
+              <div className="space-y-2">
+                <label className="block text-base font-extrabold text-slate-700 dark:text-slate-300">
                   계산 기간
                 </label>
                 <input
@@ -299,17 +290,17 @@ export default function CompoundInterestCalc() {
                   value={period}
                   onChange={(e) => setPeriod(e.target.value)}
                   placeholder="예: 20"
-                  className="w-full py-4 px-5 font-black text-lg text-slate-805 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
+                  className="w-full py-3.5 px-4 font-bold text-base text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
                 />
               </div>
-              <div className="space-y-2.5">
-                <label className="block text-base font-extrabold text-slate-700 dark:text-slate-350">
+              <div className="space-y-2">
+                <label className="block text-base font-extrabold text-slate-700 dark:text-slate-300">
                   기간 단위
                 </label>
                 <select
                   value={periodUnit}
                   onChange={(e) => setPeriodUnit(e.target.value as '일' | '월' | '년')}
-                  className="w-full py-4 px-4 font-black text-base text-slate-805 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500/10 transition-all cursor-pointer shadow-sm"
+                  className="w-full py-3.5 px-3 font-bold text-base text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500/10 transition-all cursor-pointer shadow-sm"
                 >
                   <option value="일">일 (Daily)</option>
                   <option value="월">월 (Monthly)</option>
@@ -319,8 +310,8 @@ export default function CompoundInterestCalc() {
             </div>
 
             {/* 목표 수익률 */}
-            <div className="space-y-2.5">
-              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-350">
+            <div className="space-y-2">
+              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-300">
                 목표 수익률 (1회차 당)
               </label>
               <div className="relative">
@@ -329,21 +320,21 @@ export default function CompoundInterestCalc() {
                   value={rate}
                   onChange={(e) => setRate(e.target.value)}
                   placeholder="수익률 입력"
-                  className="w-full py-4 pl-5 pr-12 font-black text-lg text-slate-805 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
+                  className="w-full py-3.5 pl-4 pr-10 font-bold text-base text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all shadow-sm"
                 />
-                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-455 text-base font-bold">%</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">%</span>
               </div>
             </div>
 
             {/* 세금 적용 */}
-            <div className="space-y-2.5">
-              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-350">
-                세금 적용
+            <div className="space-y-2">
+              <label className="block text-base font-extrabold text-slate-700 dark:text-slate-300">
+                세금 적용 필터
               </label>
               <select
                 value={taxRateType}
                 onChange={(e) => setTaxRateType(e.target.value as 'none' | 'normal' | 'preferential')}
-                className="w-full py-4 px-4 font-black text-base text-slate-850 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500/10 transition-all cursor-pointer shadow-sm"
+                className="w-full py-3.5 px-3 font-bold text-base text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500/10 transition-all cursor-pointer shadow-sm"
               >
                 <option value="none">비과세 (0%)</option>
                 <option value="normal">일반 과세 (15.4%)</option>
@@ -359,16 +350,16 @@ export default function CompoundInterestCalc() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* 최종 자산 */}
               <div className="bg-blue-50/40 dark:bg-blue-950/10 border border-blue-100/50 dark:border-blue-900/30 p-5 rounded-2xl shadow-sm text-center">
-                <span className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest block mb-1">최종 자산 (세후)</span>
-                <span className="text-xl md:text-2xl font-black text-slate-850 dark:text-slate-100 tracking-tight">
+                <span className="text-sm font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest block mb-1">최종 자산 (세후)</span>
+                <span className="text-xl md:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
                   {Math.round(calculationResults.finalAsset).toLocaleString()}원
                 </span>
               </div>
 
               {/* 총 투자 원금 */}
               <div className="bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/80 p-5 rounded-2xl shadow-sm text-center">
-                <span className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-1">총 투자 원금</span>
-                <span className="text-xl md:text-2xl font-black text-slate-850 dark:text-slate-100 tracking-tight">
+                <span className="text-sm font-bold text-slate-500 uppercase tracking-widest block mb-1">총 투자 원금</span>
+                <span className="text-xl md:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
                   {calculationResults.finalPrincipal.toLocaleString()}원
                 </span>
               </div>
@@ -379,7 +370,7 @@ export default function CompoundInterestCalc() {
                 <span className="text-xl md:text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight block">
                   {Math.round(calculationResults.finalNetProfit).toLocaleString()}원
                 </span>
-                <span className="text-xs md:text-sm font-bold text-emerald-500/80 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-full inline-block mt-1">
+                <span className="text-xs md:text-sm font-bold text-emerald-500/85 bg-emerald-50 dark:bg-emerald-950/50 px-3 py-1 rounded-full inline-block mt-1">
                   수익률 {calculationResults.finalYield.toFixed(2)}%
                 </span>
               </div>
@@ -388,7 +379,7 @@ export default function CompoundInterestCalc() {
             {/* 차트 캔버스 프레임 */}
             <div className="border border-slate-150 dark:border-slate-800 rounded-3xl p-4 bg-slate-50/30 dark:bg-slate-950/10 relative">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-wider">복리 시각화 그래프</span>
+                <span className="text-sm font-black text-slate-400 uppercase tracking-wider">복리 시각화 그래프</span>
                 <div className="flex gap-4 text-xs font-bold text-slate-500">
                   <div className="flex items-center gap-1.5">
                     <span className="inline-block w-2.5 h-1 bg-emerald-500 rounded-full"></span>
@@ -408,7 +399,6 @@ export default function CompoundInterestCalc() {
                   className="w-full h-auto overflow-visible select-none"
                 >
                   <defs>
-                    {/* 복리 선 그라데이션 채우기 */}
                     <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
                       <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
@@ -428,12 +418,11 @@ export default function CompoundInterestCalc() {
                         strokeWidth="1"
                         strokeDasharray="2 2"
                       />
-                      {/* Y축 텍스트 라벨 */}
                       <text
                         x={chartSvgData.paddingLeft - 8}
                         y={tick.y + 4}
                         textAnchor="end"
-                        fontSize="10"
+                        fontSize="11"
                         fontWeight="bold"
                         fill="#94a3b8"
                       >
@@ -494,7 +483,7 @@ export default function CompoundInterestCalc() {
                         x={tick.x}
                         y={chartSvgData.svgHeight - chartSvgData.paddingBottom + 16}
                         textAnchor="middle"
-                        fontSize="10"
+                        fontSize="11"
                         fontWeight="bold"
                         fill="#94a3b8"
                       >
@@ -503,7 +492,7 @@ export default function CompoundInterestCalc() {
                     </g>
                   ))}
 
-                  {/* 인터랙티브 마우스 호버 구역 분할 슬라이스 (transparent rects) */}
+                  {/* 인터랙티브 마우스 호버 구역 분할 슬라이스 */}
                   {calculationResults.history.map((_, idx) => {
                     const cellW = chartSvgData.chartW / calculationResults.pVal;
                     const xStart = chartSvgData.paddingLeft + (idx - 0.5) * cellW;
@@ -524,7 +513,6 @@ export default function CompoundInterestCalc() {
                   {/* 호버 노드 표시선 & 서클 이펙트 */}
                   {hoverCoords && currentHoverItem && (
                     <g>
-                      {/* 수직 하이라이트선 */}
                       <line
                         x1={hoverCoords.x}
                         y1={chartSvgData.paddingTop}
@@ -534,21 +522,19 @@ export default function CompoundInterestCalc() {
                         strokeWidth="1"
                         strokeDasharray="2 2"
                       />
-                      {/* 원금 점 노드 */}
                       <circle
                         cx={hoverCoords.x}
                         cy={chartSvgData.getCoords(hoveredIndex!, parseRawNumber(currentHoverItem.cumulativeDeposit)).y}
-                        r="3.5"
+                        r="4"
                         fill="#3b82f6"
                       />
-                      {/* 복리 자산 대형 서클 노드 */}
                       <circle
                         cx={hoverCoords.x}
                         cy={hoverCoords.y}
-                        r="6"
+                        r="6.5"
                         fill="#10b981"
                         stroke="#ffffff"
-                        strokeWidth="2"
+                        strokeWidth="2.5"
                         className="shadow-sm"
                       />
                     </g>
@@ -558,7 +544,7 @@ export default function CompoundInterestCalc() {
                 {/* 절대 좌표 호버 툴팁 Popover */}
                 {hoverCoords && currentHoverItem && (
                   <div
-                    className="absolute bg-slate-900/95 text-white p-3 rounded-xl border border-slate-800 shadow-2xl text-xs md:text-sm font-sans leading-normal pointer-events-none transition-all duration-75"
+                    className="absolute bg-slate-900/95 text-white p-3.5 rounded-xl border border-slate-800 shadow-2xl text-xs font-sans leading-normal pointer-events-none transition-all duration-75"
                     style={{
                       left: `${(hoverCoords.x / chartSvgData.svgWidth) * 100}%`,
                       top: `${Math.max((hoverCoords.y / chartSvgData.svgHeight) * 100 - 35, 0)}%`,
@@ -566,14 +552,14 @@ export default function CompoundInterestCalc() {
                       zIndex: 30,
                     }}
                   >
-                    <div className="font-bold text-center border-b border-white/10 pb-1.5 mb-1.5 text-emerald-450">
+                    <div className="font-bold text-center border-b border-white/10 pb-1 mb-1.5 text-emerald-400">
                       {hoveredIndex === 0 ? '시작 시점' : `${hoveredIndex}회차 (${periodUnit})`}
                     </div>
-                    <div className="flex justify-between gap-4 mb-0.5">
+                    <div className="flex justify-between gap-4">
                       <span>복리 자산:</span>
                       <span className="font-bold">{Math.round(currentHoverItem.assetAfterTax).toLocaleString()}원</span>
                     </div>
-                    <div className="flex justify-between gap-4 mb-0.5">
+                    <div className="flex justify-between gap-4">
                       <span>누적 원금:</span>
                       <span className="font-bold">{currentHoverItem.cumulativeDeposit}원</span>
                     </div>
@@ -596,24 +582,24 @@ export default function CompoundInterestCalc() {
       <div className="w-full bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg p-6 mb-12">
         <h2 className="text-lg font-black text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
           <span>📋 회차별 상세 리포트 내역</span>
-          <span className="text-xs md:text-sm text-slate-400 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-800">
+          <span className="text-xs md:text-sm text-slate-500 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded border border-slate-100 dark:border-slate-800 font-bold">
             총 {calculationResults.pVal}개 회차
           </span>
         </h2>
 
-        <div className="max-h-[350px] overflow-y-auto overflow-x-auto w-full border border-slate-150 dark:border-slate-800 rounded-2xl scrollbar-thin">
-          <table className="w-full min-w-[700px] border-collapse text-sm md:text-base text-left">
+        <div className="max-h-[350px] overflow-y-auto overflow-x-auto border border-slate-150 dark:border-slate-800 rounded-2xl scrollbar-thin">
+          <table className="w-full min-w-[700px] border-collapse text-sm text-left">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-950/60 text-slate-550 dark:text-slate-400 font-bold border-b border-slate-150 dark:border-slate-800">
-                <th className="py-3.5 px-4 text-left w-20">회차</th>
-                <th className="py-3.5 px-4 text-right">회차별 이자</th>
-                <th className="py-3.5 px-4 text-right">누적 원금</th>
-                <th className="py-3.5 px-4 text-right">최종 자산 (세전)</th>
-                <th className="py-3.5 px-4 text-right text-emerald-600 dark:text-emerald-400">최종 자산 (세후)</th>
-                <th className="py-3.5 px-4 text-right text-indigo-500">누적 순수익</th>
+              <tr className="bg-slate-50 dark:bg-slate-950/60 text-slate-550 dark:text-slate-400 font-black border-b border-slate-150 dark:border-slate-800 text-sm">
+                <th className="py-4 px-4 text-left w-24">회차</th>
+                <th className="py-4 px-4 text-right">회차별 이자</th>
+                <th className="py-4 px-4 text-right">누적 원금</th>
+                <th className="py-4 px-4 text-right">최종 자산 (세전)</th>
+                <th className="py-4 px-4 text-right text-emerald-600 dark:text-emerald-400">최종 자산 (세후)</th>
+                <th className="py-4 px-4 text-right text-indigo-500">누적 순수익</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-350">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-350 text-sm md:text-base">
               {calculationResults.history.map((item) => (
                 <tr
                   key={item.cycle}
@@ -650,10 +636,10 @@ export default function CompoundInterestCalc() {
             <h2 className="text-lg font-black m-0 tracking-tight text-slate-800 dark:text-slate-200">복리의 개념</h2>
           </div>
           <p className="text-base text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
-            복리(Compound Interest)란 원금에 대해서만 이자가 계산되는 단리(Simple Interest)와 달리, <strong>'이자에 또 이자가 붙는'</strong> 획기적인 이자 계산 방식입니다.
+            복리(Compound Interest)란 원금에 대해서만 이자가 계산되는 단리(Simple Interest)와 달리, <strong className="font-extrabold text-blue-600 dark:text-blue-400">'이자에 또 이자가 붙는'</strong> 획기적인 이자 계산 방식입니다.
           </p>
-          <p className="text-base text-slate-650 dark:text-slate-350 leading-relaxed">
-            시간이 지날수록 발생한 이자가 다시 원금으로 합산되어 새로운 이자를 창출하기 때문에, 투자 기간이 늘어날수록 자산 증가 속도가 비약적인 기하급수적 곡선을 그리기 시작합니다. 세계적인 물리학자 알베르트 아인슈타인은 이를 두고 <strong className="font-extrabold text-slate-850 dark:text-slate-100">"복리는 인류 최대의 수학적 발견이자 세계 제8대 불가사의"</strong>라고 칭송한 바 있습니다.
+          <p className="text-base text-slate-600 dark:text-slate-350 leading-relaxed">
+            시간이 지날수록 발생한 이자가 다시 원금으로 합산되어 새로운 이자를 창출하기 때문에, 투자 기간이 늘어날수록 자산 증가 속도가 비약적인 기하급수적 곡선을 그리기 시작합니다. 세계적인 물리학자 알베르트 아인슈타인은 이를 두고 <strong className="font-extrabold text-blue-650 dark:text-blue-405">"복리는 인류 최대의 수학적 발견이자 세계 제8대 불가사의"</strong>라고 칭송한 바 있습니다.
           </p>
         </div>
 
@@ -664,14 +650,14 @@ export default function CompoundInterestCalc() {
             <h2 className="text-lg font-black m-0 tracking-tight text-slate-800 dark:text-slate-200">마법의 복리 72 법칙</h2>
           </div>
           <p className="text-base text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
-            투자의 세계에서 내가 투입한 자산이 정확히 <strong className="font-extrabold text-blue-600 dark:text-blue-400">두 배(100% 수익률)</strong>가 되기까지 걸리는 시간(연수)을 구하는 간단하고 획기적인 법칙이 바로 <strong className="font-extrabold text-blue-600 dark:text-blue-400">'72 법칙'</strong>입니다.
+            투자의 세계에서 내가 투입한 자산이 정확히 <strong className="font-extrabold text-blue-600 dark:text-blue-400">두 배(100% 수익률)</strong>가 되기까지 걸리는 기간을 구하는 간단하고 획기적인 법칙이 바로 <strong className="font-extrabold text-blue-605 dark:text-blue-400">'72 법칙'</strong>입니다.
           </p>
-          <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 font-mono text-sm text-slate-600 dark:text-slate-300 text-center mb-4 font-bold">
+          <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 font-mono text-base text-slate-650 dark:text-slate-350 text-center mb-4 font-black">
             두 배 도달 기간 = 72 / 연간 수익률 (%)
           </div>
-          <p className="text-base text-slate-650 dark:text-slate-355 leading-relaxed">
-            예를 들어 매년 꾸준히 <strong className="font-extrabold text-blue-600 dark:text-blue-400">8%</strong>의 연복리 수익을 실현하는 금융 상품이 있다면, 자산이 두 배가 되기까지는 <code className="bg-slate-100 dark:bg-slate-850 px-1.5 py-0.5 rounded text-sm">72 / 8 = 9</code>년의 세월이 소요됩니다. 
-            만약 복리 이율을 높여 연 수익률 <strong className="font-extrabold text-blue-600 dark:text-blue-400">12%</strong>를 보장받는다면, 원금이 두 배가 되는 시간은 단 <strong className="font-extrabold text-blue-600 dark:text-blue-400">6년</strong>으로 단축됩니다.
+          <p className="text-base text-slate-650 dark:text-slate-350 leading-relaxed">
+            예를 들어 매년 꾸준히 <strong className="font-extrabold text-blue-655 dark:text-blue-400">8%</strong>의 연복리 수익을 실현하는 금융 상품이 있다면, 자산이 두 배가 되기까지는 <code className="bg-slate-100 dark:bg-slate-850 px-1.5 py-0.5 rounded text-sm">72 / 8 = 9</code>년의 세월이 소요됩니다. 
+            만약 복리 이율을 높여 연 수익률 <strong className="font-extrabold text-blue-655 dark:text-blue-400">12%</strong>를 보장받는다면, 원금이 두 배가 되는 시간은 단 <strong className="font-extrabold text-blue-655 dark:text-blue-400">6년</strong>으로 단축됩니다.
           </p>
         </div>
 
@@ -682,37 +668,9 @@ export default function CompoundInterestCalc() {
             <h2 className="text-lg font-black m-0 tracking-tight text-slate-800 dark:text-slate-200">적립식 복리 전략</h2>
           </div>
           <p className="text-base text-slate-650 dark:text-slate-400 leading-relaxed mb-4">
-            목돈을 한 번에 넣어두는 거치식 복리도 훌륭하지만, 일상 속에서 <strong className="font-extrabold text-emerald-600 dark:text-emerald-400">매 주기마다 추가 납입을 곁들이는 적립식 복리 투자</strong>는 가장 보편적이고 안전한 자산 증식 설계입니다.
-          </p>
-          <p className="text-base text-slate-650 dark:text-slate-355 leading-relaxed">
-            주기적인 분할 매수(추가 납입) 효과를 통해 자산 가격 변동의 리스크를 평균화하는 <strong className="font-extrabold text-emerald-600 dark:text-emerald-400">달러 비용 평균법(Dollar Cost Averaging)</strong>을 극대화할 수 있으며, 이자에 이자가 불어나는 속도에 적립 원금의 가중치가 더해져 훨씬 강력한 마법이 실현됩니다.<br/><br/>
-            또한 세금 적용 옵션(15.4%의 일반 과세 등)에 유의하시어 실제 세후 최종 자산을 치밀하게 계산하고 포트폴리오를 구성해 나가시기를 적극 권장합니다.
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  );
-}r border-slate-100 dark:border-slate-700/60 font-mono text-xs text-slate-600 dark:text-slate-350 text-center mb-4 font-bold">
-            두 배 도달 기간 = 72 / 연간 수익률 (%)
-          </div>
-          <p className="text-sm text-slate-650 dark:text-slate-450 leading-relaxed">
-            예를 들어 매년 꾸준히 <strong className="font-extrabold text-blue-600 dark:text-blue-400">8%</strong>의 연복리 수익을 실현하는 금융 상품이 있다면, 자산이 두 배가 되기까지는 <code className="bg-slate-100 dark:bg-slate-850 px-1 py-0.5 rounded text-xs">72 / 8 = 9</code>년의 세월이 소요됩니다. 
-            만약 복리 이율을 높여 연 수익률 <strong className="font-extrabold text-blue-600 dark:text-blue-400">12%</strong>를 보장받는다면, 원금이 두 배가 되는 시간은 단 <strong className="font-extrabold text-blue-600 dark:text-blue-400">6년</strong>으로 단축됩니다.
-          </p>
-        </div>
-
-        {/* 적립식 복리 및 세금 유의사항 */}
-        <div className="bg-emerald-50/30 dark:bg-emerald-950/10 border border-emerald-250/40 dark:border-emerald-900/20 rounded-3xl p-6 shadow-md transition-transform duration-200 hover:scale-[1.01] hover:shadow-lg">
-          <div className="flex items-center gap-2.5 mb-3.5 text-emerald-600 dark:text-emerald-500">
-            <span className="text-xl">💡</span>
-            <h2 className="text-base font-extrabold m-0 tracking-tight">적립식 복리 전략</h2>
-          </div>
-          <p className="text-sm text-slate-650 dark:text-slate-400 leading-relaxed mb-4">
             목돈을 한 번에 넣어두는 거치식 복리도 훌륭하지만, 일상 속에서 <strong className="font-extrabold">매 주기마다 추가 납입을 곁들이는 적립식 복리 투자</strong>는 가장 보편적이고 안전한 자산 증식 설계입니다.
           </p>
-          <p className="text-sm text-slate-650 dark:text-slate-450 leading-relaxed">
+          <p className="text-base text-slate-650 dark:text-slate-350 leading-relaxed">
             주기적인 분할 매수(추가 납입) 효과를 통해 자산 가격 변동의 리스크를 평균화하는 <strong className="font-extrabold">달러 비용 평균법(Dollar Cost Averaging)</strong>을 극대화할 수 있으며, 이자에 이자가 불어나는 속도에 적립 원금의 가중치가 더해져 훨씬 강력한 마법이 실현됩니다.<br/><br/>
             또한 세금 적용 옵션(15.4%의 일반 과세 등)에 유의하시어 실제 세후 최종 자산을 치밀하게 계산하고 포트폴리오를 구성해 나가시기를 적극 권장합니다.
           </p>

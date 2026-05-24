@@ -82,6 +82,16 @@ export default function CalculatorHubPage() {
       badgeColor: 'bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400'
     },
     {
+      id: 'national-growth-fund',
+      title: '🇰🇷 국민성장펀드 절세 계산기',
+      subtitle: '연말정산 소득공제 환급금 & 절세 수익률 시뮬레이터',
+      description: '국민성장펀드 납입 시 확보하는 세액 혜택을 정밀 계산합니다. 3단계 누진 소득공제 산식(최대 1,800만 원 한도)과 종합소득세율 구간을 결합해 세금 환급금 및 가입 즉시 챙기는 확정 수익률을 계산하며, 하방 -20% 손실 방어 안전마진 구조를 시각화합니다.',
+      url: '/calculator/national-growth-fund',
+      category: '재테크 · 세금',
+      tag: '신규 🌟',
+      badgeColor: 'bg-red-50 text-red-650 dark:bg-red-950/40 dark:text-red-400'
+    },
+    {
       id: 'subsidy',
       title: '💰 정부지원금 3초 계산기',
       subtitle: '맞춤형 지원 복지 지원금 즉시 조회',

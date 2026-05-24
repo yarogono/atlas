@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Script from 'next/script';
-import CompoundInterestCalc from '@/components/calculator/CompoundInterestCalc';
+import CompoundInterestCalc from '@/components/calculator/CompoundInterestCalcNew';
 
 export const metadata: Metadata = {
   title: '간편 복리계산기 | 주식·코인·적립식 복리 수익률 계산기',

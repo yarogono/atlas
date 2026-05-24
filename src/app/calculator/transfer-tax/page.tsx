@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Script from 'next/script';
-import TransferTaxCalc from '@/components/calculator/TransferTaxCalc';
+import TransferTaxCalc from '@/components/calculator/TransferTaxCalcNew';
 
 export const metadata: Metadata = {
   title: '부동산 양도소득세 계산기 | 최신 양도세 비과세·장특공제 시뮬레이터',
