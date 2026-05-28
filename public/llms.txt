@@ -1,0 +1,21 @@
+# 복지지원금24시 (Atlas Welfare Hub)
+
+> 대한민국 정부지원금, 지자체 복지 정책, 2026년 전국동시지방선거 사전투표소 정보 및 맞춤형 혜택 계산기를 제공하는 종합 복지 안내 포털 사이트입니다.
+
+## 핵심 웹 서비스 및 도구 (Core Web Tools)
+- [홈페이지](https://atlas.yaro.co.kr/): 복지지원금24시 메인 허브 및 실시간 정부 지원 혜택 한눈에 모아보기.
+- [정부지원금 가이드](https://atlas.yaro.co.kr/guide): 생애주기별, 대상별(청년, 소상공인 등) 맞춤형 정부 보조금 신청 가이드.
+- [지자체별 복지 지도](https://atlas.yaro.co.kr/map): 전국 17개 시·도 및 세부 기초지자체별 복지 혜택과 지역화폐(서울사랑상품권, 경기지역화폐 등) 사용처 실시간 지도 조회.
+- [자가진단 복지 계산기](https://atlas.yaro.co.kr/calculator): 소득별 아동수당, 청년희망적금 만기 금액, 소상공인 특례대출 가능 여부 등을 바로 계산해 볼 수 있는 인터랙티브 자가진단 계산기.
+
+## 2026 지방선거 사전투표 정보 (Special Topic: 2026 Pre-Voting Guide)
+전국 44개 주요 도시별 2026년 제9회 전국동시지방선거 사전투표소 위치, 준비물, 시간, 관내/관외 투표 절차를 제공하는 전용 가이드 포스트 정보입니다.
+- [서울 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-seoul): 서울특별시 사전투표소 정보 및 위치 찾기 바로가기.
+- [수원 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-suwon): 경기도 수원시 사전투표소 정보 및 위치 찾기 바로가기.
+- [인천 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-incheon): 인천광역시 사전투표소 정보 및 위치 찾기 바로가기.
+- [천안 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-cheonan): 충청남도 천안시 사전투표소 정보 및 위치 찾기 바로가기.
+- [안산 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-ansan): 경기도 안산시 사전투표소 정보 및 위치 찾기 바로가기.
+- [창원 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-changwon): 경상남도 창원시 사전투표소 정보 및 위치 찾기 바로가기.
+- [전주 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-jeonju): 전북특별자치도 전주시 사전투표소 정보 및 위치 찾기 바로가기.
+- [청주 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-cheongju): 충청북도 청주시 사전투표소 정보 및 위치 찾기 바로가기.
+- [제주 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-jeju): 제주특별자치도 사전투표소 정보 및 위치 찾기 바로가기.
