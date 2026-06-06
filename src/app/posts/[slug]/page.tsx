@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { InteractiveCalc } from '@/components/InteractiveCalc';
@@ -242,6 +243,12 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 
   const contentWithoutFrontmatter = fileContents.replace(/---[\s\S]*?---/, '');
 
+  // 조사/문자가 바로 붙어 파싱되지 않는 마크다운 볼드(**) 문제를 해결하기 위한 전처리 (개행 및 테이블 구분자 | 제외)
+  const processedContent = contentWithoutFrontmatter.replace(
+    /\*\*([^*|\r\n]+?)\*\*([ㄱ-ㅎ가-힣a-zA-Z0-9])/g,
+    '<strong>$1</strong>$2'
+  );
+
   return (
     <article className="max-w-3xl mx-auto w-full">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
@@ -283,7 +290,15 @@ export default function PostPage({ params }: { params: { slug: string } }) {
           prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-3 prose-h2:mt-16 prose-h2:mb-6
           prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
           prose-strong:text-[#0a3d7e] prose-strong:font-black">
-        <MDXRemote source={contentWithoutFrontmatter} components={components} />
+        <MDXRemote 
+          source={processedContent} 
+          components={components} 
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+            }
+          }}
+        />
       </div>
 
       <Pagination prev={prevPost} next={nextPost} />

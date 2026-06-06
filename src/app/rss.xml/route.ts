@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   // 실제 도메인 주소로 교체 (로컬에서는 localhost 우선)
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';

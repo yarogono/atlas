@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import welfareData from '../../data/regions-welfare.json';
 
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
