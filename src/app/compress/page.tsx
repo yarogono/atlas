@@ -26,10 +26,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/subsidy24-1779012468324.webp',
+        url: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/blog-assets/image_compressor_thumbnail_1781215337629-1781215355336.webp',
         width: 1200,
         height: 630,
-        alt: '무료 이미지 용량 줄이기 및 압축 - 복지지원금24시',
+        alt: '무료 이미지 용량 줄이기 - 100% 안전한 브라우저 압축기 | 복지지원금24시',
       },
     ],
   },
