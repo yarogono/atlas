@@ -131,6 +131,7 @@ export default function RootLayout({
               <Link href="/calculator/stock-average" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">📉 평단가</Link>
               <Link href="/calculator/compound-interest" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">📈 복리</Link>
               <Link href="/calculator/transfer-tax" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">🏠 양도세</Link>
+              <Link href="/compress" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">🖼️ 이미지 압축</Link>
               <span className="text-white/20 hidden md:inline">|</span>
               <Link href="/eligibility" className="hover:text-blue-200 transition-colors text-white/85 text-xs md:text-sm">대상조회</Link>
               <Link href="/guide" className="hover:text-blue-200 transition-colors text-white/85 text-xs md:text-sm">가이드</Link>
