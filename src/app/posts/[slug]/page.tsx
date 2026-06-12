@@ -57,6 +57,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const date = content.match(/date:\s*"([^"]+)"/)?.[1] || '';
   const coverImage = content.match(/coverImage:\s*"([^"]+)"/)?.[1] || '';
   const keywords = content.match(/keywords:\s*"([^"]+)"/)?.[1] || '';
+  const authorMatch = content.match(/author:\s*"([^"]+)"/);
+  const author = authorMatch ? authorMatch[1] : '정부정책 에디터';
   
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://atlas.yaro.co.kr';
 
@@ -67,6 +69,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: seoTitle,
     description: seoDescription,
     keywords: keywords || undefined,
+    authors: [{ name: author }],
     openGraph: {
       title: seoTitle,
       description: seoDescription,
@@ -106,7 +109,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
   const filePath = path.join(postsDirectory, `${params.slug}.mdx`);
 
   if (!fs.existsSync(filePath)) {
-    return <div className="p-10 text-center text-xl text-slate-500 font-bold">포스트를 찾을 수 없습니다 😢</div>;
+    return <div className="p-10 text-center text-xl text-slate-500 font-bold">포스트를 찾을 수 없습니다.</div>;
   }
 
   const fileContents = fs.readFileSync(filePath, 'utf8');
@@ -129,6 +132,8 @@ export default function PostPage({ params }: { params: { slug: string } }) {
   const keywords = keywordsMatch ? keywordsMatch[1] : '';
   const categoryMatch = fileContents.match(/category:\s*"([^"]+)"/);
   const category = categoryMatch ? categoryMatch[1] : '정부지원금';
+  const authorMatch = fileContents.match(/author:\s*"([^"]+)"/);
+  const author = authorMatch ? authorMatch[1] : '정부정책 에디터';
 
   // Pagination을 위한 전체 포스트 리스트 (날짜순 정렬)
   const allFiles = fs.readdirSync(postsDirectory).filter(f => f.endsWith('.mdx'));
@@ -173,9 +178,9 @@ export default function PostPage({ params }: { params: { slug: string } }) {
       '@id': `${baseUrl}/posts/${params.slug}`
     },
     author: [{
-      '@type': 'Organization',
-      name: '복지지원금24시',
-      url: baseUrl,
+      '@type': 'Person',
+      name: author,
+      jobTitle: '정부정책 칼럼니스트',
     }],
     publisher: {
       '@type': 'Organization',
@@ -265,6 +270,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         </h1>
         <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-slate-500 font-medium">
           <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">발행일: {date}</span>
+          <span className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-1 rounded-full">작성자: {author}</span>
           {lastModified && lastModified !== date && (
             <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">최근수정일: {lastModified}</span>
           )}

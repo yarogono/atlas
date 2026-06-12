@@ -8,6 +8,7 @@ export interface Post {
   description: string;
   coverImage?: string;
   category?: string;
+  author?: string;
   content: string;
 }
 
@@ -64,6 +65,7 @@ export function getPostBySlug(slug: string): Post {
     description: data.description || '',
     coverImage: data.coverImage,
     category: data.category,
+    author: data.author || '정부정책 에디터',
     content,
   };
 }

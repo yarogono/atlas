@@ -1,21 +1,126 @@
 # 복지지원금24시 (Atlas Welfare Hub)
 
-> 대한민국 정부지원금, 지자체 복지 정책, 2026년 전국동시지방선거 사전투표소 정보 및 맞춤형 혜택 계산기를 제공하는 종합 복지 안내 포털 사이트입니다.
+> 대한민국 정부지원금, 지자체 복지 정책, 2026년 전국동시지방선거 사전투표소 정보 및 맞춤형 혜택 계산기를 제공하는 종합 복지 안내 포털 사이트입니다. 모든 정보는 구글 E-E-A-T 기준을 준수하여 정확하고 최신화된 내용으로 에디터에 의해 성실히 검증 및 서술됩니다.
 
 ## 핵심 웹 서비스 및 도구 (Core Web Tools)
 - [홈페이지](https://atlas.yaro.co.kr/): 복지지원금24시 메인 허브 및 실시간 정부 지원 혜택 한눈에 모아보기.
 - [정부지원금 가이드](https://atlas.yaro.co.kr/guide): 생애주기별, 대상별(청년, 소상공인 등) 맞춤형 정부 보조금 신청 가이드.
 - [지자체별 복지 지도](https://atlas.yaro.co.kr/map): 전국 17개 시·도 및 세부 기초지자체별 복지 혜택과 지역화폐(서울사랑상품권, 경기지역화폐 등) 사용처 실시간 지도 조회.
 - [자가진단 복지 계산기](https://atlas.yaro.co.kr/calculator): 소득별 아동수당, 청년희망적금 만기 금액, 소상공인 특례대출 가능 여부 등을 바로 계산해 볼 수 있는 인터랙티브 자가진단 계산기.
+- [무료 이미지 압축기](https://atlas.yaro.co.kr/compress): 100% 브라우저 로컬 연산 기반으로 동작하여 사진 유출 걱정 없는 안전한 이미지 용량 줄이기, 리사이징 및 WebP/AVIF 인코더 툴킷.
 
-## 2026 지방선거 사전투표 정보 (Special Topic: 2026 Pre-Voting Guide)
-전국 44개 주요 도시별 2026년 제9회 전국동시지방선거 사전투표소 위치, 준비물, 시간, 관내/관외 투표 절차를 제공하는 전용 가이드 포스트 정보입니다.
-- [서울 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-seoul): 서울특별시 사전투표소 정보 및 위치 찾기 바로가기.
-- [수원 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-suwon): 경기도 수원시 사전투표소 정보 및 위치 찾기 바로가기.
-- [인천 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-incheon): 인천광역시 사전투표소 정보 및 위치 찾기 바로가기.
-- [천안 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-cheonan): 충청남도 천안시 사전투표소 정보 및 위치 찾기 바로가기.
-- [안산 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-ansan): 경기도 안산시 사전투표소 정보 및 위치 찾기 바로가기.
-- [창원 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-changwon): 경상남도 창원시 사전투표소 정보 및 위치 찾기 바로가기.
-- [전주 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-jeonju): 전북특별자치도 전주시 사전투표소 정보 및 위치 찾기 바로가기.
-- [청주 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-cheongju): 충청북도 청주시 사전투표소 정보 및 위치 찾기 바로가기.
-- [제주 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-jeju): 제주특별자치도 사전투표소 정보 및 위치 찾기 바로가기.
+## 이미지 최적화 도구 (pSEO Toolkits)
+특정 목적으로 유입되는 사용자들을 위해 최적의 압축 규격(품질, 포맷, 해상도 리사이징 한도)을 동적으로 미리 셋업해 주는 맞춤형 이미지 최적화 도구 리스트입니다.
+- [사람인 이력서 사진 용량 줄이기](https://atlas.yaro.co.kr/compress/saramin-resume): 이력서 등록에 맞춘 최적의 설정으로 사진 용량을 200KB 이하(JPEG)로 즉시 최적화.
+- [정부24 첨부파일 사진 크기 줄이기](https://atlas.yaro.co.kr/compress/gov24-document): 민원 신청 시 용량 초과 에러 방지를 위해 첨부 파일 및 서류 사진을 2MB 이하(JPEG)로 축소 및 압축.
+- [이미지 용량 100kb 이하로 줄이기](https://atlas.yaro.co.kr/compress/target-100kb): 초경량 WebP/JPEG 파일로 용량을 100KB 이하로 정밀 압축.
+- [이미지 가로 960px로 맞추기](https://atlas.yaro.co.kr/compress/width-960px): 세로 비율을 보존하며 이미지의 가로 크기를 정확히 960px로 리사이징.
+- [삼일회계법인 감사 보고서 이미지 용량 줄이기](https://atlas.yaro.co.kr/compress/samil-report): 회계 감사 보고서 및 첨부 영수증 사진을 1MB 이하(JPEG)로 선명하게 압축.
+- [국세청 홈택스 신고용 첨부 파일 줄이기](https://atlas.yaro.co.kr/compress/hometax-tax): 부가가치세, 종합소득세 등 홈택스 증빙 서류 이미지의 용량을 1MB 이하(JPEG)로 최적화.
+- [티스토리 블로그 이미지 용량 및 WebP 변환](https://atlas.yaro.co.kr/compress/tistory-upload): 구글 애드센스 승인 및 모바일 로딩 가속화를 위해 이미지를 WebP 포맷과 1000px 해상도로 압축 최적화.
+- [인스타그램 업로드 최적 해상도 맞추기](https://atlas.yaro.co.kr/compress/instagram-upload): 인스타그램 화질 저하를 방지하기 위해 가로 1080px 해상도와 JPEG 포맷으로 최적 변환.
+- [이미지 용량 500kb 이하로 줄이기](https://atlas.yaro.co.kr/compress/target-500kb): 온라인 커뮤니티, 사내 포털 업로드 규격인 500KB 제한에 맞춰 WebP/JPEG 변환 및 압축.
+- [블로그용 이미지 최적화 및 용량 다이어트](https://atlas.yaro.co.kr/compress/blog-optimization): 네이버/워드프레스 블로그 구글 SEO 로딩 가속화를 위해 해상도 1000px 리사이즈 및 WebP 압축.
+
+## 주요 정책 & 복지 정보 가이드 (Core Policy & Welfare Guides)
+### 1. 고유가 피해지원금 및 상세 사용처 안내
+- [2026 고유가 피해지원금 2차 신청·대상 총정리](https://atlas.yaro.co.kr/posts/2026-oil-support-guide): 2차 지원금 신청 방법, 대상 기준 및 지급일 총정리.
+- [고유가 피해지원금 이의 신청 방법 (상위 30% 미대상자)](https://atlas.yaro.co.kr/posts/2026-oil-support-objection): 탈락 통보자에 대한 이의 신청 조건, 서류 및 온라인/오프라인 절차 안내.
+- [고유가 피해지원금 편의점 사용처](https://atlas.yaro.co.kr/posts/oil-support-convenience): 편의점 프랜차이즈(CU, GS25, 세븐일레븐, 이마트24) 사용 조건.
+- [CU 편의점 결제 사용 가이드](https://atlas.yaro.co.kr/posts/oil-support-cu): CU 가맹점과 본사 직영점의 차이 및 사용처 조회.
+- [GS25 편의점 결제 사용 가이드](https://atlas.yaro.co.kr/posts/oil-support-gs25): GS25 가맹점 실시간 사용처 조회 및 직영 매장 구분법.
+- [이마트24 편의점 결제 사용 가이드](https://atlas.yaro.co.kr/posts/oil-support-emart24): 이마트24 가맹점 조건 및 대형 할인점 내 매장 예외 기준.
+- [다이소 매장 결제 사용 가이드](https://atlas.yaro.co.kr/posts/oil-support-daiso): 직영점 vs 가맹점 구분과 연 매출 30억 원 기준에 따른 사용 안내.
+- [대형 마트 매장 결제 여부](https://atlas.yaro.co.kr/posts/oil-support-large-mart): 이마트, 홈플러스, 롯데마트 등 대형 마트 및 SSM 결제 제한 이유 및 대체 마트 조회.
+- [타 지역 주유소 결제 여부](https://atlas.yaro.co.kr/posts/oil-support-out-of-region-gas-station): 주유소 매출 제한 완화 혜택 및 거주 지역 외 주유소 결제 기준 안내.
+- [스타벅스 결제 사용 여부](https://atlas.yaro.co.kr/posts/oil-support-starbucks): 대기업 직영 매장 관련 예외 조건 및 대체 카페 안내.
+- [메가커피 결제 사용 가이드](https://atlas.yaro.co.kr/posts/oil-support-megacoffee): 일반 가맹점과 직영점 차이 및 연 매출 30억 원 제한 조건.
+- [컴포즈 커피 결제 사용 가이드](https://atlas.yaro.co.kr/posts/oil-support-composecoffee): 컴포즈 커피 가맹점 사용 제한 여부 및 실시간 사용처 조회.
+- [빽다방 결제 사용 가이드](https://atlas.yaro.co.kr/posts/oil-support-paikscoffee): 본사 직영점 제외 빽다방 일반 가맹점 결제 조건 및 매장 찾기.
+
+### 2. 이륜차 배달 라이더 보험 정보
+- [배달 기사 라이더 의무 유상운송용 보험 다이렉트 가입법](https://atlas.yaro.co.kr/posts/rider-delivery-insurance-direct): 2026년 6월 의무화된 유상운송용 보험 개념 및 다이렉트 최저가 가입 가이드.
+- [배달 기사 라이더 의무 보험 공제조합 최저가 가입](https://atlas.yaro.co.kr/posts/rider-insurance-delivery-cooperative-cheapest): 국토교통부 산하 배달서비스공제조합 혜택 및 안전교육 추가 할인 요건.
+- [배달 기사 라이더 의무 보험 시간제 가입 절차](https://atlas.yaro.co.kr/posts/rider-insurance-part-time-process): 부업 라이더를 위한 배민커넥트/쿠팡이츠 제휴 시간제 특약 신청 방법.
+- [배달 라이더 가정용 오토바이 보험 보상 범위 및 리스크](https://atlas.yaro.co.kr/posts/delivery-rider-insurance-coverage-home-use): 가정용 보험으로 배달 영업 중 사고 시 면책 리스크 및 법적 불이익 총정리.
+
+### 3. 동탄 아파트 및 부동산/금융 정보 (하이닉스 셔세권)
+- [SK하이닉스 통근버스(셔세권) 동탄 아파트 TOP3 정류장 노선](https://atlas.yaro.co.kr/posts/dongtan-apartment-hynix-shuttle-bus): 이천·용인 캠퍼스 셔틀버스 정차 주요 단지 정보.
+- [동탄 아파트 주택담보대출 LTV 및 DSR 6억 규제 조건](https://atlas.yaro.co.kr/posts/dongtan-apartment-mortgage-loan-ltv): 비규제지역 LTV 70~80% 기준과 DSR 40% 한도 극대화 전략.
+- [동탄 하이닉스 용인 클러스터 오피스텔 분양 정보](https://atlas.yaro.co.kr/posts/dongtan-officetel-sale-yongin-cluster): 동탄역 초역세권 분양 소식과 SK하이닉스 임직원용 투자 및 실거주 입지 분석.
+
+### 4. 스페이스X IPO 및 우주항공 투자 가이드
+- [스페이스X 상장 일정 및 관련주 투자 방법](https://atlas.yaro.co.kr/posts/spacex-ipo-investment-guide): 2026년 나스닥 IPO 일정, 공모 정보, 국내외 밸류체인 관련주 분석.
+- [스페이스X 2026년 IPO 공모주 청약 방법](https://atlas.yaro.co.kr/posts/spacex-ipo-subscription-method): 개인 투자자 배정 비율(30%) 및 서학개미 공모 청약 상세 가이드.
+- [스페이스X 상장 수혜 국내 관련주 밸류체인 분석](https://atlas.yaro.co.kr/posts/spacex-korean-stocks-value-chain): 미래에셋, 켄코아아이에이치, 인텔리안테크 등 대장주 분석.
+- [스페이스X 상장일 수혜 국내 종목 심층 분석](https://atlas.yaro.co.kr/posts/spacex-korean-beneficiaries-miraeasset-kencoa): 미래에셋금융그룹 지분 및 켄코아아이에이치의 아르테미스 파트너십 분석.
+- [스페이스X 6월 상장일 공모가 및 5대1 액면분할 정보](https://atlas.yaro.co.kr/posts/spacex-nasdaq-listing-date-spcx): 희망 공모가 및 액면분할 결과표 제공.
+- [스페이스X 액면분할 후 가격 및 기업가치 전망](https://atlas.yaro.co.kr/posts/spacex-stock-split-valuation-outlook): 5대1 액면분할 후 전망 및 일론 머스크 차등의결권 리스크.
+- [스페이스X 테슬라 주주 우선 배정 조건 분석](https://atlas.yaro.co.kr/posts/spacex-tesla-shareholder-priority-allocation): 테슬라 기존 주주 대상 SPCX 공모주 우선 청약 가능성 및 조건.
+- [미국 우주항공주 대안 투자 (로켓랩 RKLB 분석)](https://atlas.yaro.co.kr/posts/us-space-stocks-rocketlab-outlook): 경쟁사 로켓랩 주가 전망, 뉴트론 로켓 개발 및 우주항공 ETF(JEDI) 간접 투자.
+
+### 5. 기타 정부지원금 및 소상공인 혜택
+- [보조금24 숨은 정부지원금 1분 조회·신청](https://atlas.yaro.co.kr/posts/sample-post): 무료 숨은 보조금 실시간 조회 및 신청 절차.
+- [지역사랑상품권 가맹점 조회·실시간 지도 사용법](https://atlas.yaro.co.kr/posts/second-post): 지자체 지역화폐 및 지원금 사용 가맹점 찾기.
+- [소상공인 저금리 대환대출 대상 및 신청 방법](https://atlas.yaro.co.kr/posts/third-post): 연 7% 이상 고금리 대출을 저금리로 전환하는 3차 신청 가이드.
+
+---
+
+## 2026 전국동시지방선거 사전투표 가이드 (2026 Pre-Voting Guide)
+전국 주요 행정구역별 2026년 제9회 전국동시지방선거 사전투표소 위치, 준비물, 시간, 관내/관외 투표 절차를 제공하는 전용 가이드 포스트 정보입니다.
+
+### 1. 광역시·특별시·특별자치시·도
+- [서울특별시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-seoul)
+- [인천광역시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-incheon)
+- [부산광역시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-busan)
+- [대구광역시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-daegu)
+- [광주광역시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gwangju)
+- [대전광역시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-daejeon)
+- [울산광역시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-ulsan)
+- [세종특별자치시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-sejong)
+- [제주특별자치도 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-jeju)
+
+### 2. 경기도 주요 도시
+- [수원시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-suwon)
+- [성남시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-seongnam)
+- [고양시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-goyang)
+- [용인시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-yongin)
+- [부천시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-bucheon)
+- [안산시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-ansan)
+- [안양시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-anyang)
+- [화성시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-hwaseong)
+- [남양주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-namyangju)
+- [평택시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-pyeongtaek)
+- [의정부시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-uijeongbu)
+- [파주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-paju)
+- [김포시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gimpo)
+- [시흥시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-siheung)
+- [광명시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gwangmyeong)
+
+### 3. 강원특별자치도 주요 도시
+- [춘천시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-chuncheon)
+- [원주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-wonju)
+- [강릉시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gangneung)
+
+### 4. 충청북도·충청남도 주요 도시
+- [청주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-cheongju)
+- [충주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-chungju)
+- [천안시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-cheonan)
+- [아산시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-asan)
+
+### 5. 전북특별자치도·전라남도 주요 도시
+- [전주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-jeonju)
+- [익산시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-iksan)
+- [군산시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gunsan)
+- [목포시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-mokpo)
+- [여수시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-yeosu)
+- [순천시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-suncheon)
+
+### 6. 경상북도·경상남도 주요 도시
+- [포항시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-pohang)
+- [구미시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gumi)
+- [경주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gyeongju)
+- [창원시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-changwon)
+- [김해시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-gimhae)
+- [진주시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-jinju)
+- [양산시 사전투표 가이드](https://atlas.yaro.co.kr/posts/2026-voting-pre-yangsan)

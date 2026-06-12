@@ -115,7 +115,7 @@ export default function RootLayout({
           <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row md:h-16 md:py-0 md:items-center justify-between gap-3">
             <div className="flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2">
-                <span className="text-xl md:text-2xl font-bold tracking-tight">복지지원금24시</span>
+                <span className="text-2xl md:text-3xl font-extrabold tracking-tight">복지지원금24시</span>
               </Link>
               <div className="flex items-center md:hidden">
                 <button className="p-1 hover:bg-blue-700 dark:hover:bg-blue-700 rounded-full transition-colors" aria-label="Search">
@@ -126,15 +126,15 @@ export default function RootLayout({
               </div>
             </div>
 
-            <nav className="flex items-center gap-4 md:gap-6 font-medium overflow-x-auto whitespace-nowrap pb-1 md:pb-0 scrollbar-hide text-sm md:text-base">
-              <Link href="/calculator" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-yellow-350 font-black">🧮 계산기 목록</Link>
-              <Link href="/calculator/stock-average" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">📉 평단가</Link>
-              <Link href="/calculator/compound-interest" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">📈 복리</Link>
-              <Link href="/calculator/transfer-tax" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">🏠 양도세</Link>
-              <Link href="/compress" className="hover:text-blue-200 transition-colors flex items-center gap-1 font-bold text-white">🖼️ 이미지 압축</Link>
+            <nav className="flex items-center gap-5 md:gap-7 font-semibold overflow-x-auto whitespace-nowrap pb-1 md:pb-0 scrollbar-hide text-base md:text-lg">
+              <Link href="/calculator" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-yellow-350 font-black">계산기 목록</Link>
+              <Link href="/calculator/stock-average" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-white">평단가</Link>
+              <Link href="/calculator/compound-interest" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-white">복리</Link>
+              <Link href="/calculator/transfer-tax" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-white">양도세</Link>
+              <Link href="/compress" className="hover:text-blue-200 transition-colors flex items-center gap-1 text-white">이미지 압축</Link>
               <span className="text-white/20 hidden md:inline">|</span>
-              <Link href="/eligibility" className="hover:text-blue-200 transition-colors text-white/85 text-xs md:text-sm">대상조회</Link>
-              <Link href="/guide" className="hover:text-blue-200 transition-colors text-white/85 text-xs md:text-sm">가이드</Link>
+              <Link href="/eligibility" className="hover:text-blue-200 transition-colors text-white/90 text-sm md:text-base">대상조회</Link>
+              <Link href="/guide" className="hover:text-blue-200 transition-colors text-white/90 text-sm md:text-base">가이드</Link>
             </nav>
 
             <div className="hidden md:flex items-center">
