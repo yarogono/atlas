@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import JSZip from 'jszip';
 
 interface ImageFile {
   id: string;
@@ -40,6 +41,10 @@ export default function ImageCompressorClient({
   const [quality, setQuality] = useState<number>(defaultQuality);
   const [maxWidth, setMaxWidth] = useState<string>(defaultMaxWidth);
   const [format, setFormat] = useState<string>(defaultFormat);
+  const [isPackagingZip, setIsPackagingZip] = useState<boolean>(false);
+  const [customWidth, setCustomWidth] = useState<string>('800');
+  const [customHeight, setCustomHeight] = useState<string>('600');
+  const [maintainAspectRatio, setMaintainAspectRatio] = useState<boolean>(true);
 
   // Sync settings when props change (pSEO navigation)
   useEffect(() => {
@@ -180,8 +185,29 @@ export default function ImageCompressorClient({
           let targetWidth = originalWidth;
           let targetHeight = originalHeight;
 
+          // 직접 가로/세로를 입력하는 경우
+          if (widthLimit === 'custom') {
+            const reqWidth = parseInt(customWidth, 10);
+            const reqHeight = parseInt(customHeight, 10);
+
+            if (!isNaN(reqWidth) && !isNaN(reqHeight)) {
+              if (maintainAspectRatio) {
+                // 비율 고정 유지 시: 지정된 가로/세로 한도 상자(Max Box) 내에 꽉 차도록 Fit 축소
+                const widthRatio = reqWidth / originalWidth;
+                const heightRatio = reqHeight / originalHeight;
+                const ratio = Math.min(widthRatio, heightRatio, 1);
+                
+                targetWidth = Math.round(originalWidth * ratio);
+                targetHeight = Math.round(originalHeight * ratio);
+              } else {
+                // 비율 고정 해제 시: 강제로 지정 해상도로 매핑
+                targetWidth = reqWidth;
+                targetHeight = reqHeight;
+              }
+            }
+          }
           // 너비 한계가 설정된 경우 리사이징
-          if (widthLimit !== 'original') {
+          else if (widthLimit !== 'original') {
             const limit = parseInt(widthLimit, 10);
             if (originalWidth > limit) {
               targetWidth = limit;
@@ -303,16 +329,43 @@ export default function ImageCompressorClient({
     document.body.removeChild(link);
   };
 
-  // 일괄 다운로드
-  const downloadAll = () => {
-    const completedFiles = files.filter((f) => f.status === 'completed' && f.optimizedUrl);
+  // ZIP 파일로 일괄 다운로드
+  const downloadAllAsZip = async () => {
+    const completedFiles = files.filter((f) => f.status === 'completed' && f.optimizedBlob);
     if (completedFiles.length === 0) return;
 
-    completedFiles.forEach((fileObj, index) => {
+    setIsPackagingZip(true);
+
+    try {
+      const zip = new JSZip();
+      const extension = format.split('/')[1];
+
+      completedFiles.forEach((fileObj) => {
+        const baseName = fileObj.name.substring(0, fileObj.name.lastIndexOf('.')) || fileObj.name;
+        const fileName = `${baseName}_optimized.${extension}`;
+        zip.file(fileName, fileObj.optimizedBlob!);
+      });
+
+      const content = await zip.generateAsync({ type: 'blob' });
+      const zipUrl = URL.createObjectURL(content);
+
+      const link = document.createElement('a');
+      link.href = zipUrl;
+      link.download = `atlas_optimized_images.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // 메모리 누수 방지를 위해 해제 예약
       setTimeout(() => {
-        downloadSingle(fileObj);
-      }, index * 300); // 크롬 등 브라우저 다중 다운로드 차단 경고 완화를 위해 시간차 다운로드 실행
-    });
+        URL.revokeObjectURL(zipUrl);
+      }, 10000);
+    } catch (error) {
+      console.error('ZIP 파일 생성 중 에러:', error);
+      alert('ZIP 파일 생성 중 오류가 발생했습니다.');
+    } finally {
+      setIsPackagingZip(false);
+    }
   };
 
   // 전후 용량 합산 통계
@@ -339,13 +392,23 @@ export default function ImageCompressorClient({
           </span>
         </h1>
         <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          {customGuide || '어떠한 파일도 서버로 전송하지 않습니다. 프로그램 설치와 로그인 없이 웹 브라우저 상에서 대량의 이미지 용량 줄이기, 사진 크기 조정 및 WebP 포맷 변환을 100% 안전하고 즉각적으로 완료하세요.'}
+          {customGuide || '개인정보가 담긴 중요 민원 서류나 소중한 사진이 외부 서버로 유출될 걱정은 이제 끝! 프로그램 설치나 회원가입도 없이, 100% 브라우저 자체 연산으로 대량의 이미지 용량을 초고속 압축해 보세요.'}
         </p>
-        <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          로컬 보안 압축 동작 중 (서버 연산 없음)
+        
+        {/* 안심 배지 그룹 */}
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/30 shadow-sm">
+            <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            100% 로컬 보안 (서버 업로드 없음)
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-200/50 dark:border-blue-900/30 shadow-sm">
+            🚀 앱 설치 없이 즉시 실행
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-900/30 shadow-sm">
+            ✨ 광고 없는 쾌적한 환경
+          </span>
         </div>
       </div>
 
@@ -356,7 +419,7 @@ export default function ImageCompressorClient({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`flex flex-col items-center justify-center border-3 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200 min-h-[350px] ${
+          className={`flex flex-col items-center justify-center border-3 border-dashed rounded-2xl p-6 md:p-12 text-center cursor-pointer transition-all duration-200 min-h-[300px] ${
             isDragOver
               ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 scale-[0.99]'
               : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-blue-400 dark:hover:border-slate-600'
@@ -370,16 +433,16 @@ export default function ImageCompressorClient({
             accept="image/*"
             className="hidden"
           />
-          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4 shadow-inner">
-            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4 shadow-inner">
+            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
           </div>
-          <p className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-1">
-            여기에 이미지 파일을 드래그하여 놓거나 클릭하세요
+          <p className="text-base md:text-lg font-bold text-slate-700 dark:text-slate-200 mb-1 px-2 leading-snug">
+            모바일 갤러리에서 다중 선택하거나 드래그해 놓으세요
           </p>
-          <p className="text-xs text-slate-400 dark:text-slate-500 max-w-sm mt-1">
-            PNG, JPG, JPEG, WEBP, GIF 등 지원 (파일당 최대 30MB)
+          <p className="text-xs text-slate-400 dark:text-slate-500 max-w-sm mt-1 px-4 leading-normal">
+            여러 장의 이미지 파일을 한 번에 선택하여 등록할 수 있습니다. (장당 최대 30MB)
           </p>
         </div>
       ) : (
@@ -456,9 +519,9 @@ export default function ImageCompressorClient({
             )}
 
             {/* 3. 크기 조정 (리사이징) */}
-            <div className="mb-6">
+            <div className="mb-4">
               <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                최대 가로 너비 (Width)
+                크기 조정 (Resizing)
               </label>
               <select
                 value={maxWidth}
@@ -471,8 +534,70 @@ export default function ImageCompressorClient({
                 <option value="1000">1000px (블로그 본문 추천)</option>
                 <option value="800">800px (작은 기사용)</option>
                 <option value="640">640px (모바일 최적화)</option>
+                <option value="custom">직접 지정 (가로/세로 직접 입력)</option>
               </select>
             </div>
+
+            {/* 사용자 정의 가로/세로 직접 입력 폼 */}
+            {maxWidth === 'custom' && (
+              <div className="mb-5 p-3.5 bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-xl space-y-3 animate-fadeIn">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 dark:text-slate-500 mb-1">
+                      가로 너비 (Width)
+                    </label>
+                    <div className="relative flex items-center">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={customWidth}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9]/g, '');
+                          setCustomWidth(val);
+                        }}
+                        className="w-full p-2 pr-7 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 font-bold"
+                        placeholder="예: 800"
+                      />
+                      <span className="absolute right-2 text-[10px] font-semibold text-slate-400">px</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 dark:text-slate-500 mb-1">
+                      세로 높이 (Height)
+                    </label>
+                    <div className="relative flex items-center">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={customHeight}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9]/g, '');
+                          setCustomHeight(val);
+                        }}
+                        className="w-full p-2 pr-7 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 font-bold"
+                        placeholder="예: 600"
+                      />
+                      <span className="absolute right-2 text-[10px] font-semibold text-slate-400">px</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-0.5">
+                  <input
+                    type="checkbox"
+                    id="ratioLock"
+                    checked={maintainAspectRatio}
+                    onChange={(e) => setMaintainAspectRatio(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded text-blue-600 border-slate-300 dark:border-slate-700 cursor-pointer focus:ring-blue-500 focus:ring-2 bg-white dark:bg-slate-800"
+                  />
+                  <label htmlFor="ratioLock" className="text-xs font-bold text-slate-500 dark:text-slate-400 cursor-pointer select-none">
+                    비율 고정 유지 (왜곡 방지)
+                  </label>
+                </div>
+              </div>
+            )}
 
             {/* 버튼 그룹 */}
             <div className="space-y-2.5">
@@ -487,27 +612,40 @@ export default function ImageCompressorClient({
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    이미지 압축 중...
+                    보안 압축 중 (기기 연산 100%)
                   </>
                 ) : (
                   <>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    압축 실행하기
+                    한 번에 압축하기
                   </>
                 )}
               </button>
 
               {hasOptimizedAny && (
                 <button
-                  onClick={downloadAll}
-                  className="w-full py-3 bg-slate-900 dark:bg-slate-700 hover:bg-black dark:hover:bg-slate-650 text-white font-bold rounded-xl shadow transition-colors flex items-center justify-center gap-2 text-sm"
+                  onClick={downloadAllAsZip}
+                  disabled={isPackagingZip}
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold rounded-xl shadow transition-colors flex items-center justify-center gap-2 text-sm"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  전체 결과물 다운로드
+                  {isPackagingZip ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      ZIP 파일 생성 중...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      전체 압축파일(ZIP) 다운로드
+                    </>
+                  )}
                 </button>
               )}
 
@@ -579,7 +717,7 @@ export default function ImageCompressorClient({
             </div>
 
             {/* 개별 파일 카드 리스트 */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               {files.map((fileObj) => {
                 const isCompleted = fileObj.status === 'completed';
                 const isProcessing = fileObj.status === 'processing';
@@ -592,12 +730,12 @@ export default function ImageCompressorClient({
                 return (
                   <div
                     key={fileObj.id}
-                    className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 transition-all hover:shadow-sm"
+                    className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 transition-all hover:shadow-sm"
                   >
                     {/* 정보 영역 */}
-                    <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
                       {/* 썸네일 */}
-                      <div className="w-14 h-14 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200/50 dark:border-slate-800 flex-shrink-0 relative">
+                      <div className="w-12 h-12 md:w-14 md:h-14 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200/50 dark:border-slate-800 flex-shrink-0 relative">
                         <img
                           src={fileObj.previewUrl}
                           alt={fileObj.name}
@@ -607,13 +745,13 @@ export default function ImageCompressorClient({
 
                       {/* 파일 세부정보 */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate mb-1">
+                        <p className="text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 truncate mb-0.5">
                           {fileObj.name}
                         </p>
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-slate-400 dark:text-slate-500 font-medium">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] md:text-xs text-slate-400 dark:text-slate-500 font-medium">
                           <span>{formatBytes(fileObj.size)}</span>
                           {fileObj.width && fileObj.height && (
-                            <span>
+                            <span className="hidden xs:inline">
                               ({fileObj.width}x{fileObj.height}px)
                             </span>
                           )}
@@ -623,11 +761,6 @@ export default function ImageCompressorClient({
                               <span className="text-emerald-600 dark:text-emerald-400 font-bold">
                                 {formatBytes(fileObj.optimizedSize)}
                               </span>
-                              {fileObj.optimizedWidth && fileObj.optimizedHeight && (
-                                <span>
-                                  ({fileObj.optimizedWidth}x{fileObj.optimizedHeight}px)
-                                </span>
-                              )}
                             </>
                           )}
                         </div>
@@ -635,44 +768,46 @@ export default function ImageCompressorClient({
                     </div>
 
                     {/* 제어 및 상태 */}
-                    <div className="flex items-center gap-3.5 self-end md:self-auto flex-shrink-0">
-                      {/* 용량 감소율 배지 */}
-                      {isCompleted && sizeSaved > 0 && (
-                        <span className="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400">
-                          -{sizeSaved.toFixed(0)}%
-                        </span>
-                      )}
+                    <div className="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0 pt-2 sm:pt-0 border-t border-slate-50 sm:border-t-0 dark:border-slate-700/30">
+                      <div className="flex items-center gap-2">
+                        {/* 용량 감소율 배지 */}
+                        {isCompleted && sizeSaved > 0 && (
+                          <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400">
+                            -{sizeSaved.toFixed(0)}%
+                          </span>
+                        )}
 
-                      {/* 상태 인디케이터 */}
-                      {isProcessing && (
-                        <div className="flex items-center gap-1.5 text-xs text-blue-600 font-bold">
-                          <svg className="animate-spin h-3.5 w-3.5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                          </svg>
-                          압축 중
-                        </div>
-                      )}
-                      {isFailed && (
-                        <span className="text-xs text-rose-500 font-bold">실패</span>
-                      )}
-                      {fileObj.status === 'pending' && (
-                        <span className="text-xs text-slate-400 font-bold">대기 중</span>
-                      )}
+                        {/* 상태 인디케이터 */}
+                        {isProcessing && (
+                          <div className="flex items-center gap-1.5 text-[11px] text-blue-600 font-bold">
+                            <svg className="animate-spin h-3.5 w-3.5 text-blue-600" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            압축 중
+                          </div>
+                        )}
+                        {isFailed && (
+                          <span className="text-[11px] text-rose-500 font-bold">실패</span>
+                        )}
+                        {fileObj.status === 'pending' && (
+                          <span className="text-[11px] text-slate-400 font-bold">대기 중</span>
+                        )}
+                      </div>
 
                       {/* 액션 버튼 */}
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         {isCompleted && fileObj.optimizedUrl && (
                           <>
                             <button
                               onClick={() => setActiveCompareId(fileObj.id)}
-                              className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/60 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 font-bold rounded-lg text-xs transition-all flex items-center gap-1"
+                              className="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/60 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 font-bold rounded-lg text-[11px] transition-all flex items-center gap-0.5"
                             >
                               🔍 비교
                             </button>
                             <button
                               onClick={() => downloadSingle(fileObj)}
-                              className="px-2.5 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-950/30 dark:text-blue-400 dark:hover:bg-blue-950 font-bold rounded-lg text-xs transition-all flex items-center gap-1"
+                              className="px-2 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-950/30 dark:text-blue-400 dark:hover:bg-blue-950 font-bold rounded-lg text-[11px] transition-all"
                             >
                               다운로드
                             </button>

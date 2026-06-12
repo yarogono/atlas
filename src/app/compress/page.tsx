@@ -204,6 +204,49 @@ export default function CompressPage() {
           </details>
         </div>
       </section>
+
+      {/* 모바일 최적화 및 디바이스별 스페셜 가이드 영역 (pSEO) */}
+      <section className="max-w-4xl mx-auto mt-10 px-4 py-8 bg-slate-50 dark:bg-slate-900/30 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-6">
+        <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <span>📱 스마트폰 사진 용량 부족 및 업로드 에러 해결 가이드</span>
+        </h2>
+        <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          스마트폰 카메라의 비약적인 발전으로 사진 한 장의 크기가 10MB를 훌쩍 넘어가는 경우가 흔합니다. 이로 인해 핸드폰 저장 공간이 부족해지거나, 웹 서류 접수처, 혹은 SNS에 사진을 올릴 때 용량 초과 에러가 빈번하게 발생합니다. 아래의 모바일 환경 최적화 팁을 참고하여 효율적으로 해결해 보세요.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+          <div className="space-y-2.5">
+            <h3 className="text-sm md:text-base font-bold text-slate-800 dark:text-slate-200">
+              🍏 아이폰 사진 용량 줄이기 사이트 & 일괄 조절
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              아이폰의 고화질 HEIC 포맷이나 대용량 스크린샷 이미지를 타 사이트에 올리려면 변환과 압축이 필요합니다. 본 웹 압축기를 사용하면 별도의 <strong>아이폰 사진 용량 줄이기 사이트</strong>나 앱을 유료로 구독할 필요 없이, 여러 장의 <strong>아이폰 이미지 크기 일괄 조절</strong> 작업을 무료로 안전하게 마무리할 수 있습니다.
+            </p>
+          </div>
+
+          <div className="space-y-2.5">
+            <h3 className="text-sm md:text-base font-bold text-slate-800 dark:text-slate-200">
+              🤖 갤럭시 사진 용량 줄이기 무료 & 스크린샷 압축
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              안드로이드 기기에서 촬영한 초고화질 JPG 파일 및 스크린샷 캡처본은 디바이스 저장소 용량을 크게 차지합니다. <strong>갤럭시 사진 용량 줄이기 무료</strong> 툴킷을 통해 <strong>핸드폰 스크린샷 용량 압축</strong> 작업을 1초 만에 실행하여 스마트폰의 저장 용량 부족 문제를 즉시 해결하세요.
+            </p>
+          </div>
+
+          <div className="space-y-2.5">
+            <h3 className="text-sm md:text-base font-bold text-slate-800 dark:text-slate-200">
+              💬 카톡 전송용 대용량 사진 압축 & 당근마켓 업로드
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              카카오톡이나 인스타그램 등에서 대용량 사진을 전송할 때 데이터 낭비가 심하다면, 미리 <strong>카톡 전송용 대용량 사진 압축 툴</strong>로 용량을 줄여 전송해 보세요. 또한, <strong>당근마켓 모바일 사진 업로드 오류 용량 줄이기</strong>가 필요할 때 본 툴로 규격을 맞춰주면 업로드 차단 현상이 완벽히 해결됩니다.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl border border-blue-100/30 text-xs md:text-sm text-blue-700 dark:text-blue-300">
+          💡 <strong>앱 설치 없이 핸드폰 사진 압축하는 법:</strong> 본 포털은 브라우저 접속만으로 실행되므로 광고 투성이의 앱 설치가 전혀 불필요합니다. <strong>모바일 사진 여러장 한번에 용량 줄이기</strong> 기능을 켜고 ZIP 다운로드 버튼을 탭하면, 단 한 번의 액션으로 최적화가 완수되어 <strong>스마트폰 사진 용량 부족 해결 사이트</strong>의 역할을 훌륭히 수행합니다.
+        </div>
+      </section>
     </div>
   );
 }
