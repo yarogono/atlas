@@ -64,6 +64,13 @@
 - [지역사랑상품권 가맹점 조회·실시간 지도 사용법](https://atlas.yaro.co.kr/posts/second-post): 지자체 지역화폐 및 지원금 사용 가맹점 찾기.
 - [소상공인 저금리 대환대출 대상 및 신청 방법](https://atlas.yaro.co.kr/posts/third-post): 연 7% 이상 고금리 대출을 저금리로 전환하는 3차 신청 가이드.
 
+### 6. 이미지 최적화 및 사진 압축 정보 가이드
+- [아이폰 사진 용량 줄이기 앱 설치 없는 즉시 해결법](https://atlas.yaro.co.kr/posts/iphone-photo-compress-no-app): 사파리/크롬 브라우저에서 프로그램 설치 없이 원클릭 화질 유지 압축 가이드.
+- [아이폰 저장공간 부족 해결을 위한 사진 50장 일괄 압축 팁](https://atlas.yaro.co.kr/posts/iphone-storage-photo-batch): 다중 파일 다운로드 경고 없이 ZIP으로 한 번에 묶어받는 저장소 최적화 노하우.
+- [이력서 사진 포토샵 없이 200KB 이하 JPEG로 맞추기](https://atlas.yaro.co.kr/posts/resume-photo-resize-200kb): 사람인, 잡코리아 등의 이력서 업로드 제한을 만족시키기 위해 가로/세로 픽셀을 직접 기입해 맞추는 방법.
+- [핸드폰 사진 용량 줄이기 어플 설치 없는 무설치 사이트 추천](https://atlas.yaro.co.kr/posts/phone-photo-compress-no-install): 광고 가득하고 불필요한 권한을 요구하는 모바일 앱 대신 브라우저 캔버스로 안전하고 쾌적하게 변환하는 법.
+- [서버 전송 유출 걱정 없는 안전한 100% 로컬 사진 압축법](https://atlas.yaro.co.kr/posts/secure-photo-compress-no-upload): 민감한 계약서 서류나 개인 증명사진이 해킹 위협에 노출되지 않도록 기기 내에서 처리하는 프론트엔드 최적화 기술.
+
 ---
 
 ## 2026 전국동시지방선거 사전투표 가이드 (2026 Pre-Voting Guide)
