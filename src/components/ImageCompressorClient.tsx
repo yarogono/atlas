@@ -19,11 +19,34 @@ interface ImageFile {
   optimizedHeight: number | null;
 }
 
-export default function ImageCompressorClient() {
+interface ImageCompressorProps {
+  defaultFormat?: 'image/webp' | 'image/jpeg' | 'image/png';
+  defaultQuality?: number;
+  defaultMaxWidth?: string;
+  targetSizeLabel?: string;
+  customHeading?: string;
+  customGuide?: string;
+}
+
+export default function ImageCompressorClient({
+  defaultFormat = 'image/webp',
+  defaultQuality = 0.8,
+  defaultMaxWidth = 'original',
+  targetSizeLabel = '',
+  customHeading = '',
+  customGuide = '',
+}: ImageCompressorProps) {
   const [files, setFiles] = useState<ImageFile[]>([]);
-  const [quality, setQuality] = useState<number>(0.8);
-  const [maxWidth, setMaxWidth] = useState<string>('original');
-  const [format, setFormat] = useState<string>('image/webp');
+  const [quality, setQuality] = useState<number>(defaultQuality);
+  const [maxWidth, setMaxWidth] = useState<string>(defaultMaxWidth);
+  const [format, setFormat] = useState<string>(defaultFormat);
+
+  // Sync settings when props change (pSEO navigation)
+  useEffect(() => {
+    setFormat(defaultFormat);
+    setQuality(defaultQuality);
+    setMaxWidth(defaultMaxWidth);
+  }, [defaultFormat, defaultQuality, defaultMaxWidth]);
   const [isProcessingAll, setIsProcessingAll] = useState<boolean>(false);
   const [activeCompareId, setActiveCompareId] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -312,11 +335,11 @@ export default function ImageCompressorClient() {
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
           <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-            무료 이미지 용량 줄이기
+            {customHeading || '무료 이미지 용량 줄이기'}
           </span>
         </h1>
         <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          어떠한 파일도 서버로 전송하지 않습니다. 프로그램 설치와 로그인 없이 웹 브라우저 상에서 대량의 이미지 용량 줄이기, 사진 크기 조정 및 WebP 포맷 변환을 100% 안전하고 즉각적으로 완료하세요.
+          {customGuide || '어떠한 파일도 서버로 전송하지 않습니다. 프로그램 설치와 로그인 없이 웹 브라우저 상에서 대량의 이미지 용량 줄이기, 사진 크기 조정 및 WebP 포맷 변환을 100% 안전하고 즉각적으로 완료하세요.'}
         </p>
         <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -365,9 +388,18 @@ export default function ImageCompressorClient() {
           
           {/* 좌측: 컨트롤 패널 */}
           <div className="lg:col-span-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 sticky top-20">
-            <h2 className="text-base font-extrabold text-slate-900 dark:text-slate-100 mb-4 pb-2 border-b border-slate-100 dark:border-slate-700">
+            <h2 className="text-base font-extrabold text-slate-900 dark:text-slate-100 mb-2 pb-2 border-b border-slate-100 dark:border-slate-700">
               🛠️ 압축 옵션 설정
             </h2>
+            {targetSizeLabel && (
+              <div className="mb-4 px-3 py-2 bg-blue-50 dark:bg-blue-950/40 border border-blue-150 rounded-lg text-xs font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-1.5 animate-pulse">
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </span>
+                🎯 최적화 목표: <strong className="underline">{targetSizeLabel}</strong>
+              </div>
+            )}
 
             {/* 1. 포맷 변환 */}
             <div className="mb-4">

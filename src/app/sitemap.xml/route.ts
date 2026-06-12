@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import welfareData from '../../data/regions-welfare.json';
+import { pseoKeywords } from '../../data/pseo-keywords';
 
 export const dynamic = 'force-dynamic';
 
@@ -114,7 +115,23 @@ export async function GET() {
     priority: 0.7,
   }));
 
-  const allPages = [...defaultPages, ...postUrls, ...regionalUrls];
+  // 4. 이미지 압축 툴 및 pSEO 롱테일 키워드 페이지 추가
+  const compressUrls = [
+    {
+      url: `${baseUrl}/compress`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    ...pseoKeywords.map((keyword) => ({
+      url: `${baseUrl}/compress/${keyword.slug}`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    })),
+  ];
+
+  const allPages = [...defaultPages, ...postUrls, ...regionalUrls, ...compressUrls];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
