@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛠️ 틀린 그림 찾기 게임 관리자 페이지</title>
+  
+  <!-- Google Fonts: Noto Sans KR, Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Outfit:wght@500;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* 🎨 디자인 시스템 변수 정의 (게임 테마 일치) */
+    :root {
+      --bg-color: #FAF6F0;
+      --card-bg: #FFFFFF;
+      --text-dark: #3E352F;
+      --text-muted: #7A6F68;
+      --primary-color: #FF6F3D;
+      --primary-hover: #E85B2A;
+      --secondary-color: #00A896;
+      --secondary-hover: #008F80;
+      --accent-color: #FFD166;
+      --error-color: #E74C3C;
+      --border-radius-lg: 20px;
+      --border-radius-md: 12px;
+      --font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: #ECE7E1;
+      color: var(--text-dark);
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background-color: var(--bg-color);
+      border-radius: var(--border-radius-lg);
+      border: 4px solid #D6CEB8;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background-color: var(--text-dark);
+      color: #FFFFFF;
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .back-btn {
+      background-color: transparent;
+      color: #FFFFFF;
+      border: 2px solid #FFFFFF;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: #FFFFFF;
+      color: var(--text-dark);
+    }
+
+    .admin-content {
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 40px;
+    }
+
+    /* 폼 영역 스타일 */
+    .config-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius-md);
+      padding: 24px;
+      border: 3px solid #E6DFD5;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    }
+
+    .card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #F3EDE4;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 2px solid #D6CEB8;
+      font-size: 15px;
+      color: var(--text-dark);
+      background-color: #FAF9F6;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .row-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: #FFFFFF;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-hover);
+    }
+
+    /* 이미지 프리뷰 및 좌표 핑 찍기 패널 */
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .upload-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .upload-box {
+      background-color: #F5EFE6;
+      border: 2px dashed #C2B8A3;
+      border-radius: var(--border-radius-md);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .upload-box input[type="file"] {
+      display: none;
+    }
+
+    .upload-box:hover {
+      background-color: #EDE4D5;
+    }
+
+    .upload-label {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .upload-status {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .editor-area {
+      background-color: var(--card-bg);
+      border: 3px solid #E6DFD5;
+      border-radius: var(--border-radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .editor-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F3EDE4;
+    }
+
+    .slot-selector {
+      display: flex;
+      gap: 12px;
+    }
+
+    .slot-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid #D6CEB8;
+      background-color: transparent;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .slot-btn.active {
+      border-color: var(--primary-color);
+      background-color: var(--primary-color);
+      color: #FFFFFF;
+    }
+
+    .slot-btn.slot-1.active { background-color: #E74C3C; border-color: #E74C3C; }
+    .slot-btn.slot-2.active { background-color: #3498DB; border-color: #3498DB; }
+    .slot-btn.slot-3.active { background-color: #2ECC71; border-color: #2ECC71; }
+
+    /* 대칭형 배치 이미지 워크벤치 */
+    .images-workbench {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      background-color: #EFECE7;
+      border: 4px solid var(--primary-color);
+      border-radius: var(--border-radius-md);
+      overflow: hidden;
+      max-width: 900px;
+      width: 100%;
+      position: relative;
+    }
+
+    .image-frame {
+      flex: 1;
+      aspect-ratio: 1.5;
+      position: relative;
+      cursor: crosshair;
+      overflow: hidden;
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .divider {
+      width: 5px;
+      background-color: var(--primary-color);
+      height: 100%;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+    }
+
+    /* 좌표 마커 핑 스타일 */
+    .ping-marker {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border: 4px solid #FFFFFF;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #FFFFFF;
+      font-size: 14px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .ping-marker.slot-1 { background-color: rgba(231, 76, 60, 0.7); }
+    .ping-marker.slot-2 { background-color: rgba(52, 152, 219, 0.7); }
+    .ping-marker.slot-3 { background-color: rgba(46, 204, 113, 0.7); }
+
+    /* 토스트 팝업 */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: var(--text-dark);
+      color: #FFFFFF;
+      padding: 16px 28px;
+      border-radius: var(--border-radius-md);
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 100;
+      border-left: 6px solid var(--secondary-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-container">
+    <header>
+      <h1>🛠️ 틀린 그림 찾기 게임 관리자 대시보드</h1>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <a href="/game/index.html" class="back-btn">게임 화면으로 돌아가기 🎮</a>
+        <button id="btn-logout" class="back-btn" style="background: rgba(255,255,255,0.15); cursor:pointer; border: 2px solid #FFFFFF; color:#FFFFFF;">🔓 로그아웃</button>
+      </div>
+    </header>
+
+
+    <div class="admin-content">
+      
+      <!-- 1. 설정 및 좌표 폼 패널 -->
+      <div class="config-panel">
+        
+        <div class="card">
+          <h2>📁 스테이지 대상 선택</h2>
+          <div class="form-group">
+            <label for="stage-selector">편집할 스테이지 (백그라운드 ID)</label>
+            <select id="stage-selector" class="form-control">
+              <option value="1">STAGE 1 (한옥 마당)</option>
+              <option value="2">STAGE 2 (시골 기와집)</option>
+              <option value="3">STAGE 3 (전통 밥상)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>⚙️ 스테이지 난이도 설정</h2>
+          <div class="form-group">
+            <label for="time-limit">제한 시간 (초)</label>
+            <input type="number" id="time-limit" class="form-control" min="10" max="300">
+          </div>
+          <div class="row-grid">
+            <div class="form-group">
+              <label for="aging-interval">노화 주기 (초)</label>
+              <input type="number" id="aging-interval" class="form-control" step="0.1" min="0.1" max="10">
+            </div>
+            <div class="form-group">
+              <label for="hit-radius">클릭 반경 (%)</label>
+              <input type="number" id="hit-radius" class="form-control" step="0.5" min="1" max="25">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>📍 틀린 그림 좌표값 (백분율 %)</h2>
+          
+          <!-- 슬롯 1 설정 -->
+          <div class="form-group" style="border-left: 4px solid #E74C3C; padding-left: 10px;">
+            <label>오브젝트 1 (빨간색)</label>
+            <input type="text" id="diff-name-1" class="form-control" placeholder="오브젝트 이름 (예: 구름)" style="margin-bottom: 6px;">
+            <div class="row-grid">
+              <input type="number" id="diff-x-1" class="form-control" placeholder="X (%)" readonly>
+              <input type="number" id="diff-y-1" class="form-control" placeholder="Y (%)" readonly>
+            </div>
+          </div>
+
+          <!-- 슬롯 2 설정 -->
+          <div class="form-group" style="border-left: 4px solid #3498DB; padding-left: 10px;">
+            <label>오브젝트 2 (파란색)</label>
+            <input type="text" id="diff-name-2" class="form-control" placeholder="오브젝트 이름" style="margin-bottom: 6px;">
+            <div class="row-grid">
+              <input type="number" id="diff-x-2" class="form-control" placeholder="X (%)" readonly>
+              <input type="number" id="diff-y-2" class="form-control" placeholder="Y (%)" readonly>
+            </div>
+          </div>
+
+          <!-- 슬롯 3 설정 -->
+          <div class="form-group" style="border-left: 4px solid #2ECC71; padding-left: 10px;">
+            <label>오브젝트 3 (초록색)</label>
+            <input type="text" id="diff-name-3" class="form-control" placeholder="오브젝트 이름" style="margin-bottom: 6px;">
+            <div class="row-grid">
+              <input type="number" id="diff-x-3" class="form-control" placeholder="X (%)" readonly>
+              <input type="number" id="diff-y-3" class="form-control" placeholder="Y (%)" readonly>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-save-config" class="btn btn-primary btn-large">💾 설정 전체 저장하기</button>
+      </div>
+
+      <!-- 2. 이미지 업로드 및 클릭 워크벤치 패널 -->
+      <div class="preview-panel">
+        
+        <!-- 이미지 S3 파일 업로더 -->
+        <div class="upload-section">
+          <!-- 이미지 A 원본 업로드 -->
+          <div class="upload-box" onclick="document.getElementById('file-a-input').click()">
+            <span class="upload-label">📸 왼쪽 원본 이미지 (Image A) 업로드</span>
+            <span class="upload-status" id="status-a">파일 선택 대기 중 (S3 자동 전송)</span>
+            <input type="file" id="file-a-input" accept="image/*">
+          </div>
+
+          <!-- 이미지 B 수정본 업로드 -->
+          <div class="upload-box" onclick="document.getElementById('file-b-input').click()">
+            <span class="upload-label">🎨 오른쪽 수정본 이미지 (Image B) 업로드</span>
+            <span class="upload-status" id="status-b">파일 선택 대기 중 (S3 자동 전송)</span>
+            <input type="file" id="file-b-input" accept="image/*">
+          </div>
+        </div>
+
+        <!-- 이미지 조작 워크벤치 -->
+        <div class="editor-area">
+          <div class="editor-header">
+            <h3>🎯 이미지 클릭하여 틀린 좌표 지정</h3>
+            
+            <div class="slot-selector">
+              <span style="font-size: 14px; font-weight: 700; align-self: center; margin-right: 4px;">지정할 번호 선택:</span>
+              <button class="slot-btn slot-1 active" data-slot="1">1번</button>
+              <button class="slot-btn slot-2" data-slot="2">2번</button>
+              <button class="slot-btn slot-3" data-slot="3">3번</button>
+            </div>
+          </div>
+
+          <p style="font-size: 14px; color: var(--text-muted); align-self: flex-start;">
+            💡 아래 이미지들의 틀린 곳 위치를 마우스로 직접 누르세요. 핑이 찍히고 해당 슬롯에 백분율 좌표가 자동으로 채워집니다.
+          </p>
+
+          <!-- 워크벤치 컨테이너 -->
+          <div class="images-workbench">
+            <!-- 왼쪽 원본 -->
+            <div class="image-frame" id="workbench-left">
+              <img id="preview-img-left" src="/game/images/stage1_a.png" alt="왼쪽 원본">
+              <div class="overlay-pings" id="pings-left"></div>
+            </div>
+
+            <!-- 중앙 구분선 (붙어 있음) -->
+            <div class="divider"></div>
+
+            <!-- 오른쪽 수정본 -->
+            <div class="image-frame" id="workbench-right">
+              <img id="preview-img-right" src="/game/images/stage1_b.png" alt="오른쪽 수정본">
+              <div class="overlay-pings" id="pings-right"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 토스트 알림 -->
+  <div id="admin-toast" class="toast">설정이 성공적으로 저장되었습니다!</div>
+
+  <script src="/game/admin.js"></script>
+</body>
+</html>

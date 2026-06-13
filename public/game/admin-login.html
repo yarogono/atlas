@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 관리자 로그인 - 틀린 그림 찾기</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Outfit:wght@500;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #FF6F3D;
+      --primary-hover: #E85B2A;
+      --text-dark: #3E352F;
+      --text-muted: #7A6F68;
+      --error-color: #E74C3C;
+      --secondary-color: #00A896;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #ECE7E1 0%, #DDD5C5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(62, 53, 47, 0.15);
+      border: 3px solid #E6DFD5;
+      text-align: center;
+    }
+
+    .lock-icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #D6CEB8;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--text-dark);
+      background: #FAF9F6;
+      transition: border-color 0.2s;
+    }
+
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      background: var(--primary-color);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 40px;
+      font-size: 18px;
+      font-weight: 900;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-login:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 111, 61, 0.35);
+    }
+
+    .btn-login:active {
+      transform: scale(0.97);
+    }
+
+    .btn-login:disabled {
+      background: #C2B8A3;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .error-msg {
+      background: #FFF0F0;
+      border: 2px solid #F5C6C6;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--error-color);
+      margin-top: 16px;
+      display: none;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .back-link:hover {
+      color: var(--primary-color);
+    }
+
+    .loading-spinner {
+      display: none;
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255,255,255,0.4);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <span class="lock-icon">🔐</span>
+    <h1>관리자 로그인</h1>
+    <p class="subtitle">틀린 그림 찾기 게임 관리자 페이지<br>접속 비밀번호를 입력하세요.</p>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" placeholder="관리자 비밀번호를 입력하세요" autofocus>
+      </div>
+
+      <button type="submit" class="btn-login" id="btn-login">
+        <span id="btn-text">🔑 관리자 페이지 입장</span>
+        <div class="loading-spinner" id="spinner"></div>
+      </button>
+    </form>
+
+    <div class="error-msg" id="error-msg">❌ 비밀번호가 올바르지 않습니다.</div>
+
+    <a href="/game/index.html" class="back-link">← 게임 화면으로 돌아가기</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
+    const btnLogin = document.getElementById('btn-login');
+    const btnText = document.getElementById('btn-text');
+    const spinner = document.getElementById('spinner');
+    const errorMsg = document.getElementById('error-msg');
+
+    // URL 파라미터에서 리다이렉트 경로 읽기
+    const params = new URLSearchParams(window.location.search);
+    const redirectTo = params.get('redirect') || '/game/admin.html';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = passwordInput.value.trim();
+      if (!password) return;
+
+      // 버튼 로딩 상태 전환
+      btnLogin.disabled = true;
+      btnText.style.display = 'none';
+      spinner.style.display = 'block';
+      errorMsg.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/game/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // 로그인 성공 → 관리자 페이지로 이동
+          window.location.href = redirectTo;
+        } else {
+          // 로그인 실패 → 에러 메시지 표시
+          errorMsg.textContent = '❌ ' + (data.error || '비밀번호가 올바르지 않습니다.');
+          errorMsg.style.display = 'block';
+          passwordInput.value = '';
+          passwordInput.focus();
+        }
+      } catch (err) {
+        errorMsg.textContent = '❌ 서버 연결 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+        errorMsg.style.display = 'block';
+      } finally {
+        btnLogin.disabled = false;
+        btnText.style.display = 'inline';
+        spinner.style.display = 'none';
+      }
+    });
+
+    // 엔터키 지원
+    passwordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') form.dispatchEvent(new Event('submit'));
+    });
+  </script>
+
+</body>
+</html>
