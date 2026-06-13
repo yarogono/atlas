@@ -156,7 +156,7 @@ body {
 
 /* 2. 게임 화면 디자인 */
 #game-screen {
-  padding: 12px;
+  padding: 8px 16px;
   justify-content: space-between;
   overflow: hidden; /* 플레이 중에는 스크롤 절대 방지 */
 }
@@ -241,8 +241,9 @@ body {
 }
 
 .game-image-frame {
-  width: 100%;
+  width: min(100%, 26vh * 1.5); /* 모바일 세로 화면에서 스크롤 없이 한눈에 들어오도록 뷰포트 높이(vh) 기준 크기 제한 */
   aspect-ratio: 1.5; /* 일러스트 이미지 3:2 비율 고정 */
+  margin: 0 auto;
   position: relative;
   background-color: #EFECE7;
   border: 4px solid #D6CEB8;
@@ -526,21 +527,23 @@ body {
 /* 6. 토스트 알림창 */
 .toast-message {
   position: absolute;
-  bottom: 80px;
+  top: 15px; /* 이미지 영역을 가리지 않도록 상단 배치 */
+  bottom: auto;
   left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background-color: rgba(62, 53, 47, 0.95);
+  transform: translateX(-50%) translateY(-20px);
+  background-color: rgba(62, 53, 47, 0.98);
   color: #FAF6F0;
   padding: 12px 24px;
   border-radius: 30px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   z-index: 999;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
   white-space: nowrap;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  border: 2px solid var(--accent-color); /* 시인성 확보를 위한 테두리 추가 */
 }
 
 .toast-message.show {
@@ -565,3 +568,34 @@ body {
     transform: translate(-50%, -50%) scale(1);
   }
 }
+
+/* 8. 수동 애드센스 광고 영역 데코레이션 */
+.adsense-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F3ECE3;
+  border: 2px dashed #C2B8A3;
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  margin: 16px 0 8px 0;
+  min-height: 100px;
+  max-height: 120px;
+}
+
+.ads-placeholder {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ads-placeholder::before {
+  content: "📢";
+}
+
