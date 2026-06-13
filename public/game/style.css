@@ -610,58 +610,62 @@ body {
   max-height: none;
 }
 
-/* 9. 데스크톱/PC 환경 반응형 레이아웃 (가로 화면에서도 모바일 스타일 유지하며 이미지 크기 최적화) */
-@media (min-width: 768px) {
+/* 9. 데스크톱/PC 환경 반응형 레이아웃 (가로 화면에서 좌/우 배치 & 이미지 800px 이상 지원) */
+@media (min-width: 1024px) {
   #game-app-container {
-    max-width: 600px; /* 데스크톱 환경에서는 앱 컨테이너 폭을 600px로 넓혀 이미지 크기를 극대화 */
+    max-width: 1750px; /* 800px 이미지 2개와 여백이 들어갈 수 있도록 컨테이너 대폭 확장 */
     height: 95vh;
     border-radius: var(--border-radius-lg);
     border: 4px solid #D6CEB8;
   }
 
-  /* 데스크톱 세로 레이아웃에서도 카드 폭 정렬 */
+  /* 시작 화면 및 결과 화면 카드 가로폭 중앙 정렬 */
   .instructions-card,
   .result-card {
-    max-width: 520px;
+    max-width: 650px;
     margin-left: auto;
     margin-right: auto;
   }
 
   #btn-start-game,
   .action-buttons {
-    max-width: 450px;
+    max-width: 500px;
     margin-left: auto;
     margin-right: auto;
   }
 
   .adsense-container {
-    max-width: 520px;
+    max-width: 728px; /* 리더보드 광고 표준 크기 */
     margin-left: auto;
     margin-right: auto;
   }
 
-  /* 모바일 세로 스택 UI를 데스크톱에서도 유지하면서, 이미지 프레임 가로폭 극대화 */
+  /* 게임 플레이 영역을 좌/우 배치(flex-direction: row)로 전환 */
   .game-play-area {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 32px;
+    padding: 0 32px;
   }
 
   .game-image-frame {
-    width: min(100%, 33vh * 1.5); /* 데스크톱에서도 세로 뷰포트 높이에 맞춘 대형 이미지 구현 */
-    aspect-ratio: 1.5;
+    /* 각 이미지의 크기를 최대 650px로 조정 */
+    width: min(45vw, 650px);
+    aspect-ratio: 1.5; /* 3:2 비율 고정 (650px일 때 세로 433px) */
     height: auto;
     border-width: 5px;
   }
 
+  /* 구분선을 세로선으로 변경 */
   .divider-line {
-    height: 4px;
-    width: 80%;
+    width: 4px;
+    height: 400px;
     background: dashed #D6CEB8;
-    margin: 0 auto;
+    margin: 0;
   }
 }
+
 
 
 
