@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Outfit:wght@500;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/game/style.css">
   
   <!-- Kakao SDK -->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
@@ -71,7 +71,7 @@
       <main class="game-play-area">
         <!-- 상단 이미지 프레임 -->
         <div id="frame-top" class="game-image-frame">
-          <img id="img-top" src="images/bg1.png" alt="원본 이미지" draggable="false">
+          <img id="img-top" src="/game/images/bg1.png" alt="원본 이미지" draggable="false">
           <div id="overlay-top" class="diff-overlay"></div>
         </div>
         
@@ -80,7 +80,7 @@
         
         <!-- 하단 이미지 프레임 -->
         <div id="frame-bottom" class="game-image-frame">
-          <img id="img-bottom" src="images/bg1.png" alt="비교 이미지" draggable="false">
+          <img id="img-bottom" src="/game/images/bg1.png" alt="비교 이미지" draggable="false">
           <div id="overlay-bottom" class="diff-overlay"></div>
         </div>
       </main>
@@ -140,6 +140,6 @@
   <!-- 토스트 알림창 -->
   <div id="toast" class="toast-message"></div>
 
-  <script src="game.js"></script>
+  <script src="/game/game.js"></script>
 </body>
 </html>

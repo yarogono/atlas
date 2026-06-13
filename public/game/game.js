@@ -214,7 +214,7 @@ function loadStage(stageNum) {
 
   // 셔플된 인덱스를 참조하여 한국적인 랜덤 이미지 로드
   const bgId = shuffledBackgrounds[currentStage - 1];
-  const bgPath = `images/bg${bgId}.png`;
+  const bgPath = `/game/images/bg${bgId}.png`;
   ui.imgTop.src = bgPath;
   ui.imgBottom.src = bgPath;
 
