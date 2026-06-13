@@ -46,43 +46,25 @@ let activeDifferences = []; // 현재 스테이지의 틀린 부분 목록
 let shuffledBackgrounds = []; // 게임마다 셔플될 배경 이미지 순서 ([1, 2, 3]이 섞임)
 let agingTimerAccumulator = 0; // 스테이지 내 소수점 시간 연령 가중 축적기
 
-// 9가지 고대비 컬러풀 SVG 아이콘 세트 (로딩 제로, 모바일 최적화)
-const SVG_ICONS = {
-  flower: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="18" fill="#FFD166"/><circle cx="50" cy="20" r="15" fill="#FF6B6B"/><circle cx="50" cy="80" r="15" fill="#FF6B6B"/><circle cx="20" cy="50" r="15" fill="#FF6B6B"/><circle cx="80" cy="50" r="15" fill="#FF6B6B"/></svg>`,
-  bird: `<svg viewBox="0 0 100 100"><path d="M20,60 Q35,30 65,30 Q80,30 85,45 Q70,55 55,55 Q40,55 20,60" fill="#4EA8DE"/><path d="M65,30 Q75,20 85,25 Q80,35 75,40" fill="#FFD166"/><circle cx="68" cy="38" r="4" fill="#000"/></svg>`,
-  butterfly: `<svg viewBox="0 0 100 100"><path d="M50,50 Q30,20 20,40 Q20,60 50,50 Q30,80 25,70 Q30,60 50,50" fill="#FF70A6"/><path d="M50,50 Q70,20 80,40 Q80,60 50,50 Q70,80 75,70 Q70,60 50,50" fill="#FF70A6"/><rect x="48" y="25" width="4" height="50" rx="2" fill="#3D348B"/></svg>`,
-  cloud: `<svg viewBox="0 0 100 100"><path d="M30,65 A15,15 0 0,1 35,35 A20,20 0 0,1 70,35 A15,15 0 0,1 75,65 Z" fill="#48CAE4"/></svg>`,
-  star: `<svg viewBox="0 0 100 100"><polygon points="50,10 63,38 93,38 70,57 78,87 50,70 22,87 30,57 7,38 37,38" fill="#FFD166" stroke="#FFB703" stroke-width="3"/></svg>`,
-  heart: `<svg viewBox="0 0 100 100"><path d="M50,30 C50,10 10,10 10,40 C10,70 50,90 50,90 C50,90 90,70 90,40 C90,10 50,10 50,30 Z" fill="#EF476F"/></svg>`,
-  ladybug: `<svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="30" fill="#FF3F3F"/><path d="M50,25 L50,85" stroke="#000" stroke-width="4"/><circle cx="50" cy="22" r="10" fill="#000"/><circle cx="38" cy="45" r="5" fill="#000"/><circle cx="62" cy="45" r="5" fill="#000"/><circle cx="34" cy="65" r="5" fill="#000"/><circle cx="66" cy="65" r="5" fill="#000"/></svg>`,
-  sun: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#FF7A00"/><path d="M50,10 L50,22 M50,78 L50,90 M10,50 L22,50 M78,50 L90,50 M22,22 L31,31 M69,69 L78,78 M22,78 L31,69 M69,31 L78,22" stroke="#FF7A00" stroke-width="8" stroke-linecap="round"/></svg>`,
-  apple: `<svg viewBox="0 0 100 100"><path d="M50,80 C30,80 20,65 20,45 C20,25 35,20 50,25 C65,20 80,25 80,45 C80,65 70,80 50,80 Z" fill="#E63946"/><path d="M50,25 Q55,10 65,8" stroke="#4A3C31" stroke-width="5" fill="none"/></svg>`
-};
-
-// 각 배경 일러스트별 고유의 5가지 어울리는 배치 슬롯 좌표
-const STAGE_SLOTS = {
-  1: [
-    { x: 28, y: 18, name: "한옥마루 위 별" },
-    { x: 45, y: 48, name: "마당 바닥 꽃" },
-    { x: 78, y: 22, name: "감나무 사이 나비" },
-    { x: 14, y: 74, name: "왼쪽 하단 돌담 새" },
-    { x: 88, y: 76, name: "우측 마당 장독대 사과" }
+// 각 배경 일러스트별 고정된 3개 네이티브 다른 그림의 중심 백분율(%) 좌표
+const STAGE_DIFFERENCES = {
+  1: [ // 한옥 마당 배경 (stage1_a.png vs stage1_b.png)
+    { x: 11.7, y: 8.8, name: "구름" },
+    { x: 87.6, y: 42.2, name: "감 열매" },
+    { x: 22.4, y: 63.5, name: "찻잔" }
   ],
-  2: [
-    { x: 18, y: 32, name: "시골 하늘 위 구름" },
-    { x: 55, y: 82, name: "논밭 사이 곤충" },
-    { x: 76, y: 45, name: "기와 지붕 위 별" },
-    { x: 48, y: 18, name: "지붕 너머 하늘 해" },
-    { x: 86, y: 78, name: "오른쪽 돌담 옆 꽃" }
+  2: [ // 시골 풍경 배경 (stage2_a.png vs stage2_b.png)
+    { x: 33.4, y: 11.2, name: "구름" },
+    { x: 61.0, y: 40.8, name: "전신주" },
+    { x: 89.8, y: 64.2, name: "농부" }
   ],
-  3: [
-    { x: 22, y: 24, name: "밥상 주변 숟가락" },
-    { x: 82, y: 62, name: "따뜻한 아랫목 장식" },
-    { x: 50, y: 80, name: "김치 그릇 옆 꽃" },
-    { x: 62, y: 40, name: "밥그릇 옆 나비" },
-    { x: 88, y: 20, name: "창틀 너머 새" }
+  3: [ // 전통 밥상 배경 (stage3_a.png vs stage3_b.png)
+    { x: 35.2, y: 31.7, name: "족자 그림" },
+    { x: 55.2, y: 27.8, name: "바구니" },
+    { x: 50.3, y: 10.5, name: "천장 등" }
   ]
 };
+
 
 // DOM 요소 취득 변수 선언
 let screens = {};
@@ -214,50 +196,35 @@ function loadStage(stageNum) {
 
   // 셔플된 인덱스를 참조하여 한국적인 랜덤 이미지 로드
   const bgId = shuffledBackgrounds[currentStage - 1];
-  const bgPath = `/game/images/bg${bgId}.png`;
-  ui.imgTop.src = bgPath;
-  ui.imgBottom.src = bgPath;
+  
+  // 상단에는 원본(_a), 하단에는 다른 부분이 들어간 수정본(_b)을 로드하여 네이티브 틀린그림찾기 구현
+  ui.imgTop.src = `/game/images/stage${bgId}_a.png`;
+  ui.imgBottom.src = `/game/images/stage${bgId}_b.png`;
 
   // 기존 정답 서클 및 오버레이 클리어
   ui.overlayTop.innerHTML = '';
   ui.overlayBottom.innerHTML = '';
 
-  // 랜덤 오버레이 생성 (배경 이미지에 종속된 전용 슬롯을 넘겨줌)
-  generateRandomDifferences(bgId);
+  // 해당 배경에 맞는 3개의 고정 틀린 그림 데이터 바인딩
+  loadDifferences(bgId);
 }
 
-// 4. 랜덤 오버레이 생성 알고리즘
-function generateRandomDifferences(bgId) {
-  const allSlots = STAGE_SLOTS[bgId];
+// 4. 틀린 그림 데이터 로딩 알고리즘
+function loadDifferences(bgId) {
+  const diffs = STAGE_DIFFERENCES[bgId];
   
-  // 1) 해당 배경의 5개 후보 슬롯 중 3개 랜덤 추출
-  const shuffledSlots = [...allSlots].sort(() => 0.5 - Math.random());
-  const selectedSlots = shuffledSlots.slice(0, 3);
-
-  // 2) 사용할 SVG 아이콘들을 섞기
-  const iconKeys = Object.keys(SVG_ICONS);
-  const shuffledIcons = iconKeys.sort(() => 0.5 - Math.random());
-
-  activeDifferences = selectedSlots.map((slot, index) => {
-    const iconName = shuffledIcons[index % shuffledIcons.length];
+  activeDifferences = diffs.map((diff, index) => {
     return {
       id: index,
-      x: slot.x,
-      y: slot.y,
-      iconMarkup: SVG_ICONS[iconName],
+      x: diff.x,
+      y: diff.y,
+      name: diff.name,
       found: false
     };
   });
-
-  // 3) 상단 프레임 오버레이에만 3개의 다른 그림 렌더링 (하단은 비워둠)
-  activeDifferences.forEach(diff => {
-    const itemEl = document.createElement('div');
-    itemEl.className = 'diff-item';
-    itemEl.style.left = `${diff.x}%`;
-    itemEl.style.top = `${diff.y}%`;
-    itemEl.innerHTML = diff.iconMarkup;
-    ui.overlayTop.appendChild(itemEl);
-  });
+  
+  // 더 이상 SVG를 동적으로 렌더링할 필요가 없으므로 화면에는 아무 오버레이도 그리지 않고
+  // 클릭 범위 판정을 위한 좌표 매칭용 데이터만 activeDifferences에 보관합니다.
 }
 
 // 5. 이미지 클릭 처리
