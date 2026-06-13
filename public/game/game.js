@@ -134,8 +134,8 @@ if (document.readyState === 'loading') {
 // 동적 설정 파일 stages.json 불러오기 및 매핑
 async function loadDynamicConfig() {
   try {
-    const response = await fetch('/game/stages.json');
-    if (!response.ok) throw new Error("stages.json을 가져올 수 없습니다.");
+    const response = await fetch('/api/game/config');
+    if (!response.ok) throw new Error("게임 설정을 가져올 수 없습니다.");
     
     const config = await response.json();
     fullConfigData = config;

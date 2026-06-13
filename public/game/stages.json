@@ -25,9 +25,26 @@
       "imgTop": "/game/images/stage1_a.png",
       "imgBottom": "/game/images/stage1_b.png",
       "differences": [
-        { "x": 11.8, "y": 9, "name": "구름" },
-        { "x": 87.6, "y": 42.2, "name": "감 열매" },
-        { "x": 22.4, "y": 63.5, "name": "찻잔" }
+        {
+          "x": 52,
+          "y": 49.8,
+          "name": "구름"
+        },
+        {
+          "x": 55.2,
+          "y": 50.5,
+          "name": "감 열매"
+        },
+        {
+          "x": 54.2,
+          "y": 53.1,
+          "name": "찻잔"
+        },
+        {
+          "x": 53.7,
+          "y": 51.6,
+          "name": "4번째"
+        }
       ]
     },
     "2": {
@@ -35,9 +52,21 @@
       "imgTop": "/game/images/stage2_a.png",
       "imgBottom": "/game/images/stage2_b.png",
       "differences": [
-        { "x": 33.4, "y": 11.2, "name": "구름" },
-        { "x": 61, "y": 40.8, "name": "전신주" },
-        { "x": 89.8, "y": 64.2, "name": "농부" }
+        {
+          "x": 33.4,
+          "y": 11.2,
+          "name": "구름"
+        },
+        {
+          "x": 61,
+          "y": 40.8,
+          "name": "전신주"
+        },
+        {
+          "x": 89.8,
+          "y": 64.2,
+          "name": "농부"
+        }
       ]
     },
     "3": {
@@ -45,9 +74,21 @@
       "imgTop": "/game/images/stage3_a.png",
       "imgBottom": "/game/images/stage3_b.png",
       "differences": [
-        { "x": 35.2, "y": 31.7, "name": "족자 그림" },
-        { "x": 55.2, "y": 27.8, "name": "바구니" },
-        { "x": 50.3, "y": 10.5, "name": "천장 등" }
+        {
+          "x": 35.2,
+          "y": 31.7,
+          "name": "족자 그림"
+        },
+        {
+          "x": 55.2,
+          "y": 27.8,
+          "name": "바구니"
+        },
+        {
+          "x": 50.3,
+          "y": 10.5,
+          "name": "천장 등"
+        }
       ]
     }
   }

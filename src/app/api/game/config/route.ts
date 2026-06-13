@@ -1,9 +1,35 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
 // stages.json 파일 경로 설정
 const configPath = path.join(process.cwd(), 'public', 'game', 'stages.json');
+
+// S3 Client 및 설정 취득 헬퍼
+function getS3Config() {
+  const bucketName = process.env.AWS_S3_BUCKET_NAME;
+  const region = process.env.AWS_REGION;
+  const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+
+  const isConfigured = !!(bucketName && region && accessKeyId && secretAccessKey);
+
+  const client = new S3Client({
+    region: region || 'ap-northeast-2',
+    credentials: {
+      accessKeyId: accessKeyId || '',
+      secretAccessKey: secretAccessKey || '',
+    },
+  });
+
+  return {
+    client,
+    bucketName,
+    isConfigured,
+    s3ConfigKey: 'game-assets/stages.json',
+  };
+}
 
 // 기본 설정 값
 const defaultConfig = {
@@ -51,7 +77,51 @@ const defaultConfig = {
 
 // ─── 공통 유틸 ────────────────────────────────────────────────
 
-function readConfig(): any {
+async function writeConfigToS3(config: any) {
+  const { client: s3Client, bucketName: BUCKET_NAME, s3ConfigKey: S3_CONFIG_KEY } = getS3Config();
+  const command = new PutObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: S3_CONFIG_KEY,
+    Body: JSON.stringify(config, null, 2),
+    ContentType: 'application/json',
+    CacheControl: 'no-cache, no-store, must-revalidate',
+  });
+  await s3Client.send(command);
+}
+
+async function readConfig(): Promise<any> {
+  const { client: s3Client, bucketName: BUCKET_NAME, isConfigured, s3ConfigKey: S3_CONFIG_KEY } = getS3Config();
+
+  if (isConfigured) {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: S3_CONFIG_KEY,
+      });
+      const response = await s3Client.send(command);
+      const dataStr = await response.Body?.transformToString();
+      if (dataStr) {
+        return JSON.parse(dataStr);
+      }
+    } catch (s3Error: any) {
+      // S3에 파일이 아직 없는 경우, 로컬 기본 설정을 업로드하고 반환
+      if (s3Error.name === 'NoSuchKey' || s3Error.code === 'NoSuchKey') {
+        console.log('S3 config file not found, initializing with default/local config.');
+        const localData = readLocalConfig();
+        try {
+          await writeConfigToS3(localData);
+        } catch (uploadError) {
+          console.error('Failed to upload default config to S3:', uploadError);
+        }
+        return localData;
+      }
+      console.error('Failed to read config from S3, falling back to local file:', s3Error);
+    }
+  }
+  return readLocalConfig();
+}
+
+function readLocalConfig(): any {
   const dir = path.dirname(configPath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   if (!fs.existsSync(configPath)) {
@@ -61,15 +131,34 @@ function readConfig(): any {
   return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 }
 
-function writeConfig(config: any) {
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
+async function writeConfig(config: any) {
+  const { isConfigured } = getS3Config();
+  if (isConfigured) {
+    try {
+      await writeConfigToS3(config);
+    } catch (s3Error) {
+      console.error('Failed to write config to S3:', s3Error);
+      throw s3Error;
+    }
+  }
+
+  try {
+    const dir = path.dirname(configPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
+  } catch (fsError: any) {
+    console.warn('Could not write config to local filesystem (expected on read-only environments):', fsError.message);
+    if (!isConfigured) {
+      throw fsError;
+    }
+  }
 }
 
 // ─── GET: 현재 설정 반환 ──────────────────────────────────────
 
 export async function GET() {
   try {
-    const config = readConfig();
+    const config = await readConfig();
     return NextResponse.json(config);
   } catch (error: any) {
     console.error('Config GET error:', error);
@@ -85,7 +174,7 @@ export async function POST(req: Request) {
     if (!newConfig || !newConfig.stages || !newConfig.backgrounds) {
       return NextResponse.json({ error: '잘못된 형식의 설정 데이터입니다.' }, { status: 400 });
     }
-    writeConfig(newConfig);
+    await writeConfig(newConfig);
     return NextResponse.json({ success: true, message: '설정이 성공적으로 저장되었습니다.' });
   } catch (error: any) {
     console.error('Config POST error:', error);
@@ -109,7 +198,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: '스테이지 이름을 입력해주세요.' }, { status: 400 });
     }
 
-    const config = readConfig();
+    const config = await readConfig();
     const newId = String(config.maxStage + 1);
 
     // 신규 스테이지 기본값
@@ -126,7 +215,7 @@ export async function PATCH(req: Request) {
     };
     config.maxStage = config.maxStage + 1;
 
-    writeConfig(config);
+    await writeConfig(config);
     return NextResponse.json({ success: true, newStageId: newId, config });
   } catch (error: any) {
     console.error('Config PATCH error:', error);
@@ -146,7 +235,7 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'stageId 쿼리 파라미터가 필요합니다.' }, { status: 400 });
     }
 
-    const config = readConfig();
+    const config = await readConfig();
 
     // 최소 1개 스테이지 보장
     if (config.maxStage <= 1) {
@@ -180,7 +269,7 @@ export async function DELETE(req: Request) {
     config.backgrounds = newBackgrounds;
     config.maxStage = remainingIds.length;
 
-    writeConfig(config);
+    await writeConfig(config);
     return NextResponse.json({ success: true, maxStage: config.maxStage, config });
   } catch (error: any) {
     console.error('Config DELETE error:', error);

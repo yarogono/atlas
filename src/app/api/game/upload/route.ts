@@ -1,20 +1,34 @@
 import { NextResponse } from 'next/server';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
-// S3 Client 초기화 (AWS credentials 활용)
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-  },
-});
+function getS3Config() {
+  const bucketName = process.env.AWS_S3_BUCKET_NAME;
+  const region = process.env.AWS_REGION;
+  const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+  const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || `https://${bucketName}.s3.${region}.amazonaws.com`;
 
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`;
+  const isConfigured = !!(bucketName && region && accessKeyId && secretAccessKey);
+
+  const client = new S3Client({
+    region: region || 'ap-northeast-2',
+    credentials: {
+      accessKeyId: accessKeyId || '',
+      secretAccessKey: secretAccessKey || '',
+    },
+  });
+
+  return { client, bucketName, cdnUrl, isConfigured };
+}
 
 export async function POST(req: Request) {
   try {
+    const { client: s3Client, bucketName: BUCKET_NAME, cdnUrl: CDN_URL, isConfigured } = getS3Config();
+
+    if (!isConfigured) {
+      return NextResponse.json({ error: 'AWS S3 설정이 올바르지 않습니다. 환경 변수를 확인하세요.' }, { status: 500 });
+    }
+
     // 폼 데이터 수신
     const formData = await req.formData();
     const file = formData.get('file') as File;
