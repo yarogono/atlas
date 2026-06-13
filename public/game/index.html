@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🧠 청춘 두뇌 건강 테스트 - 틀린 그림 찾기</title>
+  <meta name="description" content="시니어 대상 실시간 뇌 연령 & IQ 테스트! 다른 부분 3곳을 찾아 두뇌 나이를 젊게 유지하세요. 친구들과 결과를 카카오톡으로 공유해보세요.">
+  
+  <!-- Google Fonts: Noto Sans KR (Korean), Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Outfit:wght@500;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Kakao SDK -->
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- 전체 레이아웃 컨테이너 -->
+  <div id="game-app-container">
+    
+    <!-- 1. 시작 화면 -->
+    <section id="start-screen" class="app-screen active">
+      <div class="logo-area">
+        <span class="emoji-logo">🧠</span>
+        <h1 id="main-title">청춘 두뇌 건강 테스트</h1>
+        <p class="subtitle">실시간 뇌 연령 & IQ 측정 게임</p>
+      </div>
+
+      <div class="instructions-card">
+        <h2>🎮 어떻게 진행되나요?</h2>
+        <ul class="instructions-list">
+          <li><strong>위, 아래 두 그림</strong>에서 서로 <strong>다른 부분 3곳</strong>을 터치하세요.</li>
+          <li><strong>매 초마다</strong> 뇌 연령이 늘어나고 IQ가 줄어듭니다! ⏰</li>
+          <li>엉뚱한 곳을 누르면 <strong>뇌 연령 +5세, IQ -10</strong> 페널티가 부여됩니다.</li>
+          <li>총 <strong>3개의 스테이지</strong>를 완성하고 청춘 뇌로 인정받아 보세요!</li>
+        </ul>
+      </div>
+
+      <button id="btn-start-game" class="btn btn-primary btn-large">
+        지금 시작하기 ⚡
+      </button>
+    </section>
+
+    <!-- 2. 게임 플레이 화면 -->
+    <section id="game-screen" class="app-screen">
+      <!-- 헤더 점수 및 타이머 바 -->
+      <header class="game-header">
+        <div class="header-top">
+          <div class="stage-badge" id="current-stage-display">STAGE 1/3</div>
+          <div class="score-display">
+            <div class="score-item age-warning">
+              <span class="label">뇌 연령:</span>
+              <span class="value" id="brain-age-value">20세</span>
+            </div>
+            <div class="score-item iq-danger">
+              <span class="label">현재 IQ:</span>
+              <span class="value" id="iq-value">150</span>
+            </div>
+          </div>
+        </div>
+        <!-- 긴박한 연령 게이지 바 -->
+        <div class="timer-bar-container">
+          <div id="timer-progress" class="timer-progress-bar"></div>
+        </div>
+      </header>
+
+      <!-- 플레이 영역 (상하 2개 이미지 프레임) -->
+      <main class="game-play-area">
+        <!-- 상단 이미지 프레임 -->
+        <div id="frame-top" class="game-image-frame">
+          <img id="img-top" src="images/bg1.png" alt="원본 이미지" draggable="false">
+          <div id="overlay-top" class="diff-overlay"></div>
+        </div>
+        
+        <!-- 구분선 (시각적 분할) -->
+        <div class="divider-line"></div>
+        
+        <!-- 하단 이미지 프레임 -->
+        <div id="frame-bottom" class="game-image-frame">
+          <img id="img-bottom" src="images/bg1.png" alt="비교 이미지" draggable="false">
+          <div id="overlay-bottom" class="diff-overlay"></div>
+        </div>
+      </main>
+
+      <!-- 하단 정보 영역 -->
+      <footer class="game-footer">
+        <div class="footer-status">
+          <span class="status-icon">🔍</span>
+          <span class="status-text">틀린 그림: <strong id="found-count-value">0 / 3</strong></span>
+        </div>
+        <p class="guide-tip">두 그림 중 다른 곳 아무데나 터치해도 정답 처리됩니다!</p>
+      </footer>
+    </section>
+
+    <!-- 3. 결과 화면 -->
+    <section id="end-screen" class="app-screen">
+      <div class="result-header">
+        <span class="emoji-logo">🏆</span>
+        <h2>테스트 결과 리포트</h2>
+      </div>
+
+      <!-- 성적표 카드 -->
+      <div class="result-card">
+        <div class="result-stats">
+          <div class="stat-box">
+            <span class="stat-label">최종 뇌 연령</span>
+            <strong class="stat-value text-primary" id="final-brain-age">--세</strong>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">최종 IQ 지수</span>
+            <strong class="stat-value text-secondary" id="final-iq">--</strong>
+          </div>
+        </div>
+        
+        <div class="result-diagnosis">
+          <h3 id="diagnosis-title">두뇌 진단명</h3>
+          <p id="diagnosis-description">상세 진단 결과 내용이 여기에 들어갑니다.</p>
+        </div>
+      </div>
+
+      <!-- 액션 버튼 영역 -->
+      <div class="action-buttons">
+        <button id="btn-share-kakao" class="btn btn-kakao">
+          <span class="btn-icon">💬</span> 카카오톡 결과 공유하기
+        </button>
+        <button id="btn-copy-link" class="btn btn-secondary">
+          <span class="btn-icon">📋</span> 결과 글 복사하기
+        </button>
+        <button id="btn-restart" class="btn btn-outline">
+          🔄 다시 도전하기
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 토스트 알림창 -->
+  <div id="toast" class="toast-message"></div>
+
+  <script src="game.js"></script>
+</body>
+</html>

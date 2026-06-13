@@ -1,0 +1,567 @@
+/* 🧠 청춘 두뇌 건강 테스트 - 스타일 디자인 */
+
+/* 디자인 시스템 변수 정의 (웜 라이트 테마 전용) */
+:root {
+  --bg-color: #FAF6F0;       /* 부드럽고 따뜻한 크림/베이지 바탕 */
+  --card-bg: #FFFFFF;        /* 카드 및 레이어 화이트 */
+  --text-dark: #3E352F;      /* 시니어 눈의 피로를 최소화하는 진한 밤색 */
+  --text-muted: #7A6F68;     /* 옅은 브라운 회색 */
+  
+  --primary-color: #FF6F3D;  /* 오렌지/다홍 포인트 (활력, 클릭 유도) */
+  --primary-hover: #E85B2A;
+  --secondary-color: #00A896;/* 청록 포인트 (안정감, 성공 피드백) */
+  --secondary-hover: #008F80;
+  
+  --accent-color: #FFD166;   /* 옐로우 포인트 (칭찬, 장식) */
+  --error-color: #E74C3C;    /* 오답 적색 경고 */
+  --kakao-color: #FEE500;    /* 카카오 브랜드 노랑 */
+  --kakao-text: #191919;
+  
+  --border-radius-lg: 20px;
+  --border-radius-md: 12px;
+  --box-shadow: 0 10px 25px rgba(62, 53, 47, 0.06);
+  --box-shadow-hover: 0 15px 35px rgba(62, 53, 47, 0.12);
+  
+  --font-family: 'Noto Sans KR', sans-serif;
+  --font-display: 'Outfit', 'Noto Sans KR', sans-serif;
+}
+
+/* 기본 리셋 및 전역 스타일 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent; /* 모바일 터치 시 푸른 반짝임 제거 */
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: #ECE7E1; /* 외부 배경색 */
+  color: var(--text-dark);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* 앱 최상위 컨테이너 (모바일 기기 비율 고정 및 반응형 제한) */
+#game-app-container {
+  width: 100%;
+  max-width: 480px; /* 전형적인 스마트폰 가로 크기 제한 */
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--bg-color);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 스크린 레이아웃 공통 */
+.app-screen {
+  display: none;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.app-screen.active {
+  display: flex;
+}
+
+/* 1. 시작 화면 디자인 */
+#start-screen {
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 40px 24px 32px 24px;
+}
+
+.logo-area {
+  margin-top: 20px;
+}
+
+.emoji-logo {
+  font-size: 80px;
+  display: block;
+  margin-bottom: 16px;
+  animation: floatEmoji 3s ease-in-out infinite;
+}
+
+#main-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--text-dark);
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--primary-color);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* 안내 카드 */
+.instructions-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  width: 100%;
+  box-shadow: var(--box-shadow);
+  border: 3px solid #E6DFD5;
+  margin: 24px 0;
+  text-align: left;
+}
+
+.instructions-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-dark);
+  border-bottom: 2px solid #F3EDE4;
+  padding-bottom: 8px;
+}
+
+.instructions-list {
+  list-style: none;
+}
+
+.instructions-list li {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 24px;
+  color: var(--text-dark);
+}
+
+.instructions-list li::before {
+  content: "💡";
+  position: absolute;
+  left: 0;
+  top: 1px;
+}
+
+.instructions-list li strong {
+  color: var(--primary-color);
+}
+
+/* 2. 게임 화면 디자인 */
+#game-screen {
+  padding: 12px;
+  justify-content: space-between;
+  overflow: hidden; /* 플레이 중에는 스크롤 절대 방지 */
+}
+
+.game-header {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.stage-badge {
+  background-color: var(--text-dark);
+  color: var(--bg-color);
+  padding: 6px 14px;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: 30px;
+  font-family: var(--font-display);
+}
+
+.score-display {
+  display: flex;
+  gap: 12px;
+}
+
+.score-item {
+  background: var(--card-bg);
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 2px solid #E6DFD5;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.score-item.age-warning .value {
+  color: var(--primary-color);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.score-item.iq-danger .value {
+  color: var(--secondary-color);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+/* 실시간 연령 변화 게이지 바 */
+.timer-bar-container {
+  width: 100%;
+  height: 10px;
+  background-color: #E6DFD5;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.timer-progress-bar {
+  height: 100%;
+  width: 0%; /* 시간이 갈수록 가득 채워져서 뇌가 노화됨을 표시 */
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  transition: width 0.1s linear, background-color 0.5s ease;
+  border-radius: 5px;
+}
+
+/* 메인 플레이 영역 (상하 이미지 프레임) */
+.game-play-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 8px 0;
+}
+
+.game-image-frame {
+  width: 100%;
+  aspect-ratio: 1.5; /* 일러스트 이미지 3:2 비율 고정 */
+  position: relative;
+  background-color: #EFECE7;
+  border: 4px solid #D6CEB8;
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+  touch-action: none; /* 드래그 및 기본 모바일 액션 방지 */
+}
+
+/* 오답일 때 깜빡이며 요동치는 프레임 효과 */
+.game-image-frame.penalty {
+  border-color: var(--error-color);
+  animation: shake 0.3s ease-in-out;
+}
+
+.game-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 이미지 사이 구분 디자인 */
+.divider-line {
+  height: 4px;
+  width: 80%;
+  background: dashed #D6CEB8;
+  margin: 0 auto;
+}
+
+/* 오버레이 틀린 그림 컨테이너 */
+.diff-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* 클릭은 이미지 프레임 자체가 받음 */
+}
+
+/* 3. 결과 화면 디자인 */
+#end-screen {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-header {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.result-header h2 {
+  font-size: 26px;
+  font-weight: 900;
+  margin-top: 8px;
+}
+
+.result-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  width: 100%;
+  box-shadow: var(--box-shadow);
+  border: 4px solid #E6DFD5;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.result-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.stat-box {
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius-md);
+  padding: 16px 12px;
+  flex: 1;
+  border: 2px solid #E6DFD5;
+}
+
+.stat-label {
+  display: block;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 900;
+  font-family: var(--font-display);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
+}
+
+.result-diagnosis {
+  background: #FDFBF7;
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  border-left: 5px solid var(--primary-color);
+  text-align: left;
+}
+
+.result-diagnosis h3 {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+
+.result-diagnosis p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-dark);
+}
+
+/* 하단 푸터 영역 */
+.game-footer {
+  width: 100%;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.footer-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 3px solid #E6DFD5;
+  padding: 8px 20px;
+  border-radius: 12px;
+  display: inline-flex;
+  margin-bottom: 6px;
+}
+
+.status-icon {
+  font-size: 20px;
+}
+
+.status-text {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.status-text strong {
+  color: var(--secondary-color);
+  font-size: 22px;
+}
+
+.guide-tip {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+/* 4. 공통 컴포넌트: 버튼 디자인 */
+.btn {
+  font-family: var(--font-family);
+  font-size: 18px;
+  font-weight: 900;
+  padding: 16px 24px;
+  border-radius: 40px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-large {
+  font-size: 22px;
+  padding: 20px 32px;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: #FFFFFF;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+}
+
+.btn-kakao {
+  background-color: var(--kakao-color);
+  color: var(--kakao-text);
+  border: 1px solid #E5CE00;
+}
+
+.btn-kakao:hover {
+  background-color: #F7D400;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-dark);
+  border: 3px solid #D6CEB8;
+}
+
+.btn-outline:hover {
+  background-color: rgba(62, 53, 47, 0.04);
+}
+
+.action-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.btn-icon {
+  font-size: 22px;
+}
+
+/* 5. 동적 렌더링 요소 (정답 동그라미 및 랜덤 아이콘) */
+
+/* 틀린 그림으로 띄울 아이콘 컨테이너 */
+.diff-item {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.35));
+}
+
+.diff-item svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 맞춘 정답에 치는 초록색 동그라미 */
+.correct-marker {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 6px solid #2ECC71;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 10;
+  animation: popMarker 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+}
+
+/* 6. 토스트 알림창 */
+.toast-message {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background-color: rgba(62, 53, 47, 0.95);
+  color: #FAF6F0;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 700;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.toast-message.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 7. 애니메이션 모음 */
+@keyframes floatEmoji {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+@keyframes popMarker {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
