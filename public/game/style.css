@@ -645,16 +645,17 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 32px;
+    gap: 20px;
     padding: 0 32px;
   }
 
   .game-image-frame {
-    /* 각 이미지의 크기를 최대 650px로 조정 */
+    /* 각 이미지의 크기를 최대 650px로 조정 및 여백 제거하여 간격 최소화 */
     width: min(45vw, 650px);
     aspect-ratio: 1.5; /* 3:2 비율 고정 (650px일 때 세로 433px) */
     height: auto;
     border-width: 5px;
+    margin: 0;
   }
 
   /* 구분선을 세로선으로 변경 */
