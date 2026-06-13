@@ -246,7 +246,7 @@ body {
   margin: 0 auto;
   position: relative;
   background-color: #EFECE7;
-  border: 4px solid #D6CEB8;
+  border: 4px solid var(--primary-color);
   border-radius: var(--border-radius-md);
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0,0,0,0.04);
@@ -645,25 +645,34 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 0;
     padding: 0 32px;
   }
 
   .game-image-frame {
-    /* 각 이미지의 크기를 최대 650px로 조정 및 여백 제거하여 간격 최소화 */
-    width: min(45vw, 650px);
-    aspect-ratio: 1.5; /* 3:2 비율 고정 (650px일 때 세로 433px) */
+    /* 각 이미지의 크기를 최대 800px로 조정 및 여백 제거하여 간격 최소화 */
+    width: min(46vw, 800px);
+    aspect-ratio: 1.5; /* 3:2 비율 고정 (800px일 때 세로 533px) */
     height: auto;
     border-width: 5px;
     margin: 0;
   }
 
-  /* 구분선을 세로선으로 변경 */
+  /* 좌우 이미지를 밀착시키되 가운데 5px 경계선을 유지하기 위해 경계와 라운딩 조정 */
+  #frame-top {
+    border-right: 5px solid var(--primary-color);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  #frame-bottom {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  /* 구분선을 가려서 완전히 붙어 있게 만듦 */
   .divider-line {
-    width: 4px;
-    height: 400px;
-    background: dashed #D6CEB8;
-    margin: 0;
+    display: none;
   }
 }
 

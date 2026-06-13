@@ -76,6 +76,8 @@
       cursor: pointer;
       text-decoration: none;
       transition: all 0.2s;
+      font-family: var(--font-family);
+      font-size: 14px;
     }
 
     .back-btn:hover {
@@ -83,6 +85,92 @@
       color: var(--text-dark);
     }
 
+    /* ── 스테이지 탭 바 ── */
+    .stage-tab-bar {
+      background-color: var(--text-dark);
+      padding: 0 40px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 4px solid #D6CEB8;
+    }
+
+    .stage-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 30px;
+      padding: 8px 16px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-family);
+    }
+
+    .stage-tab:hover {
+      background: rgba(255,255,255,0.22);
+      color: #FFFFFF;
+    }
+
+    .stage-tab.active {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: #FFFFFF;
+    }
+
+    .stage-tab .tab-delete-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      color: #FFFFFF;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: background 0.2s;
+      font-family: var(--font-family);
+    }
+
+    .stage-tab .tab-delete-btn:hover {
+      background: var(--error-color);
+    }
+
+    .stage-tab .tab-delete-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .btn-add-stage {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--secondary-color);
+      border: 2px solid var(--secondary-color);
+      border-radius: 30px;
+      padding: 8px 18px;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-family);
+    }
+
+    .btn-add-stage:hover {
+      background: var(--secondary-hover);
+      border-color: var(--secondary-hover);
+    }
+
+    /* ── 본문 레이아웃 ── */
     .admin-content {
       padding: 40px;
       display: grid;
@@ -133,6 +221,7 @@
       font-size: 15px;
       color: var(--text-dark);
       background-color: #FAF9F6;
+      font-family: var(--font-family);
     }
 
     .form-control:focus {
@@ -158,6 +247,8 @@
       gap: 8px;
       transition: all 0.2s;
       width: 100%;
+      font-family: var(--font-family);
+      font-size: 15px;
     }
 
     .btn-primary {
@@ -176,6 +267,83 @@
 
     .btn-secondary:hover {
       background-color: var(--secondary-hover);
+    }
+
+    /* ── 동적 틀린 그림 슬롯 ── */
+    .diff-slots-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .diff-slot {
+      background: #F9F5F0;
+      border-radius: 10px;
+      padding: 12px;
+      border: 2px solid #E6DFD5;
+      position: relative;
+    }
+
+    .diff-slot-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .diff-slot-label {
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slot-color-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .btn-remove-slot {
+      background: transparent;
+      border: 1px solid #D6CEB8;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--error-color);
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: all 0.2s;
+    }
+
+    .btn-remove-slot:hover {
+      background: var(--error-color);
+      color: #FFF;
+      border-color: var(--error-color);
+    }
+
+    .btn-add-slot {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      border: 2px dashed #C2B8A3;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: all 0.2s;
+      margin-top: 4px;
+    }
+
+    .btn-add-slot:hover {
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+      background: rgba(0,168,150,0.05);
     }
 
     /* 이미지 프리뷰 및 좌표 핑 찍기 패널 */
@@ -242,28 +410,22 @@
 
     .slot-selector {
       display: flex;
-      gap: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .slot-btn {
-      padding: 8px 16px;
+      padding: 7px 14px;
       border-radius: 20px;
       border: 2px solid #D6CEB8;
       background-color: transparent;
       cursor: pointer;
       font-weight: 700;
       color: var(--text-muted);
+      font-family: var(--font-family);
+      font-size: 13px;
+      transition: all 0.2s;
     }
-
-    .slot-btn.active {
-      border-color: var(--primary-color);
-      background-color: var(--primary-color);
-      color: #FFFFFF;
-    }
-
-    .slot-btn.slot-1.active { background-color: #E74C3C; border-color: #E74C3C; }
-    .slot-btn.slot-2.active { background-color: #3498DB; border-color: #3498DB; }
-    .slot-btn.slot-3.active { background-color: #2ECC71; border-color: #2ECC71; }
 
     /* 대칭형 배치 이미지 워크벤치 */
     .images-workbench {
@@ -297,14 +459,25 @@
       -webkit-user-drag: none;
     }
 
+    .image-frame .placeholder-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 700;
+      background: #EFECE7;
+    }
+
     .divider {
       width: 5px;
       background-color: var(--primary-color);
-      height: 100%;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 5;
+      align-self: stretch;
+      flex-shrink: 0;
     }
 
     /* 좌표 마커 핑 스타일 */
@@ -327,10 +500,6 @@
       text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
 
-    .ping-marker.slot-1 { background-color: rgba(231, 76, 60, 0.7); }
-    .ping-marker.slot-2 { background-color: rgba(52, 152, 219, 0.7); }
-    .ping-marker.slot-3 { background-color: rgba(46, 204, 113, 0.7); }
-
     /* 토스트 팝업 */
     .toast {
       position: fixed;
@@ -345,6 +514,84 @@
       display: none;
       z-index: 100;
       border-left: 6px solid var(--secondary-color);
+      max-width: 380px;
+    }
+
+    /* ── 모달 (스테이지 추가 / 삭제 확인) ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 36px 32px;
+      width: 420px;
+      max-width: 90vw;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: scale(1);
+    }
+
+    .modal-box h3 {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+    }
+
+    .modal-box p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+    }
+
+    .btn-danger {
+      background-color: var(--error-color);
+      color: #FFFFFF;
+    }
+
+    .btn-danger:hover {
+      background-color: #C0392B;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 2px solid #D6CEB8;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--text-dark);
+      color: var(--text-dark);
     }
   </style>
 </head>
@@ -355,30 +602,27 @@
       <h1>🛠️ 틀린 그림 찾기 게임 관리자 대시보드</h1>
       <div style="display: flex; gap: 12px; align-items: center;">
         <a href="/game/index.html" class="back-btn">게임 화면으로 돌아가기 🎮</a>
-        <button id="btn-logout" class="back-btn" style="background: rgba(255,255,255,0.15); cursor:pointer; border: 2px solid #FFFFFF; color:#FFFFFF;">🔓 로그아웃</button>
+        <button id="btn-logout" class="back-btn" style="background: rgba(255,255,255,0.15); cursor:pointer;">🔓 로그아웃</button>
       </div>
     </header>
 
+    <!-- 동적 스테이지 탭 바 -->
+    <div class="stage-tab-bar" id="stage-tab-bar">
+      <!-- JS로 동적 렌더링 -->
+      <button class="btn-add-stage" id="btn-add-stage">➕ 스테이지 추가</button>
+    </div>
 
     <div class="admin-content">
       
       <!-- 1. 설정 및 좌표 폼 패널 -->
       <div class="config-panel">
-        
-        <div class="card">
-          <h2>📁 스테이지 대상 선택</h2>
-          <div class="form-group">
-            <label for="stage-selector">편집할 스테이지 (백그라운드 ID)</label>
-            <select id="stage-selector" class="form-control">
-              <option value="1">STAGE 1 (한옥 마당)</option>
-              <option value="2">STAGE 2 (시골 기와집)</option>
-              <option value="3">STAGE 3 (전통 밥상)</option>
-            </select>
-          </div>
-        </div>
 
         <div class="card">
           <h2>⚙️ 스테이지 난이도 설정</h2>
+          <div class="form-group">
+            <label>스테이지 이름</label>
+            <input type="text" id="stage-title" class="form-control" placeholder="예: 봄 꽃밭">
+          </div>
           <div class="form-group">
             <label for="time-limit">제한 시간 (초)</label>
             <input type="number" id="time-limit" class="form-control" min="10" max="300">
@@ -397,39 +641,13 @@
 
         <div class="card">
           <h2>📍 틀린 그림 좌표값 (백분율 %)</h2>
-          
-          <!-- 슬롯 1 설정 -->
-          <div class="form-group" style="border-left: 4px solid #E74C3C; padding-left: 10px;">
-            <label>오브젝트 1 (빨간색)</label>
-            <input type="text" id="diff-name-1" class="form-control" placeholder="오브젝트 이름 (예: 구름)" style="margin-bottom: 6px;">
-            <div class="row-grid">
-              <input type="number" id="diff-x-1" class="form-control" placeholder="X (%)" readonly>
-              <input type="number" id="diff-y-1" class="form-control" placeholder="Y (%)" readonly>
-            </div>
-          </div>
-
-          <!-- 슬롯 2 설정 -->
-          <div class="form-group" style="border-left: 4px solid #3498DB; padding-left: 10px;">
-            <label>오브젝트 2 (파란색)</label>
-            <input type="text" id="diff-name-2" class="form-control" placeholder="오브젝트 이름" style="margin-bottom: 6px;">
-            <div class="row-grid">
-              <input type="number" id="diff-x-2" class="form-control" placeholder="X (%)" readonly>
-              <input type="number" id="diff-y-2" class="form-control" placeholder="Y (%)" readonly>
-            </div>
-          </div>
-
-          <!-- 슬롯 3 설정 -->
-          <div class="form-group" style="border-left: 4px solid #2ECC71; padding-left: 10px;">
-            <label>오브젝트 3 (초록색)</label>
-            <input type="text" id="diff-name-3" class="form-control" placeholder="오브젝트 이름" style="margin-bottom: 6px;">
-            <div class="row-grid">
-              <input type="number" id="diff-x-3" class="form-control" placeholder="X (%)" readonly>
-              <input type="number" id="diff-y-3" class="form-control" placeholder="Y (%)" readonly>
-            </div>
-          </div>
+          <!-- 동적 슬롯 렌더링 영역 -->
+          <div id="diff-slots-container" class="diff-slots-container"></div>
+          <!-- 슬롯 추가 버튼 -->
+          <button class="btn-add-slot" id="btn-add-slot">➕ 틀린 그림 추가</button>
         </div>
 
-        <button id="btn-save-config" class="btn btn-primary btn-large">💾 설정 전체 저장하기</button>
+        <button id="btn-save-config" class="btn btn-primary">💾 설정 전체 저장하기</button>
       </div>
 
       <!-- 2. 이미지 업로드 및 클릭 워크벤치 패널 -->
@@ -437,14 +655,12 @@
         
         <!-- 이미지 S3 파일 업로더 -->
         <div class="upload-section">
-          <!-- 이미지 A 원본 업로드 -->
           <div class="upload-box" onclick="document.getElementById('file-a-input').click()">
             <span class="upload-label">📸 왼쪽 원본 이미지 (Image A) 업로드</span>
             <span class="upload-status" id="status-a">파일 선택 대기 중 (S3 자동 전송)</span>
             <input type="file" id="file-a-input" accept="image/*">
           </div>
 
-          <!-- 이미지 B 수정본 업로드 -->
           <div class="upload-box" onclick="document.getElementById('file-b-input').click()">
             <span class="upload-label">🎨 오른쪽 수정본 이미지 (Image B) 업로드</span>
             <span class="upload-status" id="status-b">파일 선택 대기 중 (S3 자동 전송)</span>
@@ -456,13 +672,8 @@
         <div class="editor-area">
           <div class="editor-header">
             <h3>🎯 이미지 클릭하여 틀린 좌표 지정</h3>
-            
-            <div class="slot-selector">
-              <span style="font-size: 14px; font-weight: 700; align-self: center; margin-right: 4px;">지정할 번호 선택:</span>
-              <button class="slot-btn slot-1 active" data-slot="1">1번</button>
-              <button class="slot-btn slot-2" data-slot="2">2번</button>
-              <button class="slot-btn slot-3" data-slot="3">3번</button>
-            </div>
+            <!-- 동적 슬롯 선택 버튼 -->
+            <div class="slot-selector" id="slot-selector-btns"></div>
           </div>
 
           <p style="font-size: 14px; color: var(--text-muted); align-self: flex-start;">
@@ -470,19 +681,21 @@
           </p>
 
           <!-- 워크벤치 컨테이너 -->
-          <div class="images-workbench">
+          <div class="images-workbench" id="images-workbench">
             <!-- 왼쪽 원본 -->
             <div class="image-frame" id="workbench-left">
-              <img id="preview-img-left" src="/game/images/stage1_a.png" alt="왼쪽 원본">
+              <img id="preview-img-left" src="" alt="왼쪽 원본" style="display:none;">
+              <div class="placeholder-text" id="placeholder-left">📸<br>원본 이미지를 업로드하세요</div>
               <div class="overlay-pings" id="pings-left"></div>
             </div>
 
-            <!-- 중앙 구분선 (붙어 있음) -->
+            <!-- 중앙 구분선 -->
             <div class="divider"></div>
 
             <!-- 오른쪽 수정본 -->
             <div class="image-frame" id="workbench-right">
-              <img id="preview-img-right" src="/game/images/stage1_b.png" alt="오른쪽 수정본">
+              <img id="preview-img-right" src="" alt="오른쪽 수정본" style="display:none;">
+              <div class="placeholder-text" id="placeholder-right">🎨<br>수정본 이미지를 업로드하세요</div>
               <div class="overlay-pings" id="pings-right"></div>
             </div>
           </div>
@@ -495,6 +708,34 @@
 
   <!-- 토스트 알림 -->
   <div id="admin-toast" class="toast">설정이 성공적으로 저장되었습니다!</div>
+
+  <!-- 스테이지 추가 모달 -->
+  <div class="modal-overlay" id="modal-add-stage">
+    <div class="modal-box">
+      <h3>➕ 새 스테이지 추가</h3>
+      <p>새 스테이지의 이름을 입력하세요.<br>이미지와 틀린 그림 좌표는 추가 후 설정할 수 있습니다.</p>
+      <div class="form-group">
+        <label for="new-stage-title">스테이지 이름</label>
+        <input type="text" id="new-stage-title" class="form-control" placeholder="예: 봄 꽃밭, 전통 시장 …">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-cancel-add">취소</button>
+        <button class="btn btn-secondary" id="btn-confirm-add">추가하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스테이지 삭제 확인 모달 -->
+  <div class="modal-overlay" id="modal-delete-stage">
+    <div class="modal-box">
+      <h3>🗑️ 스테이지 삭제</h3>
+      <p id="modal-delete-desc">정말로 이 스테이지를 삭제하시겠습니까?<br>삭제된 스테이지의 S3 이미지는 자동으로 삭제되지 않습니다.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-cancel-delete">취소</button>
+        <button class="btn btn-danger" id="btn-confirm-delete">삭제하기</button>
+      </div>
+    </div>
+  </div>
 
   <script src="/game/admin.js"></script>
 </body>

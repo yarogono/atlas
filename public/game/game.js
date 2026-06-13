@@ -45,6 +45,7 @@ let foundCount = 0;
 let activeDifferences = []; // 현재 스테이지의 틀린 부분 목록
 let shuffledBackgrounds = []; // 게임마다 셔플될 배경 이미지 순서 ([1, 2, 3]이 섞임)
 let agingTimerAccumulator = 0; // 스테이지 내 소수점 시간 연령 가중 축적기
+let fullConfigData = null; // 동적 stages.json 설정을 담을 전역 변수
 
 // 각 배경 일러스트별 고정된 3개 네이티브 다른 그림의 중심 백분율(%) 좌표
 const STAGE_DIFFERENCES = {
@@ -117,12 +118,49 @@ function initGameListeners() {
   // 클릭 이벤트 핸들러 (상단/하단 프레임 둘 다 연결)
   ui.frameTop.addEventListener('click', (e) => handleImageClick(e, ui.frameTop));
   ui.frameBottom.addEventListener('click', (e) => handleImageClick(e, ui.frameBottom));
+
+  // 동적 설정 불러오기 실행
+  loadDynamicConfig().then(() => {
+    console.log("initGameListeners: Setup complete with dynamic configs.");
+  });
 }
 
 if (document.readyState === 'loading') {
   window.addEventListener('DOMContentLoaded', initGameListeners);
 } else {
   initGameListeners();
+}
+
+// 동적 설정 파일 stages.json 불러오기 및 매핑
+async function loadDynamicConfig() {
+  try {
+    const response = await fetch('/game/stages.json');
+    if (!response.ok) throw new Error("stages.json을 가져올 수 없습니다.");
+    
+    const config = await response.json();
+    fullConfigData = config;
+    
+    // gameConfig 기본 파라미터 병합
+    gameConfig.maxStage = config.maxStage || 3;
+    gameConfig.baseIq = config.baseIq || 150;
+    gameConfig.baseBrainAge = config.baseBrainAge || 20;
+    
+    // stages 병합
+    if (config.stages) {
+      gameConfig.stages = config.stages;
+    }
+    
+    // STAGE_DIFFERENCES 매핑
+    if (config.backgrounds) {
+      for (let bgId in config.backgrounds) {
+        STAGE_DIFFERENCES[bgId] = config.backgrounds[bgId].differences;
+      }
+    }
+    
+    console.log("loadDynamicConfig: Dynamic configs merged successfully.");
+  } catch (error) {
+    console.warn("loadDynamicConfig: Failed to load dynamic config, using local fallback:", error);
+  }
 }
 
 // 타이머 변수
@@ -134,9 +172,11 @@ function startGame() {
   gameState = 'PLAYING';
   showScreen('game');
   
-  // 첫 게임 시 배경 셔플이 안되어있으면 셔플 처리
+  // 첫 게임 시 배경 셔플이 안되어있으면 셔플 처리 (maxStage 기반 동적 생성)
   if (shuffledBackgrounds.length === 0) {
-    shuffledBackgrounds = [1, 2, 3].sort(() => 0.5 - Math.random());
+    const stageCount = gameConfig.maxStage || 3;
+    shuffledBackgrounds = Array.from({ length: stageCount }, (_, i) => i + 1)
+      .sort(() => 0.5 - Math.random());
   }
   
   loadStage(1);
@@ -192,14 +232,21 @@ function loadStage(stageNum) {
   ui.timerProgress.style.width = '0%';
   
   ui.stageDisplay.textContent = `STAGE ${currentStage}/${gameConfig.maxStage}`;
-  ui.foundCount.innerHTML = `<strong>0 / 3</strong>`;
+  // 이 시점에는 아직 differences 로드 전이므로 "0 / ?"로 초기 표시 (loadDifferences에서 갱신)
+  ui.foundCount.innerHTML = `<strong>0 / ?</strong>`;
 
   // 셔플된 인덱스를 참조하여 한국적인 랜덤 이미지 로드
   const bgId = shuffledBackgrounds[currentStage - 1];
   
   // 상단에는 원본(_a), 하단에는 다른 부분이 들어간 수정본(_b)을 로드하여 네이티브 틀린그림찾기 구현
-  ui.imgTop.src = `/game/images/stage${bgId}_a.png`;
-  ui.imgBottom.src = `/game/images/stage${bgId}_b.png`;
+  const bgInfo = fullConfigData && fullConfigData.backgrounds && fullConfigData.backgrounds[bgId];
+  if (bgInfo && bgInfo.imgTop && bgInfo.imgBottom) {
+    ui.imgTop.src = bgInfo.imgTop;
+    ui.imgBottom.src = bgInfo.imgBottom;
+  } else {
+    ui.imgTop.src = `/game/images/stage${bgId}_a.png`;
+    ui.imgBottom.src = `/game/images/stage${bgId}_b.png`;
+  }
 
   // 기존 정답 서클 및 오버레이 클리어
   ui.overlayTop.innerHTML = '';
@@ -211,7 +258,7 @@ function loadStage(stageNum) {
 
 // 4. 틀린 그림 데이터 로딩 알고리즘
 function loadDifferences(bgId) {
-  const diffs = STAGE_DIFFERENCES[bgId];
+  const diffs = STAGE_DIFFERENCES[bgId] || [];
   
   activeDifferences = diffs.map((diff, index) => {
     return {
@@ -222,10 +269,16 @@ function loadDifferences(bgId) {
       found: false
     };
   });
-  
-  // 더 이상 SVG를 동적으로 렌더링할 필요가 없으므로 화면에는 아무 오버레이도 그리지 않고
-  // 클릭 범위 판정을 위한 좌표 매칭용 데이터만 activeDifferences에 보관합니다.
+
+  // 정답 개수 확정 후 카운터 UI 갱신 (동적 개수 반영)
+  ui.foundCount.innerHTML = `<strong>0 / ${activeDifferences.length}</strong>`;
+
+  // 틀린 그림 데이터가 비어있으면 경고 (아직 설정 안된 스테이지)
+  if (activeDifferences.length === 0) {
+    console.warn(`loadDifferences: Stage bgId=${bgId}의 틀린 그림 좌표가 설정되지 않았습니다.`);
+  }
 }
+
 
 // 5. 이미지 클릭 처리
 function handleImageClick(e, frameElement) {
@@ -236,6 +289,9 @@ function handleImageClick(e, frameElement) {
   // 클릭된 절대좌표를 프레임 크기 기준 백분율(%)로 환산
   const clickX = ((e.clientX - rect.left) / rect.width) * 100;
   const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+
+  // 개발 및 코디네이트 지정 편의를 위한 로그 출력 (콘솔에서 복사 가능)
+  console.log(`[클릭 좌표 정보] { x: ${clickX.toFixed(1)}, y: ${clickY.toFixed(1)} }`);
 
   const stageDifficulty = gameConfig.stages[currentStage];
   const hitRadius = stageDifficulty.hitRadius; // 스테이지별 다이내믹 정답 판정 반경
@@ -261,7 +317,7 @@ function handleImageClick(e, frameElement) {
       // 양쪽 이미지 오버레이 모두에 성공 동그라미 표식 생성
       showSuccessMarker(diff.x, diff.y);
       updateScoreUI();
-      ui.foundCount.innerHTML = `<strong>${foundCount} / 3</strong>`;
+      ui.foundCount.innerHTML = `<strong>${foundCount} / ${activeDifferences.length}</strong>`;
 
       showToast("🎉 정답입니다! 뇌 나이 -3세, IQ +5!");
 
@@ -270,8 +326,8 @@ function handleImageClick(e, frameElement) {
         navigator.vibrate(50);
       }
 
-      // 3개 모두 찾았는지 여부 확인
-      if (foundCount === 3) {
+      // 모든 틀린 그림을 찾았는지 여부 확인 (동적 개수 지원)
+      if (foundCount === activeDifferences.length) {
         setTimeout(() => {
           if (currentStage < gameConfig.maxStage) {
             loadStage(currentStage + 1);
