@@ -34,7 +34,7 @@ function getS3Config() {
 // 기본 설정 값
 const defaultConfig = {
   maxStage: 3,
-  baseIq: 150,
+  baseIq: 200,
   baseBrainAge: 20,
   stages: {
     "1": { timeLimit: 60, agingInterval: 2.0, hitRadius: 10.0 },

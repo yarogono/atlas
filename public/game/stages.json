@@ -1,6 +1,6 @@
 {
   "maxStage": 1,
-  "baseIq": 150,
+  "baseIq": 200,
   "baseBrainAge": 20,
   "stages": {
     "1": {

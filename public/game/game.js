@@ -14,7 +14,7 @@ try {
 // 게임 상태 및 데이터 정의
 const gameConfig = {
   maxStage: 3,
-  baseIq: 150,
+  baseIq: 200,
   baseBrainAge: 20,
   // 스테이지별 점진적 난이도 상세 설정
   stages: {
@@ -184,7 +184,7 @@ async function loadDynamicConfig() {
     
     // gameConfig 기본 파라미터 병합
     gameConfig.maxStage = config.maxStage || 3;
-    gameConfig.baseIq = config.baseIq || 150;
+    gameConfig.baseIq = config.baseIq || 200;
     gameConfig.baseBrainAge = config.baseBrainAge || 20;
     
     // stages 병합
