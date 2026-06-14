@@ -512,5 +512,221 @@ fileBInput.addEventListener('change', (e) => {
 // 설정 저장
 btnSaveConfig.addEventListener('click', saveAllConfig);
 
+// ─── 16. S3 라이브러리 연동 ───────────────────────────────────────
+let s3TargetImageType = 'a';
+let loadedS3AssetsList = [];
+let currentS3Filter = 'all'; // 'all', 'used', 'unused'
+
+const modalS3Library = document.getElementById('modal-s3-library');
+const s3LibraryTitle = document.getElementById('s3-library-title');
+const s3Loading = document.getElementById('s3-loading');
+const s3Empty = document.getElementById('s3-empty');
+const s3AssetsGrid = document.getElementById('s3-assets-grid');
+const s3FilterContainer = document.getElementById('s3-filter-container');
+
+function openS3Library(imageType) {
+  s3TargetImageType = imageType;
+  s3LibraryTitle.textContent = imageType === 'a' ? '왼쪽 원본 Image A' : '오른쪽 수정본 Image B';
+  modalS3Library.classList.add('active');
+  
+  // 필터 초기화
+  currentS3Filter = 'all';
+  s3FilterContainer.querySelectorAll('.filter-btn').forEach(btn => {
+    if (btn.dataset.filter === 'all') {
+      btn.classList.add('active');
+      btn.style.background = 'var(--text-dark)';
+      btn.style.color = '#FFF';
+      btn.style.borderColor = 'var(--text-dark)';
+    } else {
+      btn.classList.remove('active');
+      btn.style.background = 'transparent';
+      btn.style.color = 'var(--text-muted)';
+      btn.style.borderColor = '#D6CEB8';
+    }
+  });
+
+  loadS3Assets();
+}
+
+function closeS3Library() {
+  modalS3Library.classList.remove('active');
+}
+
+async function loadS3Assets() {
+  s3Loading.style.display = 'block';
+  s3Empty.style.display = 'none';
+  s3AssetsGrid.innerHTML = '';
+
+  try {
+    const response = await fetch('/api/game/assets');
+    if (!response.ok) {
+      throw new Error('S3 에셋 목록을 가져오지 못했습니다.');
+    }
+    const data = await response.json();
+    loadedS3AssetsList = data.assets || [];
+    
+    s3Loading.style.display = 'none';
+    renderS3Assets();
+  } catch (error) {
+    s3Loading.style.display = 'none';
+    showToast(`❌ 에러: ${error.message}`);
+  }
+}
+
+function renderS3Assets() {
+  s3AssetsGrid.innerHTML = '';
+  s3Empty.style.display = 'none';
+
+  // 1. 현재 사용중인 이미지 경로 확인 (stages.json 기준)
+  const usedUrls = new Set();
+  const urlToStageMap = {}; // 어떤 스테이지에서 사용중인지 매핑
+  if (fullConfig && fullConfig.backgrounds) {
+    Object.keys(fullConfig.backgrounds).forEach(id => {
+      const bg = fullConfig.backgrounds[id];
+      if (bg.imgTop) {
+        usedUrls.add(bg.imgTop);
+        urlToStageMap[bg.imgTop] = `STAGE ${id} (원본)`;
+      }
+      if (bg.imgBottom) {
+        usedUrls.add(bg.imgBottom);
+        urlToStageMap[bg.imgBottom] = `STAGE ${id} (수정본)`;
+      }
+    });
+  }
+
+  // 2. 필터링된 목록 구성
+  const filteredAssets = loadedS3AssetsList.filter(asset => {
+    const isUsed = usedUrls.has(asset.url);
+    if (currentS3Filter === 'used') return isUsed;
+    if (currentS3Filter === 'unused') return !isUsed;
+    return true; // 'all'
+  });
+
+  if (filteredAssets.length === 0) {
+    s3Empty.textContent = currentS3Filter === 'unused' 
+      ? '사용하지 않는 이미지가 없습니다. 버킷이 아주 깨끗합니다!' 
+      : (currentS3Filter === 'used' ? '사용 중인 이미지가 없습니다.' : 'S3 라이브러리가 비어 있습니다.');
+    s3Empty.style.display = 'block';
+    return;
+  }
+
+  // 3. 카드 렌더링
+  filteredAssets.forEach(asset => {
+    const card = document.createElement('div');
+    card.className = 's3-card';
+
+    const isUsed = usedUrls.has(asset.url);
+    const sizeKB = (asset.size / 1024).toFixed(1);
+    const dateStr = new Date(asset.lastModified).toLocaleDateString('ko-KR', {
+      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+    });
+
+    // 사용 여부 뱃지 구성
+    const badgeHtml = isUsed 
+      ? `<span style="background-color: var(--secondary-color); color:#FFF; font-size:10px; font-weight:700; padding:2px 6px; border-radius:10px; align-self:flex-start;">사용 중 (${urlToStageMap[asset.url]})</span>`
+      : `<span style="background-color: var(--text-muted); color:#FFF; font-size:10px; font-weight:700; padding:2px 6px; border-radius:10px; align-self:flex-start;">미사용</span>`;
+
+    card.innerHTML = `
+      <div class="s3-card-img-container">
+        <img src="${asset.url}" alt="${asset.name}">
+      </div>
+      <div class="s3-card-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+          ${badgeHtml}
+        </div>
+        <div class="s3-card-title" title="${asset.name}" style="margin-top:4px;">${asset.name}</div>
+        <div class="s3-card-meta">${sizeKB} KB</div>
+        <div class="s3-card-meta">${dateStr}</div>
+        <div class="s3-card-actions">
+          <button class="btn-s3-select" data-url="${asset.url}">선택</button>
+          <button class="btn-s3-delete" data-key="${asset.key}" ${isUsed ? 'disabled style="opacity:0.4; cursor:not-allowed; background-color:#7A6F68;"' : ''}>${isUsed ? '사용중' : '삭제'}</button>
+        </div>
+      </div>
+    `;
+
+    card.querySelector('.btn-s3-select').addEventListener('click', () => {
+      selectS3Asset(asset.url);
+    });
+
+    if (!isUsed) {
+      card.querySelector('.btn-s3-delete').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteS3Asset(asset.key, asset.name);
+      });
+    }
+
+    s3AssetsGrid.appendChild(card);
+  });
+}
+
+function selectS3Asset(url) {
+  if (s3TargetImageType === 'a') {
+    fullConfig.backgrounds[selectedStage].imgTop = url;
+    previewImgLeft.src = url;
+    previewImgLeft.style.display = 'block';
+    placeholderLeft.style.display = 'none';
+    statusA.textContent = 'S3 라이브러리에서 선택됨';
+    statusA.style.color = 'var(--secondary-color)';
+  } else {
+    fullConfig.backgrounds[selectedStage].imgBottom = url;
+    previewImgRight.src = url;
+    previewImgRight.style.display = 'block';
+    placeholderRight.style.display = 'none';
+    statusB.textContent = 'S3 라이브러리에서 선택됨';
+    statusB.style.color = 'var(--secondary-color)';
+  }
+  
+  closeS3Library();
+  showToast(`✅ S3 이미지가 스테이지 ${selectedStage}에 선택 적용되었습니다.`);
+}
+
+async function deleteS3Asset(key, name) {
+  const isConfirmed = confirm(`정말로 S3 버킷에서 이 파일을 영구 삭제하시겠습니까?\n파일명: ${name}`);
+  if (!isConfirmed) return;
+
+  try {
+    const response = await fetch(`/api/game/assets?key=${encodeURIComponent(key)}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || 'S3 에셋 삭제 실패');
+    }
+
+    showToast('🗑️ S3 에셋이 삭제되었습니다.');
+    loadS3Assets();
+  } catch (error) {
+    showToast(`❌ 에러: ${error.message}`);
+  }
+}
+
+// 필터 버튼 클릭 이벤트 바인딩
+s3FilterContainer.addEventListener('click', (e) => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+
+  s3FilterContainer.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = 'transparent';
+    b.style.color = 'var(--text-muted)';
+    b.style.borderColor = '#D6CEB8';
+  });
+
+  btn.classList.add('active');
+  btn.style.background = 'var(--text-dark)';
+  btn.style.color = '#FFF';
+  btn.style.borderColor = 'var(--text-dark)';
+
+  currentS3Filter = btn.dataset.filter;
+  renderS3Assets();
+});
+
+// S3 라이브러리 관련 이벤트 바인딩
+document.getElementById('btn-open-s3-a').addEventListener('click', () => openS3Library('a'));
+document.getElementById('btn-open-s3-b').addEventListener('click', () => openS3Library('b'));
+document.getElementById('btn-close-s3-library').addEventListener('click', closeS3Library);
+modalS3Library.addEventListener('click', (e) => { if (e.target === modalS3Library) closeS3Library(); });
+
 // ─── 초기화 ──────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', loadConfig);

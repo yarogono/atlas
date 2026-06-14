@@ -1,19 +1,9 @@
 {
-  "maxStage": 3,
+  "maxStage": 1,
   "baseIq": 150,
   "baseBrainAge": 20,
   "stages": {
     "1": {
-      "timeLimit": 60,
-      "agingInterval": 2,
-      "hitRadius": 10
-    },
-    "2": {
-      "timeLimit": 50,
-      "agingInterval": 1.2,
-      "hitRadius": 8
-    },
-    "3": {
       "timeLimit": 40,
       "agingInterval": 0.8,
       "hitRadius": 6
@@ -21,68 +11,29 @@
   },
   "backgrounds": {
     "1": {
-      "title": "주방 요리",
-      "imgTop": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage1_a_1781395300971.jpg",
-      "imgBottom": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage1_b_1781395307782.jpg",
-      "differences": [
-        {
-          "x": 24.6,
-          "y": 71.3,
-          "name": "구름"
-        },
-        {
-          "x": 63.2,
-          "y": 19.6,
-          "name": "감 열매"
-        },
-        {
-          "x": 82.4,
-          "y": 36.4,
-          "name": "찻잔"
-        }
-      ]
-    },
-    "2": {
-      "title": "시골 기와집",
-      "imgTop": "/game/images/stage2_a.png",
-      "imgBottom": "/game/images/stage2_b.png",
-      "differences": [
-        {
-          "x": 33.4,
-          "y": 11.2,
-          "name": "구름"
-        },
-        {
-          "x": 61,
-          "y": 40.8,
-          "name": "전신주"
-        },
-        {
-          "x": 89.8,
-          "y": 64.2,
-          "name": "농부"
-        }
-      ]
-    },
-    "3": {
       "title": "전통 밥상",
-      "imgTop": "/game/images/stage3_a.png",
-      "imgBottom": "/game/images/stage3_b.png",
+      "imgTop": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage3_a_1781403991198.jpg",
+      "imgBottom": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage3_b_1781403995031.jpeg",
       "differences": [
         {
-          "x": 35.2,
-          "y": 31.7,
+          "x": 23.9,
+          "y": 81.1,
           "name": "족자 그림"
         },
         {
-          "x": 55.2,
-          "y": 27.8,
+          "x": 17.2,
+          "y": 8,
           "name": "바구니"
         },
         {
-          "x": 50.3,
-          "y": 10.5,
+          "x": 92.4,
+          "y": 58.5,
           "name": "천장 등"
+        },
+        {
+          "x": 89.7,
+          "y": 87.6,
+          "name": "바퀴"
         }
       ]
     }

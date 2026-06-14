@@ -593,6 +593,89 @@
       border-color: var(--text-dark);
       color: var(--text-dark);
     }
+
+    /* S3 라이브러리 카드 스타일 */
+    .s3-card {
+      background: #FAF9F6;
+      border: 2px solid #E6DFD5;
+      border-radius: var(--border-radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .s3-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--secondary-color);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.05);
+    }
+    .s3-card-img-container {
+      width: 100%;
+      aspect-ratio: 1.5;
+      background-color: #ECE7E1;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 2px solid #E6DFD5;
+    }
+    .s3-card-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: fill; /* 틀린그림찾기 비율 유지 */
+    }
+    .s3-card-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+    .s3-card-title {
+      font-size: 12px;
+      font-weight: 700;
+      word-break: break-all;
+      color: var(--text-dark);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 32px;
+      line-height: 1.35;
+    }
+    .s3-card-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .s3-card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: auto;
+    }
+    .s3-card-actions button {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: background 0.2s;
+    }
+    .btn-s3-select {
+      background-color: var(--secondary-color);
+      color: #FFFFFF;
+    }
+    .btn-s3-select:hover {
+      background-color: var(--secondary-hover);
+    }
+    .btn-s3-delete {
+      background-color: var(--error-color);
+      color: #FFFFFF;
+    }
+    .btn-s3-delete:hover {
+      background-color: #C0392B;
+    }
   </style>
 </head>
 <body>
@@ -653,20 +736,26 @@
       <!-- 2. 이미지 업로드 및 클릭 워크벤치 패널 -->
       <div class="preview-panel">
         
-        <!-- 이미지 S3 파일 업로더 -->
-        <div class="upload-section">
-          <div class="upload-box" onclick="document.getElementById('file-a-input').click()">
-            <span class="upload-label">📸 왼쪽 원본 이미지 (Image A) 업로드</span>
-            <span class="upload-status" style="display:block; font-size:12px; color:var(--primary-color); margin-bottom:4px; font-weight:700;">(권장 비율 3:2, 예: 1200x800)</span>
-            <span class="upload-status" id="status-a">파일 선택 대기 중 (S3 자동 전송)</span>
-            <input type="file" id="file-a-input" accept="image/*">
+        <!-- 이미지 S3 파일 업로더 및 라이브러리 선택 -->
+        <div class="upload-section" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="card" style="padding:16px; border:2px solid #D6CEB8; display:flex; flex-direction:column; gap:10px;">
+            <div class="upload-box" onclick="document.getElementById('file-a-input').click()" style="margin-bottom:0; flex:1;">
+              <span class="upload-label">📸 1. 왼쪽 원본 이미지 (Image A) 업로드</span>
+              <span class="upload-status" style="display:block; font-size:12px; color:var(--primary-color); margin-bottom:4px; font-weight:700;">(권장 비율 3:2, 예: 1200x800)</span>
+              <span class="upload-status" id="status-a">파일 선택 대기 중 (S3 자동 전송)</span>
+              <input type="file" id="file-a-input" accept="image/*">
+            </div>
+            <button id="btn-open-s3-a" class="btn btn-secondary" style="font-size:13px; padding:8px 16px;">📂 S3 라이브러리에서 선택하기</button>
           </div>
 
-          <div class="upload-box" onclick="document.getElementById('file-b-input').click()">
-            <span class="upload-label">🎨 오른쪽 수정본 이미지 (Image B) 업로드</span>
-            <span class="upload-status" style="display:block; font-size:12px; color:var(--primary-color); margin-bottom:4px; font-weight:700;">(권장 비율 3:2, 예: 1200x800)</span>
-            <span class="upload-status" id="status-b">파일 선택 대기 중 (S3 자동 전송)</span>
-            <input type="file" id="file-b-input" accept="image/*">
+          <div class="card" style="padding:16px; border:2px solid #D6CEB8; display:flex; flex-direction:column; gap:10px;">
+            <div class="upload-box" onclick="document.getElementById('file-b-input').click()" style="margin-bottom:0; flex:1;">
+              <span class="upload-label">🎨 2. 오른쪽 수정본 이미지 (Image B) 업로드</span>
+              <span class="upload-status" style="display:block; font-size:12px; color:var(--primary-color); margin-bottom:4px; font-weight:700;">(권장 비율 3:2, 예: 1200x800)</span>
+              <span class="upload-status" id="status-b">파일 선택 대기 중 (S3 자동 전송)</span>
+              <input type="file" id="file-b-input" accept="image/*">
+            </div>
+            <button id="btn-open-s3-b" class="btn btn-secondary" style="font-size:13px; padding:8px 16px;">📂 S3 라이브러리에서 선택하기</button>
           </div>
         </div>
 
@@ -735,6 +824,39 @@
       <div class="modal-actions">
         <button class="btn btn-ghost" id="btn-cancel-delete">취소</button>
         <button class="btn btn-danger" id="btn-confirm-delete">삭제하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 에셋 라이브러리 모달 -->
+  <div class="modal-overlay" id="modal-s3-library">
+    <div class="modal-box" style="width: 800px; max-width: 95vw; display: flex; flex-direction: column; max-height: 85vh;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom: 2px solid #F3EDE4; padding-bottom:8px;">
+        <h3 style="margin-bottom:0;">📂 S3 에셋 라이브러리 (<span id="s3-library-title">Image A</span>)</h3>
+        <button class="btn-remove-slot" id="btn-close-s3-library" style="font-size:16px; padding:4px 12px; color:var(--text-muted); cursor:pointer;">✕ 닫기</button>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:12px; flex-wrap:wrap;">
+        <p style="font-size:14px; margin-bottom:0; color:var(--text-muted);">S3 버킷의 <code>game-assets/</code> 폴더 내 파일 목록입니다. 선택하거나 삭제할 수 있습니다.</p>
+        <!-- 필터 탭 -->
+        <div style="display:flex; gap:6px;" id="s3-filter-container">
+          <button class="filter-btn active" data-filter="all" style="padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; border:2px solid var(--text-dark); background:var(--text-dark); color:#FFF; cursor:pointer; font-family:var(--font-family); transition:all 0.2s;">전체</button>
+          <button class="filter-btn" data-filter="used" style="padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; border:2px solid #D6CEB8; background:transparent; color:var(--text-muted); cursor:pointer; font-family:var(--font-family); transition:all 0.2s;">사용 중</button>
+          <button class="filter-btn" data-filter="unused" style="padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; border:2px solid #D6CEB8; background:transparent; color:var(--text-muted); cursor:pointer; font-family:var(--font-family); transition:all 0.2s;">미사용</button>
+        </div>
+      </div>
+      
+      <!-- 에셋 그리드 스크롤 영역 -->
+      <div style="flex:1; overflow-y:auto; padding-right:4px; min-height: 250px;" id="s3-library-scroll">
+        <!-- 로딩 표시기 -->
+        <div id="s3-loading" style="text-align:center; padding:40px 0; color:var(--text-muted); font-size:16px; font-weight:700;">
+          ⏳ S3에서 파일 목록을 로딩하는 중...
+        </div>
+        <!-- 비어있을 때 표시 -->
+        <div id="s3-empty" style="text-align:center; padding:40px 0; color:var(--text-muted); font-size:15px; display:none;">
+          S3 라이브러리가 비어 있습니다. 이미지를 새로 업로드해 보세요!
+        </div>
+        <!-- 실제 그리드 목록 -->
+        <div id="s3-assets-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:16px;"></div>
       </div>
     </div>
   </div>

@@ -27,7 +27,7 @@ function getS3Config() {
     client,
     bucketName,
     isConfigured,
-    s3ConfigKey: 'game-assets/stages.json',
+    s3ConfigKey: 'game-config/stages.json',
   };
 }
 

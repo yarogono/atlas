@@ -6,6 +6,7 @@ const PROTECTED_PATHS = [
   '/game/admin.js',
   '/api/game/upload',
   '/api/game/config',
+  '/api/game/assets',
 ];
 
 // 인증 쿠키 이름
