@@ -107,6 +107,8 @@ body {
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  padding-top: 0;      /* 광고가 최상단에 완전 밀착되도록 패딩 제거 */
+  padding-bottom: 80px; /* 시작 버튼이 하단 너무 구석에 붙지 않도록 하단 마진 여백 */
 }
 
 .logo-area {
