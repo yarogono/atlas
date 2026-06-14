@@ -629,33 +629,11 @@ body {
   overflow: hidden !important;
 }
 
-.ads-game-screen::before,
-.ads-end-screen::before {
-  padding: 14px 24px; /* 높이가 줄어든 만큼 상하 패딩 축소 */
-}
-
 /* 애드센스 태그 자체의 가로폭이 0px로 붕괴되는 현상 방지 */
 .adsense-container ins.adsbygoogle {
   display: block !important;
   width: 100% !important;
   min-width: 250px;
-}
-
-/* 광고 미로딩 시 안내 문구 표시 */
-.adsense-container::before {
-  content: "📢 여기에 수동 애드센스 광고가 노출됩니다 (ca-pub 등록 필요)";
-  font-size: 13px;
-  color: var(--text-muted);
-  font-weight: 700;
-  text-align: center;
-  padding: 24px;
-  display: block;
-}
-
-/* 광고가 실제 로드되어 iframe이나 내부 요소가 생기면 안내 문구와 dashed 테두리, 배경을 자동으로 감춤 */
-.adsense-container:has(iframe)::before,
-.adsense-container:has(ins[data-ad-status="filled"])::before {
-  display: none;
 }
 
 .adsense-container:has(iframe),
@@ -819,11 +797,6 @@ body {
     min-height: auto;
     max-height: 60px !important;
     overflow: hidden !important;
-  }
-  .adsense-container.ads-game-screen::before,
-  .adsense-container.ads-end-screen::before {
-    padding: 12px 16px;
-    content: "📢 광고 영역 (320x50)";
   }
 }
 
