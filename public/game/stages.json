@@ -12,8 +12,8 @@
   "backgrounds": {
     "1": {
       "title": "전통 밥상",
-      "imgTop": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage3_a_1781403991198.jpg",
-      "imgBottom": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage3_b_1781403995031.jpeg",
+      "imgTop": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage1_a_1781433953673.jpg",
+      "imgBottom": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage1_b_1781433959232.jpeg",
       "differences": [
         {
           "x": 23.9,
