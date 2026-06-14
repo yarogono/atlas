@@ -31,38 +31,39 @@
   <!-- 전체 레이아웃 컨테이너 -->
   <div id="game-app-container">
 
-    <!-- 1. 시작 화면 -->
-    <section id="start-screen" class="app-screen active">
-      <div class="logo-area">
-        <span class="emoji-logo">🧠</span>
-        <h1 id="main-title">100세 시대 치매 예방 뇌 건강 테스트</h1>
-        <p class="subtitle">숨은 그림 찾기로 확인하는 나의 기억력과 뇌 나이</p>
-      </div>
+    <!-- 시작 오버레이 (게임 최초 로드 시 화면 위에 노출되며, 시작 버튼 클릭 시 페이드 아웃) -->
+    <div id="start-overlay">
+      <div class="start-overlay-content">
+        <div class="logo-area">
+          <span class="emoji-logo">🧠</span>
+          <h1 id="main-title">100세 시대 치매 예방 뇌 건강 테스트</h1>
+          <p class="subtitle">숨은 그림 찾기로 확인하는 나의 기억력과 뇌 나이</p>
+        </div>
 
-      <div class="instructions-card">
-        <h2>👵 어떻게 참여하나요?</h2>
-        <ul class="instructions-list">
-          <li><strong>위, 아래 두 그림</strong>을 잘 보시고 서로 <strong>다른 부분 3곳</strong>을 손가락으로 눌러주세요.</li>
-          <li><strong>시간이 흐를수록</strong> 뇌 나이가 조금씩 늘어나니, 눈을 크게 뜨고 빠르게 찾아보세요! ⏰</li>
-          <li>엉뚱한 곳을 누르면 <strong>실수 페널티(뇌 나이 +5세)</strong>가 추가되니 신중하게 눌러야 합니다.</li>
-          <li>총 <strong>3개의 단계</strong>를 모두 성공하고, 자식들보다 젊고 건강한 뇌를 인증해 보세요!</li>
-        </ul>
-      </div>
+        <div class="instructions-card">
+          <h2>👵 어떻게 참여하나요?</h2>
+          <ul class="instructions-list">
+            <li><strong>위, 아래 두 그림</strong>에서 서로 <strong>다른 부분 3곳</strong>을 눌러주세요.</li>
+            <li><strong>시간이 흐를수록</strong> 뇌 나이가 조금씩 늘어나니, 눈을 크게 뜨고 빠르게 찾아보세요! ⏰</li>
+            <li>엉뚱한 곳을 누르면 <strong>실수 페널티 (뇌 나이 +5세)</strong>가 추가됩니다.</li>
+          </ul>
+        </div>
 
-      <button id="btn-start-game" class="btn btn-primary btn-large" disabled>
-        게임 설정 로딩 중... ⏳
-      </button>
+        <button id="btn-start-game" class="btn btn-primary btn-large" disabled>
+          게임 설정 로딩 중... ⏳
+        </button>
 
-      <!-- 시작 화면 하단 수동 애드센스 광고 영역 -->
-      <div class="adsense-container ads-start-screen">
-        <!-- atlas 수동광고 -->
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5633731930294890"
-          data-ad-slot="2074402093" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <!-- 시작 화면 하단 수동 애드센스 광고 영역 -->
+        <div class="adsense-container ads-start-screen">
+          <!-- atlas 수동광고 -->
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5633731930294890"
+            data-ad-slot="2074402093" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        </div>
       </div>
-    </section>
+    </div>
 
     <!-- 2. 게임 플레이 화면 -->
-    <section id="game-screen" class="app-screen">
+    <section id="game-screen" class="app-screen active">
       <!-- 헤더 점수 및 타이머 바 -->
       <header class="game-header">
         <div class="header-top">

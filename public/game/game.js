@@ -75,7 +75,6 @@ let ui = {};
 // 1. 초기 이벤트 리스너 등록 및 DOM 취득
 function initGameListeners() {
   screens = {
-    start: document.getElementById('start-screen'),
     game: document.getElementById('game-screen'),
     end: document.getElementById('end-screen')
   };
@@ -201,6 +200,13 @@ async function loadDynamicConfig() {
     }
     
     console.log("loadDynamicConfig: Dynamic configs merged successfully.");
+
+    // 배경 이미지 노출 순서 셔플을 미리 해두어 배경 이미지가 즉시 로딩되도록 지원
+    const stageCount = gameConfig.maxStage || 3;
+    shuffledBackgrounds = Array.from({ length: stageCount }, (_, i) => i + 1)
+      .sort(() => 0.5 - Math.random());
+
+    loadStage(1);
   } catch (error) {
     console.warn("loadDynamicConfig: Failed to load dynamic config, using local fallback:", error);
   } finally {
@@ -212,7 +218,7 @@ async function loadDynamicConfig() {
     // 시작 화면 광고 초기화 (레이아웃 렌더링 완료 후 0.2초 대기하여 availableWidth=0 에러 예방)
     setTimeout(() => {
       try {
-        const startAdIns = document.querySelector('#start-screen .adsbygoogle');
+        const startAdIns = document.querySelector('#start-overlay .adsbygoogle');
         if (startAdIns && !startAdIns.hasAttribute('data-adsbygoogle-status')) {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
           console.log("Start screen AdSense initialized dynamically.");
@@ -231,7 +237,12 @@ let gameTimerId = null;
 function startGame() {
   console.log("startGame: initiating gameplay.");
   gameState = 'PLAYING';
-  showScreen('game');
+  
+  // 시작 오버레이 페이드 아웃
+  const startOverlay = document.getElementById('start-overlay');
+  if (startOverlay) {
+    startOverlay.classList.add('fade-out');
+  }
   
   // 첫 게임 시 배경 셔플이 안되어있으면 셔플 처리 (maxStage 기반 동적 생성)
   if (shuffledBackgrounds.length === 0) {
@@ -517,10 +528,12 @@ function resetGame() {
 // 10. 스크린 전환 유틸리티
 function showScreen(screenKey) {
   Object.keys(screens).forEach(key => {
-    if (key === screenKey) {
-      screens[key].classList.add('active');
-    } else {
-      screens[key].classList.remove('active');
+    if (screens[key]) {
+      if (key === screenKey) {
+        screens[key].classList.add('active');
+      } else {
+        screens[key].classList.remove('active');
+      }
     }
   });
 }
