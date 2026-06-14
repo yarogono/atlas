@@ -288,9 +288,34 @@ function createMarker(x, y, num, color) {
   return el;
 }
 
+// 이미지 파일 가로/세로 비율 확인 헬퍼
+function checkImageRatio(file) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      const ratio = img.width / img.height;
+      URL.revokeObjectURL(img.src);
+      resolve({ width: img.width, height: img.height, ratio });
+    };
+    img.onerror = () => {
+      resolve(null);
+    };
+  });
+}
+
 // ─── 9. 이미지 S3 업로드 ──────────────────────────────────────────
 async function uploadImageFile(file, imageType, statusEl, imgEl, placeholderEl) {
   try {
+    const dimensions = await checkImageRatio(file);
+    if (dimensions) {
+      const targetRatio = 1.5; // 3:2
+      const diff = Math.abs(dimensions.ratio - targetRatio);
+      if (diff > 0.05) {
+        showToast(`⚠️ 경고: 이미지 비율이 3:2가 아닙니다 (${dimensions.width}x${dimensions.height}). 게임 화면에서 늘어나 보일 수 있습니다.`);
+      }
+    }
+
     statusEl.textContent = '⏳ S3로 전송 중...';
     statusEl.style.color = 'var(--primary-color)';
 

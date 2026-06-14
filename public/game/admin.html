@@ -453,7 +453,7 @@
     .image-frame img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: fill; /* 원본 이미지의 누락/잘림 방지를 위해 3:2 채우기 적용 */
       display: block;
       user-select: none;
       -webkit-user-drag: none;
@@ -657,12 +657,14 @@
         <div class="upload-section">
           <div class="upload-box" onclick="document.getElementById('file-a-input').click()">
             <span class="upload-label">📸 왼쪽 원본 이미지 (Image A) 업로드</span>
+            <span class="upload-status" style="display:block; font-size:12px; color:var(--primary-color); margin-bottom:4px; font-weight:700;">(권장 비율 3:2, 예: 1200x800)</span>
             <span class="upload-status" id="status-a">파일 선택 대기 중 (S3 자동 전송)</span>
             <input type="file" id="file-a-input" accept="image/*">
           </div>
 
           <div class="upload-box" onclick="document.getElementById('file-b-input').click()">
             <span class="upload-label">🎨 오른쪽 수정본 이미지 (Image B) 업로드</span>
+            <span class="upload-status" style="display:block; font-size:12px; color:var(--primary-color); margin-bottom:4px; font-weight:700;">(권장 비율 3:2, 예: 1200x800)</span>
             <span class="upload-status" id="status-b">파일 선택 대기 중 (S3 자동 전송)</span>
             <input type="file" id="file-b-input" accept="image/*">
           </div>

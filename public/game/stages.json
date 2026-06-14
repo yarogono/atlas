@@ -21,29 +21,24 @@
   },
   "backgrounds": {
     "1": {
-      "title": "한옥 마당",
-      "imgTop": "/game/images/stage1_a.png",
-      "imgBottom": "/game/images/stage1_b.png",
+      "title": "주방 요리",
+      "imgTop": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage1_a_1781395300971.jpg",
+      "imgBottom": "https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-assets/stage1_b_1781395307782.jpg",
       "differences": [
         {
-          "x": 52,
-          "y": 49.8,
+          "x": 24.6,
+          "y": 71.3,
           "name": "구름"
         },
         {
-          "x": 55.2,
-          "y": 50.5,
+          "x": 63.2,
+          "y": 19.6,
           "name": "감 열매"
         },
         {
-          "x": 54.2,
-          "y": 53.1,
+          "x": 82.4,
+          "y": 36.4,
           "name": "찻잔"
-        },
-        {
-          "x": 53.7,
-          "y": 51.6,
-          "name": "4번째"
         }
       ]
     },
