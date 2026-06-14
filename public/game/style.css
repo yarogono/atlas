@@ -81,9 +81,9 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(250, 246, 240, 0.96); /* 따뜻한 크림 베이지 바탕, 살짝 불투명하게 */
-  backdrop-filter: blur(8px); /* 뒷배경 게임 이미지가 흐릿하게 비쳐 보임 */
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(250, 246, 240, 0.6); /* 투명도를 조율하여 뒷배경 게임 이미지가 비치게 함 */
+  backdrop-filter: blur(6px); /* 뒷배경 흐림 효과 */
+  -webkit-backdrop-filter: blur(6px);
   z-index: 100;
   display: flex;
   justify-content: center;
@@ -96,19 +96,6 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-}
-
-.start-overlay-content {
-  width: 100%;
-  max-width: 440px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-  padding-top: 0;      /* 광고가 최상단에 완전 밀착되도록 패딩 제거 */
-  padding-bottom: 80px; /* 시작 버튼이 하단 너무 구석에 붙지 않도록 하단 마진 여백 */
 }
 
 .logo-area {
@@ -188,6 +175,7 @@ body {
   padding: 8px 16px;
   justify-content: space-between;
   overflow: hidden; /* 플레이 중에는 스크롤 절대 방지 */
+  position: relative; /* 시작 오버레이 absolute 배치를 위한 relative 컨텍스트 제공 */
 }
 
 .game-header {
@@ -618,6 +606,12 @@ body {
   min-height: 100px;
   max-height: 120px;
   position: relative;
+}
+
+.ads-game-screen {
+  z-index: 101; /* 오버레이(z-index 100)보다 상위에 오게 하여 blur 필터를 피하고 활성 상태 유지 */
+  position: relative;
+  margin: 0 0 12px 0;
 }
 
 /* 애드센스 태그 자체의 가로폭이 0px로 붕괴되는 현상 방지 */

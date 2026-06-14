@@ -218,7 +218,7 @@ async function loadDynamicConfig() {
     // 시작 화면 광고 초기화 (레이아웃 렌더링 완료 후 0.2초 대기하여 availableWidth=0 에러 예방)
     setTimeout(() => {
       try {
-        const startAdIns = document.querySelector('#start-overlay .adsbygoogle');
+        const startAdIns = document.querySelector('.ads-game-screen .adsbygoogle');
         if (startAdIns && !startAdIns.hasAttribute('data-adsbygoogle-status')) {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
           console.log("Start screen AdSense initialized dynamically.");

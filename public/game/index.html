@@ -31,24 +31,22 @@
   <!-- 전체 레이아웃 컨테이너 -->
   <div id="game-app-container">
 
-    <!-- 시작 오버레이 (게임 최초 로드 시 화면 위에 노출되며, 시작 버튼 클릭 시 페이드 아웃) -->
-    <div id="start-overlay">
-      <div class="start-overlay-content">
-        <!-- 시작 화면 최상단 수동 애드센스 광고 영역 -->
-        <div class="adsense-container ads-start-screen">
-          <!-- atlas 수동광고 -->
-          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5633731930294890"
-            data-ad-slot="2074402093" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        </div>
+    <!-- 2. 게임 플레이 화면 -->
+    <section id="game-screen" class="app-screen active">
+      <!-- 게임 화면 상단 수동 애드센스 광고 영역 (z-index: 101로 오버레이 위에 배치) -->
+      <div class="adsense-container ads-game-screen">
+        <!-- atlas 수동광고 -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5633731930294890"
+          data-ad-slot="2074402093" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      </div>
 
+      <!-- 시작 오버레이 (게임 최초 로드 시 화면 위에 노출되며, 시작 버튼 클릭 시 페이드 아웃) -->
+      <div id="start-overlay">
         <button id="btn-start-game" class="btn btn-primary btn-large" disabled>
           게임 설정 로딩 중... ⏳
         </button>
       </div>
-    </div>
 
-    <!-- 2. 게임 플레이 화면 -->
-    <section id="game-screen" class="app-screen active">
       <!-- 헤더 점수 및 타이머 바 -->
       <header class="game-header">
         <div class="header-top">
