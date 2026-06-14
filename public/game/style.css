@@ -580,9 +580,7 @@ body {
 /* 8. 수동 애드센스 광고 영역 데코레이션 */
 .adsense-container {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block; /* Flexbox item collapse (AvailableWidth=0) 방지를 위해 block으로 설정 */
   background-color: #F3ECE3;
   border: 2px dashed #C2B8A3;
   border-radius: var(--border-radius-md);
@@ -591,6 +589,13 @@ body {
   min-height: 100px;
   max-height: 120px;
   position: relative;
+}
+
+/* 애드센스 태그 자체의 가로폭이 0px로 붕괴되는 현상 방지 */
+.adsense-container ins.adsbygoogle {
+  display: block !important;
+  width: 100% !important;
+  min-width: 250px;
 }
 
 /* 광고 미로딩 시 안내 문구 표시 */
