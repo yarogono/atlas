@@ -209,6 +209,18 @@ async function loadDynamicConfig() {
       buttons.start.disabled = false;
       buttons.start.textContent = "지금 시작하기 ⚡";
     }
+    // 시작 화면 광고 초기화 (레이아웃 렌더링 완료 후 0.2초 대기하여 availableWidth=0 에러 예방)
+    setTimeout(() => {
+      try {
+        const startAdIns = document.querySelector('#start-screen .adsbygoogle');
+        if (startAdIns && !startAdIns.hasAttribute('data-adsbygoogle-status')) {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          console.log("Start screen AdSense initialized dynamically.");
+        }
+      } catch (adError) {
+        console.warn("Failed to dynamically initialize start screen AdSense:", adError);
+      }
+    }, 200);
   }
 }
 
@@ -470,15 +482,18 @@ function endGame() {
   ui.diagnosisDesc.textContent = diagnosisDesc;
 
   // 결과 화면이 보인 후에 애드센스 광고 초기화 실행 (hidden 상태에서 호출 시 크기 계산 오류 방지)
-  try {
-    const endAdIns = document.querySelector('#end-screen .adsbygoogle');
-    if (endAdIns && !endAdIns.hasAttribute('data-adsbygoogle-status')) {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      console.log("Result screen AdSense initialized dynamically.");
+  // 레이아웃이 렌더링되고 가로폭 계산이 가능할 때까지 0.2초 대기 후 push 실행
+  setTimeout(() => {
+    try {
+      const endAdIns = document.querySelector('#end-screen .adsbygoogle');
+      if (endAdIns && !endAdIns.hasAttribute('data-adsbygoogle-status')) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        console.log("Result screen AdSense initialized dynamically.");
+      }
+    } catch (adError) {
+      console.warn("Failed to dynamically initialize result screen AdSense:", adError);
     }
-  } catch (adError) {
-    console.warn("Failed to dynamically initialize result screen AdSense:", adError);
-  }
+  }, 200);
 }
 
 // 9. 게임 리셋
