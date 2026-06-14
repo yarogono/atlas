@@ -138,6 +138,49 @@ async function loadDynamicConfig() {
     if (!response.ok) throw new Error("게임 설정을 가져올 수 없습니다.");
     
     const config = await response.json();
+    
+    // S3 이미지 URL(http/https로 시작)을 포함하는 배경만 필터링하여 순차 넘버링
+    const validBackgrounds = {};
+    const validStages = {};
+    let validCount = 0;
+    
+    if (config.backgrounds) {
+      // 배경 데이터 순차 정렬 (1, 2, 3...)
+      const bgKeys = Object.keys(config.backgrounds).map(Number).sort((a, b) => a - b);
+      
+      for (const bgId of bgKeys) {
+        const bg = config.backgrounds[String(bgId)];
+        if (bg && bg.imgTop && bg.imgBottom) {
+          const isS3ImgTop = bg.imgTop.startsWith('http://') || bg.imgTop.startsWith('https://');
+          const isS3ImgBottom = bg.imgBottom.startsWith('http://') || bg.imgBottom.startsWith('https://');
+          
+          if (isS3ImgTop && isS3ImgBottom) {
+            validCount++;
+            const newKey = String(validCount);
+            
+            // 새 키(1, 2, 3...)에 필터링된 배경 매핑
+            validBackgrounds[newKey] = bg;
+            
+            // 기존 stage 난이도 정보 매핑 (없으면 기본값 생성)
+            validStages[newKey] = (config.stages && config.stages[String(bgId)]) || {
+              timeLimit: 60 - (validCount - 1) * 10,
+              agingInterval: Math.max(0.5, 2.0 - (validCount - 1) * 0.6),
+              hitRadius: Math.max(5.0, 10.0 - (validCount - 1) * 2.0)
+            };
+          }
+        }
+      }
+    }
+    
+    if (validCount > 0) {
+      config.backgrounds = validBackgrounds;
+      config.stages = validStages;
+      config.maxStage = validCount;
+      console.log(`loadDynamicConfig: Found ${validCount} valid S3 stages.`);
+    } else {
+      console.warn("loadDynamicConfig: No valid S3 stages found. Falling back to local/default stages.");
+    }
+    
     fullConfigData = config;
     
     // gameConfig 기본 파라미터 병합
@@ -160,6 +203,12 @@ async function loadDynamicConfig() {
     console.log("loadDynamicConfig: Dynamic configs merged successfully.");
   } catch (error) {
     console.warn("loadDynamicConfig: Failed to load dynamic config, using local fallback:", error);
+  } finally {
+    // 로딩 완료 후 시작 버튼 활성화
+    if (buttons.start) {
+      buttons.start.disabled = false;
+      buttons.start.textContent = "지금 시작하기 ⚡";
+    }
   }
 }
 
@@ -431,8 +480,10 @@ function resetGame() {
   activeDifferences = [];
   clearInterval(gameTimerId);
   
-  // 매 플레이 시 배경 이미지(1, 2, 3)의 노출 순서를 랜덤 셔플
-  shuffledBackgrounds = [1, 2, 3].sort(() => 0.5 - Math.random());
+  // 매 플레이 시 설정된 최대 스테이지 수만큼 동적으로 셔플 순서 배열 생성
+  const stageCount = gameConfig.maxStage || 3;
+  shuffledBackgrounds = Array.from({ length: stageCount }, (_, i) => i + 1)
+    .sort(() => 0.5 - Math.random());
   
   updateScoreUI();
 }

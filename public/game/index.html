@@ -49,14 +49,15 @@
         </ul>
       </div>
 
-      <button id="btn-start-game" class="btn btn-primary btn-large">
-        지금 시작하기 ⚡
+      <button id="btn-start-game" class="btn btn-primary btn-large" disabled>
+        게임 설정 로딩 중... ⏳
       </button>
 
-      <!-- 시작 화면 하단 수동 애드센스 광고 영역 (실제 운영 시 ca-pub 및 data-ad-slot 번호를 매칭해 주세요) -->
+      <!-- 시작 화면 하단 수동 애드센스 광고 영역 -->
       <div class="adsense-container ads-start-screen">
+        <!-- studyant -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5633731930294890"
-          data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          data-ad-slot="8466093668" data-ad-format="auto" data-full-width-responsive="true"></ins>
         <script>
           (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
@@ -90,7 +91,8 @@
       <main class="game-play-area">
         <!-- 상단 이미지 프레임 -->
         <div id="frame-top" class="game-image-frame">
-          <img id="img-top" src="/game/images/bg1.png" alt="원본 이미지" draggable="false">
+          <img id="img-top" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            alt="원본 이미지" draggable="false">
           <div id="overlay-top" class="diff-overlay"></div>
         </div>
 
@@ -99,7 +101,8 @@
 
         <!-- 하단 이미지 프레임 -->
         <div id="frame-bottom" class="game-image-frame">
-          <img id="img-bottom" src="/game/images/bg1.png" alt="비교 이미지" draggable="false">
+          <img id="img-bottom" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            alt="비교 이미지" draggable="false">
           <div id="overlay-bottom" class="diff-overlay"></div>
         </div>
       </main>
@@ -116,6 +119,16 @@
 
     <!-- 3. 결과 화면 -->
     <section id="end-screen" class="app-screen">
+      <!-- 결과 화면 상단 수동 애드센스 광고 영역 -->
+      <div class="adsense-container ads-end-screen">
+        <!-- studyant -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5633731930294890"
+          data-ad-slot="8466093668" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+
       <div class="result-header">
         <span class="emoji-logo">🏆</span>
         <h2>테스트 결과 리포트</h2>
@@ -138,15 +151,6 @@
           <h3 id="diagnosis-title">두뇌 진단명</h3>
           <p id="diagnosis-description">상세 진단 결과 내용이 여기에 들어갑니다.</p>
         </div>
-      </div>
-
-      <!-- 결과 화면 중간 수동 애드센스 광고 영역 (실제 운영 시 ca-pub 및 data-ad-slot 번호를 매칭해 주세요) -->
-      <div class="adsense-container ads-end-screen">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5633731930294890"
-          data-ad-slot="9876543210" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
       </div>
 
       <!-- 액션 버튼 영역 -->
