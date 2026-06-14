@@ -616,10 +616,11 @@ body {
   max-height: 90px;
 }
 
-.ads-game-screen:has(iframe),
-.ads-game-screen:has(ins[data-ad-status="filled"]) {
+.adsense-container.ads-game-screen:has(iframe),
+.adsense-container.ads-game-screen:has(ins[data-ad-status="filled"]) {
   min-height: auto;
-  max-height: 90px; /* 상단 광고는 최대 90px로 제한하여 게임 화면 영역 침범 최소화 */
+  max-height: 90px !important; /* 상단 광고는 최대 90px로 강제 제한하여 게임 화면 영역 침범 방지 */
+  overflow: hidden !important;
 }
 
 .ads-game-screen::before {
@@ -794,6 +795,25 @@ body {
 #end-screen .action-buttons .btn {
   padding: 11px 20px;
   font-size: 15.5px;
+}
+
+/* 모바일 전용 상단 애드센스 배너 크기 압축 (게임 플레이 영역 확보) */
+@media (max-width: 767px) {
+  .adsense-container.ads-game-screen {
+    min-height: 50px;
+    max-height: 60px;
+    margin: 0 0 6px 0;
+  }
+  .adsense-container.ads-game-screen:has(iframe),
+  .adsense-container.ads-game-screen:has(ins[data-ad-status="filled"]) {
+    min-height: auto;
+    max-height: 60px !important;
+    overflow: hidden !important;
+  }
+  .adsense-container.ads-game-screen::before {
+    padding: 12px 16px;
+    content: "📢 광고 영역 (320x50)";
+  }
 }
 
 
