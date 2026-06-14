@@ -468,6 +468,17 @@ function endGame() {
 
   ui.diagnosisTitle.textContent = diagnosisTitle;
   ui.diagnosisDesc.textContent = diagnosisDesc;
+
+  // 결과 화면이 보인 후에 애드센스 광고 초기화 실행 (hidden 상태에서 호출 시 크기 계산 오류 방지)
+  try {
+    const endAdIns = document.querySelector('#end-screen .adsbygoogle');
+    if (endAdIns && !endAdIns.hasAttribute('data-adsbygoogle-status')) {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      console.log("Result screen AdSense initialized dynamically.");
+    }
+  } catch (adError) {
+    console.warn("Failed to dynamically initialize result screen AdSense:", adError);
+  }
 }
 
 // 9. 게임 리셋
