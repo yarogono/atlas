@@ -122,14 +122,21 @@ async function readConfig(): Promise<any> {
 }
 
 function readLocalConfig(): any {
-  const dir = path.dirname(configPath);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  if (!fs.existsSync(configPath)) {
+  try {
+    if (fs.existsSync(configPath)) {
+      return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    }
+    
+    // 로컬 환경을 위해 디렉토리 및 기본 설정 파일 생성 시도 (Vercel 등 읽기전용 환경에서는 실패하며, catch 블록에서 처리됨)
+    const dir = path.dirname(configPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2), 'utf-8');
-    return JSON.parse(JSON.stringify(defaultConfig));
+  } catch (err: any) {
+    console.warn('Failed to read or write local config file (expected on read-only environments like Vercel):', err.message);
   }
-  return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  return JSON.parse(JSON.stringify(defaultConfig));
 }
+
 
 async function writeConfig(config: any) {
   const { isConfigured } = getS3Config();
