@@ -238,6 +238,9 @@ function startGame() {
   console.log("startGame: initiating gameplay.");
   gameState = 'PLAYING';
   
+  // 게임 화면 활성화
+  showScreen('game');
+  
   // 시작 오버레이 페이드 아웃
   const startOverlay = document.getElementById('start-overlay');
   if (startOverlay) {

@@ -611,7 +611,19 @@ body {
 .ads-game-screen {
   z-index: 101; /* 오버레이(z-index 100)보다 상위에 오게 하여 blur 필터를 피하고 활성 상태 유지 */
   position: relative;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
+  min-height: 60px;
+  max-height: 90px;
+}
+
+.ads-game-screen:has(iframe),
+.ads-game-screen:has(ins[data-ad-status="filled"]) {
+  min-height: auto;
+  max-height: 90px; /* 상단 광고는 최대 90px로 제한하여 게임 화면 영역 침범 최소화 */
+}
+
+.ads-game-screen::before {
+  padding: 14px 24px; /* 높이가 줄어든 만큼 상하 패딩 축소 */
 }
 
 /* 애드센스 태그 자체의 가로폭이 0px로 붕괴되는 현상 방지 */
