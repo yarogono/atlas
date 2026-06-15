@@ -16,12 +16,17 @@
 
   <link rel="stylesheet" href="/game/style.css">
 
-  <!-- 구글 애드센스 기본 스크립트 로드 (실행 시 client=ca-pub-XXXXXXXXXXXXXXXX 값을 본인의 애드센스 고유 ID로 교체해 주세요) -->
+  <!-- 구글 애드센스 H5 게임 광고 및 기본 스크립트 로드 -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5633731930294890"
     crossorigin="anonymous"></script>
-
-  <!-- 구글 퍼블리셔 태그 (GPT) 비동기 스크립트 로드 (보상형 광고용) -->
-  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+  <script>
+    window.adsbygoogle = window.adsbygoogle || [];
+    var adBreak = adConfig = function(o) { adsbygoogle.push(o); }
+    adConfig({
+      preloadAdBreaks: 'on',
+      adbreakTest: 'on' // 로컬 테스트 모드 (프로덕션 배포 시 이 줄 제거)
+    });
+  </script>
 
   <!-- Kakao SDK -->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"

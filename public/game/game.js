@@ -50,10 +50,9 @@ let fullConfigData = null; // 동적 stages.json 설정을 담을 전역 변수
 const maxAttempts = 5;
 let attempts = maxAttempts;
 
-// GPT 보상형 광고 전역 변수
-let rewardedSlot = null;
-let rewardedAdEvent = null;
+// 애드센스 H5 게임 보상형 광고 상태 변수
 let isAdGranted = false;
+let adPlayStarted = false; // 실제 광고 재생 여부 감지용 플래그
 
 let isMuted = false;
 const correctSound = new Audio('/game/correct-sound.mp3');
@@ -153,7 +152,6 @@ function initGameListeners() {
   // 동적 설정 불러오기 실행
   loadDynamicConfig().then(() => {
     console.log("initGameListeners: Setup complete with dynamic configs.");
-    initRewardedAd(); // GPT 보상형 광고 초기화
   });
 }
 
@@ -777,21 +775,82 @@ function handleOutOfAttempts() {
   }
 }
 
-// 17. 광고 시청 프로세스 (GPT Rewarded Ads 연동 및 Fallback 연출)
+// 17. 광고 시청 프로세스 (AdSense H5 Games Ads API 연동 및 Fallback 연출)
 function startAdRefillProcess() {
   // 모달 닫기
   if (ui.refillModal) {
     ui.refillModal.classList.remove('active');
   }
   
-  if (rewardedAdEvent) {
-    // GPT 광고가 로드되어 준비된 상태라면 실제 구글 보상형 광고 표출
-    console.log("GPT: Launching official rewarded ad.");
-    isAdGranted = false; // 보상 수여 플래그 초기화
-    rewardedAdEvent.makeRewardedVisible();
+  isAdGranted = false;
+  adPlayStarted = false;
+  
+  let adCallbackCalled = false; // SDK 콜백이 실행되었는지 여부 플래그
+  
+  console.log("AdSense H5 Games Ads: Triggering rewarded adBreak.");
+  
+  // 구글 H5 광고 무응답 방어 타임아웃 (3초 내 콜백 응답 없을 시 강제 가상 광고 실행)
+  const adSafetyTimeout = setTimeout(() => {
+    if (!adCallbackCalled) {
+      console.warn("AdSense H5 Games Ads: adBreak callbacks did not respond within 3s. Forcing fallback.");
+      runSimulatedAdFallback();
+    }
+  }, 3000);
+  
+  // 구글 애드센스 H5 게임 보상형 광고 호출
+  if (typeof adBreak !== 'undefined') {
+    try {
+      adBreak({
+        type: 'reward',
+        name: 'refill_life',
+        beforeReward: (showAdFn) => {
+          adCallbackCalled = true;
+          // 사용자가 이미 버튼을 클릭해 광고 시청 동의를 했으므로 즉시 광고 송출
+          console.log("AdSense H5 Games Ads: User consented. Showing ad.");
+          showAdFn();
+        },
+        beforeAd: () => {
+          adCallbackCalled = true;
+          // 광고가 실제로 송출 및 렌더링 시작되었을 때
+          console.log("AdSense H5 Games Ads: Ad view presentation started.");
+          adPlayStarted = true;
+          gameState = 'AD_PLAYING';
+        },
+        adViewed: () => {
+          adCallbackCalled = true;
+          // 광고 시청 완료: 보상 획득 승인
+          console.log("AdSense H5 Games Ads: Reward granted.");
+          isAdGranted = true;
+        },
+        adDismissed: () => {
+          adCallbackCalled = true;
+          // 광고 중도 하차
+          console.log("AdSense H5 Games Ads: Ad dismissed by user.");
+          isAdGranted = false;
+        },
+        afterAd: () => {
+          adCallbackCalled = true;
+          // 광고가 완료되어 닫혔을 때
+          console.log("AdSense H5 Games Ads: Ad closed.");
+        },
+        adBreakDone: (placementInfo) => {
+          adCallbackCalled = true;
+          clearTimeout(adSafetyTimeout); // 정상 반응했으므로 보호용 타이머 제거
+          
+          const status = placementInfo ? placementInfo.breakStatus : 'unknown';
+          console.log("AdSense H5 Games Ads: adBreakDone triggered. Status:", status);
+          handleH5AdClosed();
+        }
+      });
+    } catch (err) {
+      console.error("AdSense H5 Games Ads: Exception during adBreak execution.", err);
+      clearTimeout(adSafetyTimeout);
+      runSimulatedAdFallback();
+    }
   } else {
-    // 광고 준비 안 됨 (AdBlock, 로드 지연 또는 미지원 환경 등): 가상 광고 Fallback 작동
-    console.log("GPT: Rewarded ad not ready. Triggering simulated fallback.");
+    // API 미선언(AdBlock 등): 가상 광고 Fallback 처리
+    clearTimeout(adSafetyTimeout);
+    console.warn("AdSense H5 Games Ads: adBreak function not defined. Launching fallback.");
     runSimulatedAdFallback();
   }
 }
@@ -831,74 +890,26 @@ function runSimulatedAdFallback() {
   }, 1000);
 }
 
-// 18. GPT 보상형 광고 초기화
-function initRewardedAd() {
-  window.googletag = window.googletag || { cmd: [] };
-  
-  googletag.cmd.push(() => {
-    // 구글 공식 테스트 보상형 광고 유닛 ID
-    rewardedSlot = googletag.defineOutOfPageSlot(
-      '/21775744923/example/rewarded',
-      googletag.enums.OutOfPageFormat.REWARDED
-    );
-    
-    if (rewardedSlot) {
-      rewardedSlot.addService(googletag.pubads());
-      
-      // 광고 로드 완료 (사용자에게 보이기 전 대기 상태)
-      googletag.pubads().addEventListener('rewardedSlotReady', (event) => {
-        console.log('GPT: Rewarded slot is ready.');
-        rewardedAdEvent = event;
-      });
-      
-      // 광고 시청 완료 (보상 지급 이벤트)
-      googletag.pubads().addEventListener('rewardedSlotGranted', (event) => {
-        console.log('GPT: Rewarded slot granted.');
-        isAdGranted = true;
-      });
-      
-      // 광고 창 닫힘
-      googletag.pubads().addEventListener('rewardedSlotClosed', (event) => {
-        console.log('GPT: Rewarded slot closed.');
-        handleAdClosed();
-      });
-      
-      googletag.enableServices();
-      googletag.display(rewardedSlot);
+// 18. AdSense H5 광고 닫힘 시 상태 처리
+function handleH5AdClosed() {
+  if (adPlayStarted) {
+    // 실제 광고가 가동되었던 경우
+    if (isAdGranted) {
+      attempts = maxAttempts;
+      updateAttemptsUI();
+      gameState = 'PLAYING';
+      showToast("🎁 광고 시청 완료! 기회가 모두 충전되었습니다.");
     } else {
-      console.warn('GPT: Rewarded slot definition returned null.');
+      gameState = 'PAUSED';
+      if (ui.refillModal) {
+        ui.refillModal.classList.add('active');
+      }
+      showToast("⚠️ 광고를 끝까지 시청해야 기회가 충전됩니다.");
     }
-  });
-}
-
-// 19. GPT 광고 닫힘 시 게임 상태 복구 처리
-function handleAdClosed() {
-  if (isAdGranted) {
-    // 시청 완료: 보상 지급 (라이프 5개 완충 및 재개)
-    attempts = maxAttempts;
-    updateAttemptsUI();
-    gameState = 'PLAYING';
-    showToast("🎁 광고 시청 완료! 기회가 모두 충전되었습니다.");
   } else {
-    // 중도 취소: 다시 충전 모달 팝업 및 일시정지 상태 유지
-    gameState = 'PAUSED';
-    if (ui.refillModal) {
-      ui.refillModal.classList.add('active');
-    }
-    showToast("⚠️ 광고를 끝까지 시청해야 기회가 충전됩니다.");
-  }
-  
-  // 상태 초기화 및 다음 시도를 위해 다음 광고 로딩
-  refreshRewardedAd();
-}
-
-// 20. 새로운 보상형 광고 로딩
-function refreshRewardedAd() {
-  rewardedAdEvent = null;
-  isAdGranted = false;
-  if (rewardedSlot) {
-    googletag.pubads().refresh([rewardedSlot]);
-    console.log('GPT: Requesting a new rewarded ad.');
+    // 광고가 송출되지 않고 무시된 경우 (AdBlock, 물량 없음, 통신 지연 등)
+    console.log("AdSense H5 Games Ads: Ad was skipped. Triggering simulated fallback.");
+    runSimulatedAdFallback();
   }
 }
 
