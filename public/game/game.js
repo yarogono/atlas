@@ -1,7 +1,7 @@
 // 🧠 청춘 두뇌 건강 테스트 - 게임 로직 (Vanilla JS)
 
 // Kakao SDK 초기화 (안전장치 포함)
-const KAKAO_APP_KEY = '5b6f385c9a7d32c589d38096f2a89c44'; // 임시 기본 키 설정 (배포 시 교체 가능)
+const KAKAO_APP_KEY = 'c870386e26ad3c8640d5adbffa0b0acf'; // 임시 기본 키 설정 (배포 시 교체 가능)
 try {
   if (typeof Kakao !== 'undefined') {
     Kakao.init(KAKAO_APP_KEY);
@@ -102,7 +102,7 @@ function initGameListeners() {
   ui = {
     stageDisplay: document.getElementById('current-stage-display'),
     brainAge: document.getElementById('brain-age-value'),
-    iq: document.getElementById('iq-value'),
+    // iq UI removed; keep reference only if element exists
     timerProgress: document.getElementById('timer-progress'),
     timerSeconds: document.getElementById('timer-seconds-text'),
     attemptsValue: document.getElementById('attempts-value'),
@@ -166,31 +166,31 @@ async function loadDynamicConfig() {
   try {
     const response = await fetch('/api/game/config');
     if (!response.ok) throw new Error("게임 설정을 가져올 수 없습니다.");
-    
+
     const config = await response.json();
-    
+
     // S3 이미지 URL(http/https로 시작)을 포함하는 배경만 필터링하여 순차 넘버링
     const validBackgrounds = {};
     const validStages = {};
     let validCount = 0;
-    
+
     if (config.backgrounds) {
       // 배경 데이터 순차 정렬 (1, 2, 3...)
       const bgKeys = Object.keys(config.backgrounds).map(Number).sort((a, b) => a - b);
-      
+
       for (const bgId of bgKeys) {
         const bg = config.backgrounds[String(bgId)];
         if (bg && bg.imgTop && bg.imgBottom) {
           const isS3ImgTop = bg.imgTop.startsWith('http://') || bg.imgTop.startsWith('https://');
           const isS3ImgBottom = bg.imgBottom.startsWith('http://') || bg.imgBottom.startsWith('https://');
-          
+
           if (isS3ImgTop && isS3ImgBottom) {
             validCount++;
             const newKey = String(validCount);
-            
+
             // 새 키(1, 2, 3...)에 필터링된 배경 매핑
             validBackgrounds[newKey] = bg;
-            
+
             // 기존 stage 난이도 정보 매핑 (없으면 기본값 생성)
             validStages[newKey] = (config.stages && config.stages[String(bgId)]) || {
               timeLimit: Math.max(30, 60 - (validCount - 1) * 10),
@@ -201,7 +201,7 @@ async function loadDynamicConfig() {
         }
       }
     }
-    
+
     if (validCount > 0) {
       config.backgrounds = validBackgrounds;
       config.stages = validStages;
@@ -210,26 +210,26 @@ async function loadDynamicConfig() {
     } else {
       console.warn("loadDynamicConfig: No valid S3 stages found. Falling back to local/default stages.");
     }
-    
+
     fullConfigData = config;
-    
+
     // gameConfig 기본 파라미터 병합
     gameConfig.maxStage = config.maxStage || 3;
     gameConfig.baseIq = config.baseIq || 200;
     gameConfig.baseBrainAge = config.baseBrainAge || 20;
-    
+
     // stages 병합
     if (config.stages) {
       gameConfig.stages = config.stages;
     }
-    
+
     // STAGE_DIFFERENCES 매핑
     if (config.backgrounds) {
       for (let bgId in config.backgrounds) {
         STAGE_DIFFERENCES[bgId] = config.backgrounds[bgId].differences;
       }
     }
-    
+
     console.log("loadDynamicConfig: Dynamic configs merged successfully.");
 
     // 배경 이미지 노출 순서 셔플을 미리 해두어 배경 이미지가 즉시 로딩되도록 지원
@@ -268,23 +268,23 @@ let gameTimerId = null;
 function startGame() {
   console.log("startGame: initiating gameplay.");
   gameState = 'PLAYING';
-  
+
   // 게임 화면 활성화
   showScreen('game');
-  
+
   // 시작 오버레이 페이드 아웃
   const startOverlay = document.getElementById('start-overlay');
   if (startOverlay) {
     startOverlay.classList.add('fade-out');
   }
-  
+
   // 첫 게임 시 배경 셔플이 안되어있으면 셔플 처리 (maxStage 기반 동적 생성)
   if (shuffledBackgrounds.length === 0) {
     const stageCount = gameConfig.maxStage || 3;
     shuffledBackgrounds = Array.from({ length: stageCount }, (_, i) => i + 1)
       .sort(() => 0.5 - Math.random());
   }
-  
+
   loadStage(1);
 
   // 1초 단위로 경과 시간 및 두뇌 나이/IQ 갱신하는 타이머 가동 (0.5초 주기로 정밀 제어)
@@ -296,13 +296,13 @@ function startGame() {
     if (!stageDifficulty) return;
 
     stageElapsedTime += 0.5;
-    
+
     // 남은 시간 텍스트 업데이트
     const timeLeft = Math.max(0, Math.ceil(stageDifficulty.timeLimit - stageElapsedTime));
     if (ui.timerSeconds) {
       ui.timerSeconds.textContent = `${timeLeft}초`;
     }
-    
+
     // UI 타이머 게이지바 업데이트 (스테이지별 감소 속도 차등)
     const percent = (stageElapsedTime / stageDifficulty.timeLimit) * 100;
     ui.timerProgress.style.width = `${percent}%`;
@@ -314,7 +314,7 @@ function startGame() {
       agingTimerAccumulator = 0;
       updateScoreUI();
     }
-    
+
     // IQ는 2초마다 공통으로 1씩 하락
     if (stageElapsedTime % 2 === 0) {
       iq = Math.max(50, iq - 1);
@@ -326,7 +326,7 @@ function startGame() {
       showToast("⏳ 시간 초과! 뇌 나이 +10세 패널티 부여!");
       brainAge = Math.min(100, brainAge + 10);
       iq = Math.max(50, iq - 15);
-      
+
       if (currentStage < gameConfig.maxStage) {
         loadStage(currentStage + 1);
       } else {
@@ -343,21 +343,21 @@ function loadStage(stageNum) {
   foundCount = 0;
   agingTimerAccumulator = 0;
   ui.timerProgress.style.width = '0%';
-  
+
   const stageDifficulty = gameConfig.stages[currentStage];
   if (stageDifficulty && ui.timerSeconds) {
     ui.timerSeconds.textContent = `${stageDifficulty.timeLimit}초`;
   }
-  
+
   updateAttemptsUI();
-  
+
   ui.stageDisplay.textContent = `${currentStage}단계 / ${gameConfig.maxStage}`;
   // 이 시점에는 아직 differences 로드 전이므로 "0 / ?"로 초기 표시 (loadDifferences에서 갱신)
   ui.foundCount.innerHTML = `<strong>0 / ?</strong>`;
 
   // 셔플된 인덱스를 참조하여 한국적인 랜덤 이미지 로드
   const bgId = shuffledBackgrounds[currentStage - 1];
-  
+
   // 상단에는 원본(_a), 하단에는 다른 부분이 들어간 수정본(_b)을 로드하여 네이티브 틀린그림찾기 구현
   const bgInfo = fullConfigData && fullConfigData.backgrounds && fullConfigData.backgrounds[bgId];
   if (bgInfo && bgInfo.imgTop && bgInfo.imgBottom) {
@@ -386,7 +386,7 @@ function loadStage(stageNum) {
 // 4. 틀린 그림 데이터 로딩 알고리즘
 function loadDifferences(bgId) {
   const diffs = STAGE_DIFFERENCES[bgId] || [];
-  
+
   activeDifferences = diffs.map((diff, index) => {
     return {
       id: index,
@@ -431,14 +431,37 @@ function toggleSoundState() {
   }
 }
 
-
+// Clipboard fallback helper
+function fallbackCopyTextToClipboard(text) {
+  if (!navigator.clipboard) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed'; // avoid scrolling to bottom
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      showToast('내용이 복사되었습니다.');
+    } catch (err) {
+      console.error('Fallback: Unable to copy', err);
+    }
+    document.body.removeChild(textarea);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('내용이 복사되었습니다.');
+  }).catch(err => {
+    console.error('Async: Could not copy text: ', err);
+  });
+}
 
 // 5. 이미지 클릭 처리
 function handleImageClick(e, frameElement) {
   if (gameState !== 'PLAYING') return;
 
   const rect = frameElement.getBoundingClientRect();
-  
+
   // 클릭된 절대좌표를 프레임 크기 기준 백분율(%)로 환산
   const clickX = ((e.clientX - rect.left) / rect.width) * 100;
   const clickY = ((e.clientY - rect.top) / rect.height) * 100;
@@ -518,7 +541,7 @@ function handleImageClick(e, frameElement) {
     // 뇌 나이 노화 촉진 및 지능 급격 하락
     brainAge = Math.min(100, brainAge + 2);
     iq = Math.max(50, iq - 5);
-    
+
     updateScoreUI();
 
     if (attempts <= 0) {
@@ -564,14 +587,17 @@ function showSuccessMarker(x, y) {
 // 7. 실시간 UI 스코어 텍스트 업데이트
 function updateScoreUI() {
   ui.brainAge.textContent = `${brainAge}세`;
-  ui.iq.textContent = String(iq);
+  // Update IQ display only if the element exists (e.g., result screen)
+  if (ui.iq) {
+    ui.iq.textContent = String(iq);
+  }
 }
 
 // 8. 게임 종료 및 결과 레포트 작성
 function endGame() {
   gameState = 'GAME_OVER';
   clearInterval(gameTimerId);
-  
+
   showScreen('end');
 
   // 최종 성적 표기
@@ -624,15 +650,15 @@ function resetGame() {
   activeDifferences = [];
   attempts = maxAttempts;
   clearInterval(gameTimerId);
-  
+
   // 매 플레이 시 설정된 최대 스테이지 수만큼 동적으로 셔플 순서 배열 생성
   const stageCount = gameConfig.maxStage || 3;
   shuffledBackgrounds = Array.from({ length: stageCount }, (_, i) => i + 1)
     .sort(() => 0.5 - Math.random());
-  
+
   updateScoreUI();
   updateAttemptsUI();
-  
+
   // 혹시 켜져 있을 수 있는 모달들 숨김
   if (ui.refillModal) ui.refillModal.classList.remove('active');
   if (ui.adOverlay) ui.adOverlay.classList.remove('active');
@@ -657,7 +683,7 @@ function showToast(message) {
   clearTimeout(toastTimeoutId);
   ui.toast.textContent = message;
   ui.toast.classList.add('show');
-  
+
   toastTimeoutId = setTimeout(() => {
     ui.toast.classList.remove('show');
   }, 2000);
@@ -713,7 +739,7 @@ function shareKakaoTalk() {
 // 14. 클립보드 복사 로직
 function copyResultsToClipboard() {
   const text = getShareText();
-  
+
   // 모바일/PC 대응 클립보드 API
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text)
@@ -732,13 +758,13 @@ function copyResultsToClipboard() {
 function fallbackCopyTextToClipboard(text) {
   const textArea = document.createElement("textarea");
   textArea.value = text;
-  
+
   // 화면 밖으로 이동
   textArea.style.top = "0";
   textArea.style.left = "0";
   textArea.style.position = "fixed";
   textArea.style.opacity = "0";
-  
+
   document.body.appendChild(textArea);
   textArea.focus();
   textArea.select();
@@ -760,7 +786,7 @@ function fallbackCopyTextToClipboard(text) {
 // 15. 시도 횟수(하트) UI 업데이트
 function updateAttemptsUI() {
   if (!ui.attemptsValue) return;
-  
+
   // 남은 횟수는 ❤️, 소진된 횟수는 🖤
   const hearts = '❤️'.repeat(Math.max(0, attempts));
   const emptyHearts = '🖤'.repeat(Math.max(0, maxAttempts - attempts));
@@ -781,7 +807,7 @@ function startAdRefillProcess() {
   if (ui.refillModal) {
     ui.refillModal.classList.remove('active');
   }
-  
+
   isAdGranted = false;
   adPlayStarted = false;
 
@@ -801,9 +827,9 @@ function startAdRefillProcess() {
   // ──────────────────────────────────────────────────────────────────────
 
   let adCallbackCalled = false; // SDK 콜백이 실행되었는지 여부 플래그
-  
+
   console.log("AdSense H5 Games Ads: Real SDK detected. Triggering rewarded adBreak.");
-  
+
   // 구글 H5 광고 무응답 방어 타임아웃 (5초 내 콜백 응답 없을 시 강제 가상 광고 실행)
   const adSafetyTimeout = setTimeout(() => {
     if (!adCallbackCalled) {
@@ -811,7 +837,7 @@ function startAdRefillProcess() {
       runSimulatedAdFallback();
     }
   }, 5000);
-  
+
   // 구글 애드센스 H5 게임 보상형 광고 호출
   try {
     adBreak({
@@ -850,7 +876,7 @@ function startAdRefillProcess() {
       adBreakDone: (placementInfo) => {
         adCallbackCalled = true;
         clearTimeout(adSafetyTimeout); // 정상 반응했으므로 보호용 타이머 제거
-        
+
         const status = placementInfo ? placementInfo.breakStatus : 'unknown';
         console.log("AdSense H5 Games Ads: adBreakDone triggered. Status:", status);
         handleH5AdClosed();
@@ -869,29 +895,29 @@ function runSimulatedAdFallback() {
   if (ui.adOverlay) {
     ui.adOverlay.classList.add('active');
   }
-  
+
   let count = 5;
   if (ui.adCountdownText) {
     ui.adCountdownText.textContent = `${count}초 후 닫기`;
   }
-  
+
   const adInterval = setInterval(() => {
     count--;
     if (ui.adCountdownText) {
       ui.adCountdownText.textContent = `${count}초 후 닫기`;
     }
-    
+
     if (count <= 0) {
       clearInterval(adInterval);
-      
+
       // 가상 광고 완료 후 기회 복구 및 게임 상태 재개
       if (ui.adOverlay) {
         ui.adOverlay.classList.remove('active');
       }
-      
+
       attempts = maxAttempts;
       updateAttemptsUI();
-      
+
       gameState = 'PLAYING';
       showToast("🎁 광고 시청 완료! 기회가 모두 충전되었습니다.");
     }
@@ -930,16 +956,16 @@ function showFloatingScoreEffect(x, y, frameElement) {
   ageEl.style.left = `${x}%`;
   ageEl.style.top = `${y}%`;
   ageEl.textContent = '-3세';
-  
+
   const iqEl = document.createElement('div');
   iqEl.className = 'floating-score-effect iq';
   iqEl.style.left = `${x + 6}%`; // x축 약간 오프셋하여 겹치지 않게
   iqEl.style.top = `${y}%`;
   iqEl.textContent = 'IQ +5';
-  
+
   frameElement.appendChild(ageEl);
   frameElement.appendChild(iqEl);
-  
+
   // 애니메이션 수명 후 삭제
   setTimeout(() => {
     ageEl.remove();
