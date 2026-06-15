@@ -198,6 +198,7 @@ body {
   font-weight: 800;
   border-radius: 30px;
   font-family: var(--font-display);
+  white-space: nowrap;
 }
 
 .score-display {
@@ -215,6 +216,7 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
+  white-space: nowrap;
 }
 
 .score-item.age-warning .value {
@@ -258,10 +260,11 @@ body {
 }
 
 .game-image-frame {
-  width: min(100%, 35vh * 1.5); /* 세로 화면에서 스크롤 없이 들어가면서 크기를 최대화 */
+  width: min(100%, 32.5vh * 1.5); /* 세로 화면에서 스크롤 없이 들어가면서 크기를 최대화 */
   aspect-ratio: 1.5; /* 일러스트 이미지 3:2 비율 고정 */
   margin: 0 auto;
   position: relative;
+
   background-color: #EFECE7;
   border: 4px solid var(--primary-color);
   border-radius: var(--border-radius-md);
@@ -782,7 +785,7 @@ body {
   font-size: 15.5px;
 }
 
-/* 모바일 전용 상단 애드센스 배너 크기 압축 (게임 플레이 및 결과 영역 확보) */
+/* 모바일 전용 상단 애드센스 배너 크기 압축 및 공간 절약 조율 */
 @media (max-width: 767px) {
   .adsense-container.ads-game-screen,
   .adsense-container.ads-end-screen {
@@ -798,8 +801,368 @@ body {
     max-height: 60px !important;
     overflow: hidden !important;
   }
+
+  /* 모바일 화면에서 하단 잘림을 원천적으로 막기 위한 여백 극소화 */
+  #game-screen {
+    padding: 6px 12px;
+  }
+  .game-header {
+    margin-bottom: 4px;
+  }
+  .header-top {
+    margin-bottom: 4px;
+  }
+  .game-play-area {
+    margin: 4px 0;
+    gap: 6px;
+  }
+  .game-image-frame {
+    width: min(100%, 30vh * 1.5) !important; /* 기존 32.5vh에서 30vh로 조율하여 하단 안전 마진 확보 */
+  }
+  .game-footer {
+    padding: 4px 0;
+  }
+  .footer-status {
+    padding: 6px 16px;
+    margin-bottom: 2px;
+  }
+  .guide-tip {
+    font-size: 12px;
+    margin: 0;
+  }
+
+  /* 모바일 상단 헤더 요소 크기 압축 조율 */
+  .stage-badge {
+    padding: 4px 10px !important;
+    font-size: 13.5px !important;
+  }
+  .btn-sound-toggle {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 12px !important;
+  }
+  .score-display {
+    gap: 6px !important;
+  }
+  .score-item {
+    padding: 4px 8px !important;
+    font-size: 12.5px !important;
+    gap: 2px !important;
+  }
+  .score-item.age-warning .value,
+  .score-item.iq-danger .value {
+    font-size: 15px !important;
+  }
 }
 
+/* 하단 맞춰야 할 개수 시각적 점 표시기 */
+.diff-dots-container {
+  display: flex;
+  gap: 8px;
+  margin-left: 14px;
+  align-items: center;
+}
 
+.diff-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #E6DFD5;
+  border: 2px solid #C4B9A6;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
+.diff-dot.found {
+  background-color: var(--secondary-color); /* 녹색 */
+  border-color: #2F9D27;
+  transform: scale(1.25);
+  box-shadow: 0 0 10px rgba(47, 157, 39, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
 
+/* 하단 틀린 그림 목표 개수 영역 펄스 강조 효과 */
+@keyframes footer-pulse {
+  0% {
+    transform: scale(1);
+    border-color: #E6DFD5;
+  }
+  50% {
+    transform: scale(1.08);
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 15px rgba(47, 157, 39, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    border-color: #E6DFD5;
+  }
+}
+
+.footer-status.pulse {
+  animation: footer-pulse 0.8s ease-in-out 2;
+}
+
+/* 상단 효과음 토글 버튼 */
+.btn-sound-toggle {
+  background-color: var(--card-bg);
+  border: 2px solid #E6DFD5;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  padding: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.btn-sound-toggle:hover {
+  background-color: #E6DFD5;
+  transform: scale(1.05);
+}
+
+.btn-sound-toggle:active {
+  transform: scale(0.9);
+}
+
+/* 타이머 바 래퍼 및 남은 초 스타일 */
+.timer-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.timer-bar-wrapper .timer-bar-container {
+  flex: 1;
+}
+
+.timer-seconds-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary-color);
+  min-width: 45px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* 정답 플로팅 텍스트 이펙트 */
+.floating-score-effect {
+  position: absolute;
+  pointer-events: none;
+  font-family: var(--font-family);
+  font-weight: 900;
+  font-size: 20px;
+  z-index: 50;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  animation: floatUpFade 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.floating-score-effect.age {
+  color: #FFD166; /* 금빛 노랑 */
+}
+
+.floating-score-effect.iq {
+  color: #2ECC71; /* 연두/초록 */
+}
+
+@keyframes floatUpFade {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) translateY(-20px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(-70px) scale(1.0);
+    opacity: 0;
+  }
+}
+
+/* 충전 안내 모달 스타일 (고급 다크 글래스모피즘) */
+.game-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 26, 23, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: none; /* JS로 flex 처리 */
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.game-modal-overlay.active {
+  display: flex;
+}
+
+.game-modal-content {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  border: 4px solid var(--primary-color);
+  text-align: center;
+  animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.modal-emoji {
+  font-size: 54px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.game-modal-content h2 {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+}
+
+.game-modal-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 가상 광고 오버레이 스타일 (전체화면) */
+.ad-simulation-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #110F0E;
+  z-index: 300;
+  display: none; /* JS로 flex 처리 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  color: #FFFFFF;
+}
+
+.ad-simulation-overlay.active {
+  display: flex;
+}
+
+.ad-simulation-content {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ad-badge {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.ad-video-mock {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: radial-gradient(circle, #2C2621 0%, #1E1A16 100%);
+  border-radius: var(--border-radius-md);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 프리미엄 로딩 스피너 */
+.ad-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.ad-main-message {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.ad-sub-message {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ad-countdown-text {
+  font-family: var(--font-family);
+  font-size: 18px;
+  font-weight: 800;
+  background-color: var(--primary-color);
+  color: #FFFFFF;
+  padding: 10px 24px;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(255, 111, 61, 0.4);
+  animation: pulseCountdown 1s infinite alternate;
+}
+
+/* 기회 하트 색상 강조 */
+.attempts-display .value {
+  color: #E74C3C !important;
+  letter-spacing: -1px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseCountdown {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+@media (max-width: 767px) {
+  .attempts-display .value {
+    font-size: 11px !important;
+    letter-spacing: -2px;
+  }
+}

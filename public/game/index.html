@@ -20,6 +20,9 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5633731930294890"
     crossorigin="anonymous"></script>
 
+  <!-- 구글 퍼블리셔 태그 (GPT) 비동기 스크립트 로드 (보상형 광고용) -->
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+
   <!-- Kakao SDK -->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
     integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
@@ -47,24 +50,35 @@
         </button>
       </div>
 
+
       <!-- 헤더 점수 및 타이머 바 -->
       <header class="game-header">
         <div class="header-top">
-          <div class="stage-badge" id="current-stage-display">STAGE 1/3</div>
+          <div class="header-left" style="display: flex; align-items: center; gap: 8px;">
+            <div class="stage-badge" id="current-stage-display">1단계 / 3</div>
+            <button id="btn-toggle-sound" class="btn-sound-toggle" title="소리 켜기/끄기">🔊</button>
+          </div>
           <div class="score-display">
+            <div class="score-item attempts-display">
+              <span class="label">기회:</span>
+              <span class="value" id="attempts-value">❤️❤️❤️❤️❤️</span>
+            </div>
             <div class="score-item age-warning">
               <span class="label">뇌 연령:</span>
               <span class="value" id="brain-age-value">20세</span>
             </div>
             <div class="score-item iq-danger">
-              <span class="label">현재 IQ:</span>
+              <span class="label">IQ:</span>
               <span class="value" id="iq-value">150</span>
             </div>
           </div>
         </div>
         <!-- 긴박한 연령 게이지 바 -->
-        <div class="timer-bar-container">
-          <div id="timer-progress" class="timer-progress-bar"></div>
+        <div class="timer-bar-wrapper">
+          <div class="timer-bar-container">
+            <div id="timer-progress" class="timer-progress-bar"></div>
+          </div>
+          <span id="timer-seconds-text" class="timer-seconds-text">60초</span>
         </div>
       </header>
 
@@ -93,6 +107,7 @@
         <div class="footer-status">
           <span class="status-icon">🔍</span>
           <span class="status-text">틀린 그림: <strong id="found-count-value">0 / 3</strong></span>
+          <div id="diff-dots-container" class="diff-dots-container"></div>
         </div>
         <p class="guide-tip">두 그림 중 다른 곳 아무데나 터치해도 정답 처리됩니다!</p>
       </footer>
@@ -144,6 +159,32 @@
         </button>
       </div>
     </section>
+
+    <!-- 기회 소진 충전 안내 모달 -->
+    <div id="modal-refill-attempts" class="game-modal-overlay">
+      <div class="game-modal-content">
+        <span class="modal-emoji">💡</span>
+        <h2>기회를 모두 소진했습니다!</h2>
+        <p>무료 동영상 광고를 <strong>5초간 시청</strong>하시면,<br>기회가 다시 가득 충전되어 이어서 하실 수 있습니다.</p>
+        <div class="modal-buttons">
+          <button id="btn-refill-ad" class="btn btn-primary">🎬 광고 시청하고 이어하기</button>
+          <button id="btn-give-up" class="btn btn-outline">결과 보러 가기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 가상 동영상 광고 오버레이 -->
+    <div id="ad-simulation-overlay" class="ad-simulation-overlay">
+      <div class="ad-simulation-content">
+        <div class="ad-badge">AD (가상 광고)</div>
+        <div class="ad-video-mock">
+          <div class="ad-spinner"></div>
+          <p class="ad-main-message">두뇌 건강 증진 캠페인 영상</p>
+          <p class="ad-sub-message">영상이 종료되면 기회가 충전됩니다.</p>
+        </div>
+        <div id="ad-countdown-text" class="ad-countdown-text">5초 후 닫기</div>
+      </div>
+    </div>
 
   </div>
 

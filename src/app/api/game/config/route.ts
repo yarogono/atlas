@@ -37,9 +37,9 @@ const defaultConfig = {
   baseIq: 200,
   baseBrainAge: 20,
   stages: {
-    "1": { timeLimit: 60, agingInterval: 2.0, hitRadius: 10.0 },
-    "2": { timeLimit: 50, agingInterval: 1.2, hitRadius: 8.0 },
-    "3": { timeLimit: 40, agingInterval: 0.8, hitRadius: 6.0 }
+    "1": { timeLimit: 60, agingInterval: 5.0, hitRadius: 10.0 },
+    "2": { timeLimit: 50, agingInterval: 4.0, hitRadius: 8.0 },
+    "3": { timeLimit: 40, agingInterval: 3.0, hitRadius: 6.0 }
   },
   backgrounds: {
     "1": {

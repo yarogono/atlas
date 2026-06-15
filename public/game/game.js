@@ -20,23 +20,23 @@ const gameConfig = {
   stages: {
     1: {
       timeLimit: 60,       // 제한 시간 60초 (넉넉함)
-      agingInterval: 2.0,  // 2.0초마다 뇌 연령 +1세 노화 (느림)
+      agingInterval: 5.0,  // 5.0초마다 뇌 연령 +1세 노화 (느림)
       hitRadius: 10.0      // 정답 클릭 허용 반경 10% (대충 클릭해도 정답)
     },
     2: {
       timeLimit: 50,       // 제한 시간 50초 (보통)
-      agingInterval: 1.2,  // 1.2초마다 뇌 연령 +1세 노화 (보통)
+      agingInterval: 4.0,  // 4.0초마다 뇌 연령 +1세 노화 (보통)
       hitRadius: 8.0       // 정답 클릭 허용 반경 8% (표준)
     },
     3: {
       timeLimit: 40,       // 제한 시간 40초 (긴박함)
-      agingInterval: 0.8,  // 0.8초마다 뇌 연령 +1세 노화 (빠름)
+      agingInterval: 3.0,  // 3.0초마다 뇌 연령 +1세 노화 (빠름)
       hitRadius: 6.0       // 정답 클릭 허용 반경 6% (정교한 터치 필요)
     }
   }
 };
 
-let gameState = 'START'; // START, PLAYING, GAME_OVER
+let gameState = 'START'; // START, PLAYING, GAME_OVER, PAUSED, AD_PLAYING
 let currentStage = 1;
 let brainAge = gameConfig.baseBrainAge;
 let iq = gameConfig.baseIq;
@@ -46,6 +46,19 @@ let activeDifferences = []; // 현재 스테이지의 틀린 부분 목록
 let shuffledBackgrounds = []; // 게임마다 셔플될 배경 이미지 순서 ([1, 2, 3]이 섞임)
 let agingTimerAccumulator = 0; // 스테이지 내 소수점 시간 연령 가중 축적기
 let fullConfigData = null; // 동적 stages.json 설정을 담을 전역 변수
+
+const maxAttempts = 5;
+let attempts = maxAttempts;
+
+// GPT 보상형 광고 전역 변수
+let rewardedSlot = null;
+let rewardedAdEvent = null;
+let isAdGranted = false;
+
+let isMuted = false;
+const correctSound = new Audio('/game/correct-sound.mp3');
+correctSound.volume = 0.3; // 효과음 볼륨을 30% 수준으로 하향 조정
+
 
 // 각 배경 일러스트별 고정된 3개 네이티브 다른 그림의 중심 백분율(%) 좌표
 const STAGE_DIFFERENCES = {
@@ -83,7 +96,8 @@ function initGameListeners() {
     start: document.getElementById('btn-start-game'),
     shareKakao: document.getElementById('btn-share-kakao'),
     copyLink: document.getElementById('btn-copy-link'),
-    restart: document.getElementById('btn-restart')
+    restart: document.getElementById('btn-restart'),
+    toggleSound: document.getElementById('btn-toggle-sound')
   };
 
   ui = {
@@ -91,6 +105,13 @@ function initGameListeners() {
     brainAge: document.getElementById('brain-age-value'),
     iq: document.getElementById('iq-value'),
     timerProgress: document.getElementById('timer-progress'),
+    timerSeconds: document.getElementById('timer-seconds-text'),
+    attemptsValue: document.getElementById('attempts-value'),
+    refillModal: document.getElementById('modal-refill-attempts'),
+    adOverlay: document.getElementById('ad-simulation-overlay'),
+    adCountdownText: document.getElementById('ad-countdown-text'),
+    btnRefillAd: document.getElementById('btn-refill-ad'),
+    btnGiveUp: document.getElementById('btn-give-up'),
     imgTop: document.getElementById('img-top'),
     imgBottom: document.getElementById('img-bottom'),
     overlayTop: document.getElementById('overlay-top'),
@@ -102,8 +123,11 @@ function initGameListeners() {
     diagnosisDesc: document.getElementById('diagnosis-description'),
     frameTop: document.getElementById('frame-top'),
     frameBottom: document.getElementById('frame-bottom'),
-    toast: document.getElementById('toast')
+    toast: document.getElementById('toast'),
+    dotsContainer: document.getElementById('diff-dots-container'),
+    footerStatus: document.querySelector('.footer-status')
   };
+
 
   console.log("initGameListeners: DOM elements bound and events registered.");
   buttons.start.addEventListener('click', startGame);
@@ -113,6 +137,14 @@ function initGameListeners() {
   });
   buttons.shareKakao.addEventListener('click', shareKakaoTalk);
   buttons.copyLink.addEventListener('click', copyResultsToClipboard);
+  buttons.toggleSound.addEventListener('click', toggleSoundState);
+
+  // 광고 및 충전 모달 리스너 추가
+  ui.btnRefillAd.addEventListener('click', startAdRefillProcess);
+  ui.btnGiveUp.addEventListener('click', () => {
+    ui.refillModal.classList.remove('active');
+    endGame();
+  });
 
   // 클릭 이벤트 핸들러 (상단/하단 프레임 둘 다 연결)
   ui.frameTop.addEventListener('click', (e) => handleImageClick(e, ui.frameTop));
@@ -121,6 +153,7 @@ function initGameListeners() {
   // 동적 설정 불러오기 실행
   loadDynamicConfig().then(() => {
     console.log("initGameListeners: Setup complete with dynamic configs.");
+    initRewardedAd(); // GPT 보상형 광고 초기화
   });
 }
 
@@ -162,8 +195,8 @@ async function loadDynamicConfig() {
             
             // 기존 stage 난이도 정보 매핑 (없으면 기본값 생성)
             validStages[newKey] = (config.stages && config.stages[String(bgId)]) || {
-              timeLimit: 60 - (validCount - 1) * 10,
-              agingInterval: Math.max(0.5, 2.0 - (validCount - 1) * 0.6),
+              timeLimit: Math.max(30, 60 - (validCount - 1) * 10),
+              agingInterval: Math.max(1.0, 5.0 - (validCount - 1) * 1.0),
               hitRadius: Math.max(5.0, 10.0 - (validCount - 1) * 2.0)
             };
           }
@@ -260,10 +293,17 @@ function startGame() {
   gameTimerId = setInterval(() => {
     if (gameState !== 'PLAYING') return;
 
-    stageElapsedTime += 0.5;
-    
     // 현재 스테이지 난이도 환경 설정 추출
     const stageDifficulty = gameConfig.stages[currentStage];
+    if (!stageDifficulty) return;
+
+    stageElapsedTime += 0.5;
+    
+    // 남은 시간 텍스트 업데이트
+    const timeLeft = Math.max(0, Math.ceil(stageDifficulty.timeLimit - stageElapsedTime));
+    if (ui.timerSeconds) {
+      ui.timerSeconds.textContent = `${timeLeft}초`;
+    }
     
     // UI 타이머 게이지바 업데이트 (스테이지별 감소 속도 차등)
     const percent = (stageElapsedTime / stageDifficulty.timeLimit) * 100;
@@ -277,17 +317,17 @@ function startGame() {
       updateScoreUI();
     }
     
-    // IQ는 1초마다 공통으로 2씩 하락
-    if (stageElapsedTime % 1 === 0) {
-      iq = Math.max(50, iq - 2);
+    // IQ는 2초마다 공통으로 1씩 하락
+    if (stageElapsedTime % 2 === 0) {
+      iq = Math.max(50, iq - 1);
       updateScoreUI();
     }
 
     // 시간 초과 처리
     if (stageElapsedTime >= stageDifficulty.timeLimit) {
-      showToast("⏳ 시간 초과! 뇌 나이 +20세 패널티 부여!");
-      brainAge = Math.min(100, brainAge + 20);
-      iq = Math.max(50, iq - 30);
+      showToast("⏳ 시간 초과! 뇌 나이 +10세 패널티 부여!");
+      brainAge = Math.min(100, brainAge + 10);
+      iq = Math.max(50, iq - 15);
       
       if (currentStage < gameConfig.maxStage) {
         loadStage(currentStage + 1);
@@ -306,7 +346,14 @@ function loadStage(stageNum) {
   agingTimerAccumulator = 0;
   ui.timerProgress.style.width = '0%';
   
-  ui.stageDisplay.textContent = `STAGE ${currentStage}/${gameConfig.maxStage}`;
+  const stageDifficulty = gameConfig.stages[currentStage];
+  if (stageDifficulty && ui.timerSeconds) {
+    ui.timerSeconds.textContent = `${stageDifficulty.timeLimit}초`;
+  }
+  
+  updateAttemptsUI();
+  
+  ui.stageDisplay.textContent = `${currentStage}단계 / ${gameConfig.maxStage}`;
   // 이 시점에는 아직 differences 로드 전이므로 "0 / ?"로 초기 표시 (loadDifferences에서 갱신)
   ui.foundCount.innerHTML = `<strong>0 / ?</strong>`;
 
@@ -329,6 +376,13 @@ function loadStage(stageNum) {
 
   // 해당 배경에 맞는 3개의 고정 틀린 그림 데이터 바인딩
   loadDifferences(bgId);
+
+  // 게임 진행 중일 때만 하단 상태 표시기 애니메이션 트리거 (시각적 환기)
+  if (gameState === 'PLAYING' && ui.footerStatus) {
+    ui.footerStatus.classList.remove('pulse');
+    void ui.footerStatus.offsetWidth; // Reflow 트리거
+    ui.footerStatus.classList.add('pulse');
+  }
 }
 
 // 4. 틀린 그림 데이터 로딩 알고리즘
@@ -348,11 +402,37 @@ function loadDifferences(bgId) {
   // 정답 개수 확정 후 카운터 UI 갱신 (동적 개수 반영)
   ui.foundCount.innerHTML = `<strong>0 / ${activeDifferences.length}</strong>`;
 
+  // 하단 점(dot) 표시기 생성
+  if (ui.dotsContainer) {
+    ui.dotsContainer.innerHTML = '';
+    for (let i = 0; i < activeDifferences.length; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'diff-dot';
+      ui.dotsContainer.appendChild(dot);
+    }
+  }
+
   // 틀린 그림 데이터가 비어있으면 경고 (아직 설정 안된 스테이지)
   if (activeDifferences.length === 0) {
     console.warn(`loadDifferences: Stage bgId=${bgId}의 틀린 그림 좌표가 설정되지 않았습니다.`);
   }
 }
+
+// 효과음 음소거 토글 함수
+function toggleSoundState() {
+  isMuted = !isMuted;
+  if (isMuted) {
+    buttons.toggleSound.textContent = '🔇';
+    showToast("🔇 효과음이 꺼졌습니다.");
+  } else {
+    buttons.toggleSound.textContent = '🔊';
+    showToast("🔊 효과음이 켜졌습니다.");
+    // 브라우저 오디오 오동작 방지 및 잠금 해제용 재생
+    correctSound.currentTime = 0;
+    correctSound.play().catch(e => console.log("Sound play error on user interaction:", e));
+  }
+}
+
 
 
 // 5. 이미지 클릭 처리
@@ -391,10 +471,26 @@ function handleImageClick(e, frameElement) {
 
       // 양쪽 이미지 오버레이 모두에 성공 동그라미 표식 생성
       showSuccessMarker(diff.x, diff.y);
+      showFloatingScoreEffect(clickX, clickY, frameElement);
       updateScoreUI();
       ui.foundCount.innerHTML = `<strong>${foundCount} / ${activeDifferences.length}</strong>`;
 
+      // 하단 점(dot) 표시기 활성화
+      if (ui.dotsContainer) {
+        const dots = ui.dotsContainer.querySelectorAll('.diff-dot');
+        if (dots[foundCount - 1]) {
+          dots[foundCount - 1].classList.add('found');
+        }
+      }
+
+      // 효과음 재생
+      if (!isMuted) {
+        correctSound.currentTime = 0;
+        correctSound.play().catch(e => console.error("Sound play failed:", e));
+      }
+
       showToast("🎉 정답입니다! 뇌 나이 -3세, IQ +5!");
+
 
       // 햅틱 진동 피드백 (모바일 지원 기기 대상 짧은 터치 진동)
       if (navigator.vibrate) {
@@ -417,12 +513,22 @@ function handleImageClick(e, frameElement) {
 
   // 2) 빗나갔을 때 (오답 페널티)
   if (!hitDetected) {
+    // 시도 횟수 차감
+    attempts--;
+    updateAttemptsUI();
+
     // 뇌 나이 노화 촉진 및 지능 급격 하락
-    brainAge = Math.min(100, brainAge + 5);
-    iq = Math.max(50, iq - 10);
+    brainAge = Math.min(100, brainAge + 2);
+    iq = Math.max(50, iq - 5);
     
     updateScoreUI();
-    showToast("❌ 오답! 뇌 나이 +5세, IQ -10!");
+
+    if (attempts <= 0) {
+      showToast("❌ 오답! 기회를 모두 잃었습니다.");
+      handleOutOfAttempts();
+    } else {
+      showToast(`❌ 오답! 뇌 나이 +2세, IQ -5! (남은 기회: ${attempts}회)`);
+    }
 
     // 화면 진동(Shake) 효과 및 적색 경고 테두리 적용
     ui.frameTop.classList.add('penalty');
@@ -518,6 +624,7 @@ function resetGame() {
   stageElapsedTime = 0;
   foundCount = 0;
   activeDifferences = [];
+  attempts = maxAttempts;
   clearInterval(gameTimerId);
   
   // 매 플레이 시 설정된 최대 스테이지 수만큼 동적으로 셔플 순서 배열 생성
@@ -526,6 +633,11 @@ function resetGame() {
     .sort(() => 0.5 - Math.random());
   
   updateScoreUI();
+  updateAttemptsUI();
+  
+  // 혹시 켜져 있을 수 있는 모달들 숨김
+  if (ui.refillModal) ui.refillModal.classList.remove('active');
+  if (ui.adOverlay) ui.adOverlay.classList.remove('active');
 }
 
 // 10. 스크린 전환 유틸리티
@@ -645,4 +757,173 @@ function fallbackCopyTextToClipboard(text) {
   }
 
   document.body.removeChild(textArea);
+}
+
+// 15. 시도 횟수(하트) UI 업데이트
+function updateAttemptsUI() {
+  if (!ui.attemptsValue) return;
+  
+  // 남은 횟수는 ❤️, 소진된 횟수는 🖤
+  const hearts = '❤️'.repeat(Math.max(0, attempts));
+  const emptyHearts = '🖤'.repeat(Math.max(0, maxAttempts - attempts));
+  ui.attemptsValue.textContent = hearts + emptyHearts;
+}
+
+// 16. 기회 모두 소진 시 모달 팝업 및 게임 일시 정지
+function handleOutOfAttempts() {
+  gameState = 'PAUSED';
+  if (ui.refillModal) {
+    ui.refillModal.classList.add('active');
+  }
+}
+
+// 17. 광고 시청 프로세스 (GPT Rewarded Ads 연동 및 Fallback 연출)
+function startAdRefillProcess() {
+  // 모달 닫기
+  if (ui.refillModal) {
+    ui.refillModal.classList.remove('active');
+  }
+  
+  if (rewardedAdEvent) {
+    // GPT 광고가 로드되어 준비된 상태라면 실제 구글 보상형 광고 표출
+    console.log("GPT: Launching official rewarded ad.");
+    isAdGranted = false; // 보상 수여 플래그 초기화
+    rewardedAdEvent.makeRewardedVisible();
+  } else {
+    // 광고 준비 안 됨 (AdBlock, 로드 지연 또는 미지원 환경 등): 가상 광고 Fallback 작동
+    console.log("GPT: Rewarded ad not ready. Triggering simulated fallback.");
+    runSimulatedAdFallback();
+  }
+}
+
+// 17-1. 광고 미지원 / 차단 시 백업용 가상 광고 5초 카운트다운 연출
+function runSimulatedAdFallback() {
+  gameState = 'AD_PLAYING';
+  if (ui.adOverlay) {
+    ui.adOverlay.classList.add('active');
+  }
+  
+  let count = 5;
+  if (ui.adCountdownText) {
+    ui.adCountdownText.textContent = `${count}초 후 닫기`;
+  }
+  
+  const adInterval = setInterval(() => {
+    count--;
+    if (ui.adCountdownText) {
+      ui.adCountdownText.textContent = `${count}초 후 닫기`;
+    }
+    
+    if (count <= 0) {
+      clearInterval(adInterval);
+      
+      // 가상 광고 완료 후 기회 복구 및 게임 상태 재개
+      if (ui.adOverlay) {
+        ui.adOverlay.classList.remove('active');
+      }
+      
+      attempts = maxAttempts;
+      updateAttemptsUI();
+      
+      gameState = 'PLAYING';
+      showToast("🎁 광고 시청 완료! 기회가 모두 충전되었습니다.");
+    }
+  }, 1000);
+}
+
+// 18. GPT 보상형 광고 초기화
+function initRewardedAd() {
+  window.googletag = window.googletag || { cmd: [] };
+  
+  googletag.cmd.push(() => {
+    // 구글 공식 테스트 보상형 광고 유닛 ID
+    rewardedSlot = googletag.defineOutOfPageSlot(
+      '/21775744923/example/rewarded',
+      googletag.enums.OutOfPageFormat.REWARDED
+    );
+    
+    if (rewardedSlot) {
+      rewardedSlot.addService(googletag.pubads());
+      
+      // 광고 로드 완료 (사용자에게 보이기 전 대기 상태)
+      googletag.pubads().addEventListener('rewardedSlotReady', (event) => {
+        console.log('GPT: Rewarded slot is ready.');
+        rewardedAdEvent = event;
+      });
+      
+      // 광고 시청 완료 (보상 지급 이벤트)
+      googletag.pubads().addEventListener('rewardedSlotGranted', (event) => {
+        console.log('GPT: Rewarded slot granted.');
+        isAdGranted = true;
+      });
+      
+      // 광고 창 닫힘
+      googletag.pubads().addEventListener('rewardedSlotClosed', (event) => {
+        console.log('GPT: Rewarded slot closed.');
+        handleAdClosed();
+      });
+      
+      googletag.enableServices();
+      googletag.display(rewardedSlot);
+    } else {
+      console.warn('GPT: Rewarded slot definition returned null.');
+    }
+  });
+}
+
+// 19. GPT 광고 닫힘 시 게임 상태 복구 처리
+function handleAdClosed() {
+  if (isAdGranted) {
+    // 시청 완료: 보상 지급 (라이프 5개 완충 및 재개)
+    attempts = maxAttempts;
+    updateAttemptsUI();
+    gameState = 'PLAYING';
+    showToast("🎁 광고 시청 완료! 기회가 모두 충전되었습니다.");
+  } else {
+    // 중도 취소: 다시 충전 모달 팝업 및 일시정지 상태 유지
+    gameState = 'PAUSED';
+    if (ui.refillModal) {
+      ui.refillModal.classList.add('active');
+    }
+    showToast("⚠️ 광고를 끝까지 시청해야 기회가 충전됩니다.");
+  }
+  
+  // 상태 초기화 및 다음 시도를 위해 다음 광고 로딩
+  refreshRewardedAd();
+}
+
+// 20. 새로운 보상형 광고 로딩
+function refreshRewardedAd() {
+  rewardedAdEvent = null;
+  isAdGranted = false;
+  if (rewardedSlot) {
+    googletag.pubads().refresh([rewardedSlot]);
+    console.log('GPT: Requesting a new rewarded ad.');
+  }
+}
+
+// 18. 정답 플로팅 텍스트 이펙트
+function showFloatingScoreEffect(x, y, frameElement) {
+  if (!frameElement) return;
+
+  const ageEl = document.createElement('div');
+  ageEl.className = 'floating-score-effect age';
+  ageEl.style.left = `${x}%`;
+  ageEl.style.top = `${y}%`;
+  ageEl.textContent = '-3세';
+  
+  const iqEl = document.createElement('div');
+  iqEl.className = 'floating-score-effect iq';
+  iqEl.style.left = `${x + 6}%`; // x축 약간 오프셋하여 겹치지 않게
+  iqEl.style.top = `${y}%`;
+  iqEl.textContent = 'IQ +5';
+  
+  frameElement.appendChild(ageEl);
+  frameElement.appendChild(iqEl);
+  
+  // 애니메이션 수명 후 삭제
+  setTimeout(() => {
+    ageEl.remove();
+    iqEl.remove();
+  }, 1200);
 }
