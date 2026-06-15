@@ -811,32 +811,17 @@ function startAdRefillProcess() {
   isAdGranted = false;
   adPlayStarted = false;
 
-  // ─── SDK 로드 여부 즉시 판별 ───────────────────────────────────────────
-  // index.html에서 선언한 스텁 함수(adBreak)는 _isStub = true 마커를 가집니다.
-  // 실제 AdSense SDK가 로드되면 adBreak를 자체 구현으로 교체하므로 마커가 사라집니다.
-  // 스텁인 경우 3초를 기다릴 이유가 없으므로 즉시 가상 광고 Fallback을 실행합니다.
-  const isRealSdkLoaded = typeof adBreak !== 'undefined' && !adBreak._isStub;
-
-  if (!isRealSdkLoaded) {
-    console.warn(
-      "AdSense H5 Games Ads: Real SDK not loaded (stub detected). Launching simulated fallback immediately."
-    );
-    runSimulatedAdFallback();
-    return;
-  }
-  // ──────────────────────────────────────────────────────────────────────
-
   let adCallbackCalled = false; // SDK 콜백이 실행되었는지 여부 플래그
 
-  console.log("AdSense H5 Games Ads: Real SDK detected. Triggering rewarded adBreak.");
+  console.log("AdSense H5 Games Ads: Triggering rewarded adBreak.");
 
-  // 구글 H5 광고 무응답 방어 타임아웃 (5초 내 콜백 응답 없을 시 강제 가상 광고 실행)
+  // 구글 H5 광고 무응답 방어 타임아웃 (3초 내 콜백 응답 없을 시 강제 가상 광고 실행)
   const adSafetyTimeout = setTimeout(() => {
     if (!adCallbackCalled) {
-      console.warn("AdSense H5 Games Ads: adBreak callbacks did not respond within 5s. Forcing fallback.");
+      console.log("AdSense H5 Games Ads: adBreak callbacks did not respond within 3s. Running simulated fallback.");
       runSimulatedAdFallback();
     }
-  }, 5000);
+  }, 3000);
 
   // 구글 애드센스 H5 게임 보상형 광고 호출
   try {
@@ -845,12 +830,14 @@ function startAdRefillProcess() {
       name: 'refill_life',
       beforeReward: (showAdFn) => {
         adCallbackCalled = true;
+        clearTimeout(adSafetyTimeout);
         // 사용자가 이미 버튼을 클릭해 광고 시청 동의를 했으므로 즉시 광고 송출
         console.log("AdSense H5 Games Ads: User consented. Showing ad.");
         showAdFn();
       },
       beforeAd: () => {
         adCallbackCalled = true;
+        clearTimeout(adSafetyTimeout);
         // 광고가 실제로 송출 및 렌더링 시작되었을 때
         console.log("AdSense H5 Games Ads: Ad view presentation started.");
         adPlayStarted = true;
