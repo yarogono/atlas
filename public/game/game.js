@@ -811,17 +811,25 @@ function startAdRefillProcess() {
   isAdGranted = false;
   adPlayStarted = false;
 
+  // 1. SDK가 아예 로드되지 않은 상태(AdBlock, 로컬 등)라면 즉시 충전 처리
+  const isRealSdkLoaded = typeof adsbygoogle !== 'undefined' && adsbygoogle.loaded === true;
+  if (!isRealSdkLoaded) {
+    console.log("AdSense H5 Games Ads: SDK not loaded. Instantly refilling attempts.");
+    runInstantRefill();
+    return;
+  }
+
   let adCallbackCalled = false; // SDK 콜백이 실행되었는지 여부 플래그
 
   console.log("AdSense H5 Games Ads: Triggering rewarded adBreak.");
 
-  // 구글 H5 광고 무응답 방어 타임아웃 (3초 내 콜백 응답 없을 시 강제 가상 광고 실행)
+  // 2. SDK는 로드되었으나 승인 대기/광고 물량 부족 등으로 1.5초 내 응답이 없는 경우 즉시 충전 처리
   const adSafetyTimeout = setTimeout(() => {
     if (!adCallbackCalled) {
-      console.log("AdSense H5 Games Ads: adBreak callbacks did not respond within 3s. Running simulated fallback.");
-      runSimulatedAdFallback();
+      console.log("AdSense H5 Games Ads: adBreak callbacks did not respond within 1.5s. Instantly refilling.");
+      runInstantRefill();
     }
-  }, 3000);
+  }, 1500);
 
   // 구글 애드센스 H5 게임 보상형 광고 호출
   try {
@@ -872,43 +880,16 @@ function startAdRefillProcess() {
   } catch (err) {
     console.error("AdSense H5 Games Ads: Exception during adBreak execution.", err);
     clearTimeout(adSafetyTimeout);
-    runSimulatedAdFallback();
+    runInstantRefill();
   }
 }
 
-// 17-1. 광고 미지원 / 차단 시 백업용 가상 광고 5초 카운트다운 연출
-function runSimulatedAdFallback() {
-  gameState = 'AD_PLAYING';
-  if (ui.adOverlay) {
-    ui.adOverlay.classList.add('active');
-  }
-
-  let count = 5;
-  if (ui.adCountdownText) {
-    ui.adCountdownText.textContent = `${count}초 후 닫기`;
-  }
-
-  const adInterval = setInterval(() => {
-    count--;
-    if (ui.adCountdownText) {
-      ui.adCountdownText.textContent = `${count}초 후 닫기`;
-    }
-
-    if (count <= 0) {
-      clearInterval(adInterval);
-
-      // 가상 광고 완료 후 기회 복구 및 게임 상태 재개
-      if (ui.adOverlay) {
-        ui.adOverlay.classList.remove('active');
-      }
-
-      attempts = maxAttempts;
-      updateAttemptsUI();
-
-      gameState = 'PLAYING';
-      showToast("🎁 광고 시청 완료! 기회가 모두 충전되었습니다.");
-    }
-  }, 1000);
+// 17-1. 광고 미지원 / 차단 / 승인 대기 시 즉시 기회 충전 처리 (이탈 방지)
+function runInstantRefill() {
+  attempts = maxAttempts;
+  updateAttemptsUI();
+  gameState = 'PLAYING';
+  showToast("🎁 기회가 충전되었습니다. 게임을 이어해보세요!");
 }
 
 // 18. AdSense H5 광고 닫힘 시 상태 처리
@@ -929,8 +910,8 @@ function handleH5AdClosed() {
     }
   } else {
     // 광고가 송출되지 않고 무시된 경우 (AdBlock, 물량 없음, 통신 지연 등)
-    console.log("AdSense H5 Games Ads: Ad was skipped. Triggering simulated fallback.");
-    runSimulatedAdFallback();
+    console.log("AdSense H5 Games Ads: Ad was skipped. Instantly refilling.");
+    runInstantRefill();
   }
 }
 
