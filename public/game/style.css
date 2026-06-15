@@ -298,21 +298,6 @@ body {
 .game-image-frame img {
   width: 100%;
   height: 100%;
-  object-fit: fill;
-  display: block;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* Slightly enlarge the top image */
-#img-top {
-  width: 108%;
-  height: 108%;
-  object-fit: cover;
-  transform: translate(-4%, -4%);
-}
-  width: 100%;
-  height: 100%;
   object-fit: fill; /* 이미지 잘림 방지 (3:2 비율에 맞춰 채움) */
   display: block;
   user-select: none;
