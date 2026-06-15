@@ -22,9 +22,9 @@
   <script>
     window.adsbygoogle = window.adsbygoogle || [];
     var adBreak = adConfig = function(o) { adsbygoogle.push(o); }
+    adBreak._isStub = true; // SDK 미로드 감지용 마커 (실제 SDK 로드 시 이 속성이 없는 함수로 교체됨)
     adConfig({
-      preloadAdBreaks: 'on',
-      adbreakTest: 'on' // 로컬 테스트 모드 (프로덕션 배포 시 이 줄 제거)
+      preloadAdBreaks: 'on'
     });
   </script>
 
