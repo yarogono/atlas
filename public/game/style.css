@@ -34,6 +34,19 @@
   -webkit-tap-highlight-color: transparent; /* 모바일 터치 시 푸른 반짝임 제거 */
 }
 
+/* 화면 읽기 전용 클래스 (SEO 및 웹 접근성 개선) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   font-family: var(--font-family);
   background-color: #ECE7E1; /* 외부 배경색 */

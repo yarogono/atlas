@@ -5,6 +5,8 @@ export function GET() {
 
   const content = `User-agent: *
 Allow: /
+Disallow: /game/admin.html
+Disallow: /game/admin-login.html
 
 Sitemap: ${baseUrl}/sitemap.xml
 
