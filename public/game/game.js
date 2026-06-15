@@ -709,7 +709,7 @@ function shareKakaoTalk() {
         content: {
           title: '🧠 청춘 두뇌 건강 테스트 결과',
           description: `제 최종 뇌 연령은 ${brainAge}세 (IQ ${iq})! 당신의 두뇌 나이도 테스트해보세요!`,
-          imageUrl: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&q=80&w=300', // 임시 대표 이미지
+          imageUrl: 'https://atlas-vercel-blog.s3.ap-northeast-2.amazonaws.com/game-config/spot+the+difference+thumbnail.jpg', // 대표 이미지
           link: {
             mobileWebUrl: window.location.href,
             webUrl: window.location.href,
