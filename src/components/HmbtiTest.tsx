@@ -288,7 +288,7 @@ export default function HmbtiTest() {
                 <span className="hmbti-title-red">홍명보 지수</span>
                 <h1>밈 테스트</h1>
               </div>
-              <p className="hmbti-subtitle">내 안의 감독 모드, 지금 킥오프합니다</p>
+              <p className="hmbti-subtitle">방구석 감독 자격증 발급받기</p>
 
               <img
                 className="hmbti-main-banner"
@@ -298,7 +298,7 @@ export default function HmbtiTest() {
 
               <button type="button" className="hmbti-main-button" onClick={startTest}>
                 시작하기
-                <span>지금 바로 감독 성향 체크</span>
+                <span>국대 감독직 뺏으러 가기</span>
               </button>
             </div>
           )}

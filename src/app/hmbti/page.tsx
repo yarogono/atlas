@@ -14,10 +14,23 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/hmbti/hmbti-ban-banner.png',
+        url: '/images/hmbti/hmbti-share-thumb.png',
         width: 1200,
         height: 630,
-        alt: '홍명보는 테스트 금지 출입금지 표지판 밈 배너',
+        alt: '국대 감독직 뺏으러 가기 HMBTI 공유 썸네일',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '홍명보 지수 테스트(HMBTI)',
+    description: '축구 밈과 리더십 스타일을 바탕으로 만든 유희용 HMBTI 테스트입니다.',
+    images: [
+      {
+        url: '/images/hmbti/hmbti-share-thumb.png',
+        width: 1200,
+        height: 630,
+        alt: '국대 감독직 뺏으러 가기 HMBTI 공유 썸네일',
       },
     ],
   },
