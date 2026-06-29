@@ -12,6 +12,14 @@ export const metadata: Metadata = {
     description: '나는 자유로운 전술가일까, 원팀 지상주의자일까? 5문항으로 확인해 보세요.',
     url: '/hmbti',
     type: 'website',
+    images: [
+      {
+        url: '/images/hmbti/hmbti-ban-banner.png',
+        width: 1200,
+        height: 630,
+        alt: '홍명보는 테스트 금지 출입금지 표지판 밈 배너',
+      },
+    ],
   },
 };
 

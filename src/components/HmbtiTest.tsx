@@ -108,7 +108,7 @@ const results: ResultType[] = [
     label: '순도 100%',
     title: '명보 오리지널! 원팀 지상주의자형',
     description:
-      '원팀, 규율, 의리, 마이웨이가 풀타임으로 뛰는 타입입니다. 너 혹시 그 감독님이니..? 밈은 밈일 뿐, 웃고 넘기는 전술로 갑시다.',
+      '원팀, 규율, 의리, 마이웨이가 전부 선발 출전했습니다. 이쯤이면 테스트가 아니라 본인 확인입니다.',
     chant: '전술보다 중요한 건 눈빛, 분위기, 그리고 원팀 구호',
     icon: '🏟️',
   },
@@ -290,20 +290,11 @@ export default function HmbtiTest() {
               </div>
               <p className="hmbti-subtitle">내 안의 감독 모드, 지금 킥오프합니다</p>
 
-              <div className="hmbti-mascot" aria-hidden="true">
-                <div className="hmbti-face">
-                  <span className="hmbti-eye hmbti-eye-left" />
-                  <span className="hmbti-eye hmbti-eye-right" />
-                  <span className="hmbti-mouth" />
-                </div>
-                <div className="hmbti-board">
-                  <span>4-4-2</span>
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <div className="hmbti-whistle">⚽</div>
-              </div>
+              <img
+                className="hmbti-main-banner"
+                src="/images/hmbti/hmbti-ban-banner.png"
+                alt="홍명보는 테스트 금지 출입금지 표지판 밈 배너"
+              />
 
               <button type="button" className="hmbti-main-button" onClick={startTest}>
                 시작하기
@@ -618,6 +609,20 @@ export default function HmbtiTest() {
             top: 214px;
             background: #4666ff;
             transform: rotate(12deg);
+          }
+
+          .hmbti-main-banner {
+            position: relative;
+            z-index: 2;
+            display: block;
+            width: min(100%, 430px);
+            aspect-ratio: 1200 / 630;
+            margin: 14px auto 24px;
+            border: 6px solid #17233f;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 9px 0 rgba(23, 35, 63, 0.24);
+            object-fit: cover;
           }
 
           .hmbti-mascot {
@@ -1004,7 +1009,7 @@ export default function HmbtiTest() {
             width: 100%;
             max-width: 400px;
             margin: 22px 0 16px;
-            padding: 18px;
+            padding: 20px 18px 18px;
             border: 5px solid #17233f;
             border-radius: 18px;
             background: #2e7d32;
@@ -1014,20 +1019,21 @@ export default function HmbtiTest() {
 
           .hmbti-score-board span {
             display: block;
-            margin-bottom: 2px;
-            font-size: 14px;
+            margin-bottom: 4px;
+            font-size: 18px;
             font-weight: 1000;
+            line-height: 1.1;
           }
 
           .hmbti-score-board strong {
-            font-size: 64px;
+            font-size: 72px;
             font-weight: 1000;
             line-height: 1;
           }
 
           .hmbti-score-board small {
             margin-left: 4px;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 1000;
           }
 
@@ -1148,6 +1154,12 @@ export default function HmbtiTest() {
               top: 190px;
             }
 
+            .hmbti-main-banner {
+              width: 100%;
+              margin: 8px auto 18px;
+              border-width: 5px;
+            }
+
             .hmbti-mascot {
               height: 255px;
               transform: scale(0.92);
@@ -1183,7 +1195,7 @@ export default function HmbtiTest() {
             }
 
             .hmbti-score-board strong {
-              font-size: 54px;
+              font-size: 60px;
             }
           }
         `}</style>
